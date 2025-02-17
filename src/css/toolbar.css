@@ -1,0 +1,21 @@
+.toolbar-btn {
+  width: 40px;
+  /* Adjust button size */
+  height: 40px;
+  /* ... other styles ... */
+}
+
+.toolbar-btn:hover svg {
+  color: #146b3a;
+  /* Change hover color */
+}
+
+.document-toolbar {
+  position: fixed;
+  right: 20px;
+  /* Adjust distance from right */
+  top: 50%;
+  /* Adjust vertical position */
+  transform: translateY(-50%);
+  /* ... other styles ... */
+}

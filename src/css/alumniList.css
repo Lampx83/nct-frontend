@@ -1,0 +1,26 @@
+#pagination .btn.active {
+    background-color: #4285f4;
+    color: white;
+  }
+  
+  #pagination .btn {
+    width: 50px;
+    text-align: center;
+    margin: 0 2px;
+  }
+  
+  #pagination i {
+    font-size: 16px;
+  }
+  
+  ul.pagination li.page-item.active a.page-link {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+  }
+  
+  .jumbotron {
+    padding: 2rem 1rem;
+    border-radius: 0.3rem;
+  }
+  

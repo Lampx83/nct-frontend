@@ -1,0 +1,35 @@
+.ttkhoa_hover {
+    transition: 0.5s;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+
+
+.ttkhoa_hover:hover p,
+.ttkhoa_hover:hover h3 {
+    color: white;
+}
+
+.marginDetail {
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 576px) {
+    .color-custom {
+        text-align: center !important;
+    }
+
+    .ttkhoa_hover {
+        padding-top: 1.8rem;
+        padding-bottom: 1.8rem;
+    }
+
+    .ttkhoa_hover div {
+        padding-left: 0 !important;
+    }
+
+    .marginDetail {
+        margin-top: 1.5rem;
+    }
+}

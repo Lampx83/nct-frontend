@@ -1,0 +1,16 @@
+.ais-Hits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  list-style-type: none;
+  padding: 0;
+}
+
+.ais-Hits-item {
+  width: 100%;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}

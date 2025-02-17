@@ -1,0 +1,55 @@
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+
+.testimonial-item {
+    flex: 0 0 auto;
+    width: 250px; /* Kích thước cố định cho item */
+    margin: 0 10px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .testimonial-item {
+        width: 200px; /* Giảm kích thước cho màn hình lớn hơn */
+    }
+}
+
+@media (min-width: 1024px) {
+    .testimonial-item {
+        flex: 0 0 23%; /* Điều chỉnh lại để hiển thị gần đúng 4 phần tử */
+    }
+}
+
+@media (min-width: 1200px) {
+    .testimonial-item {
+        flex: 0 0 16.5%; /* Điều chỉnh lại để hiển thị gần đúng 6 phần tử */
+    }
+}
+
+/* .carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+
+.testimonial-item {
+    flex: 0 0 auto;
+    width: 100%;
+    text-align: center;
+} */

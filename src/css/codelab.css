@@ -1,0 +1,53 @@
+.drag-area-parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-area {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 50px;
+  transition: border-color 0.3s ease;
+  /* Thêm hiệu ứng chuyển đổi màu viền */
+}
+
+.drag-area.active {
+  border: 1px solid var(--primary-color);
+  /* Màu viền mới khi kéo file vào */
+}
+
+.drag-area.uploading {
+  border: 1px dashed var(--primary-color);
+}
+
+.drag-area header {
+  font-weight: 500;
+  color: #333;
+}
+
+.drag-area span {
+  font-weight: 500;
+  color: #333;
+  margin: 10px 0 15px 0;
+}
+
+.drag-area button {
+  padding: 10px 25px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.drag-area img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}

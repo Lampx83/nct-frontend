@@ -1,0 +1,36 @@
+.student-img {
+  width: 150px;
+  /* Chiều rộng cố định cho ảnh hình tròn */
+  height: 150px !important;
+  /* Chiều cao cố định cho ảnh hình tròn */
+  border-radius: 50%;
+  /* Biến ảnh thành hình tròn */
+  object-fit: cover;
+  /* Cắt ảnh để giữ tỉ lệ và đầy đủ hình tròn */
+  display: block;
+  /* Đảm bảo không có khoảng trắng bên dưới ảnh */
+  margin: 0 auto;
+  /* Căn giữa ảnh */
+}
+
+
+.card-title {
+  white-space: normal;
+  /* Cho phép xuống dòng nếu cần */
+  overflow: visible;
+  /* Hiện nội dung đầy đủ */
+  text-overflow: clip;
+  /* Không sử dụng dấu ... */
+}
+
+.remove_boder {
+  border: none !important;
+}
+
+.border-sv {
+  border-color: darkgrey;
+}
+
+.student-name {
+  font-size: 20px;
+}

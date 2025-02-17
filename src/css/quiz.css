@@ -1,0 +1,125 @@
+.user-hover-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.user-indicator {
+  font-size: 0.8rem; /* Optional: make it smaller */
+  color: gray; /* Optional: change color */
+}
+
+.user-list {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 100%; /* Position below the container */
+  left: 0;
+  background-color: white; /* Set a background color */
+  border: 1px solid #ccc; /* Optional border */
+  padding: 5px; /* Add padding */
+  z-index: 100; /* Ensure it appears above other elements */
+  white-space: nowrap; /* Keep the content in a single horizontal line */
+  max-width: 500px; /* Optional: set a max width */
+  overflow: hidden; /* Optional: hide content that overflows */
+  font-size: 0.8rem;
+  width: auto;
+}
+
+.user-hover-container:hover .user-list {
+  display: block; /* Show the content on hover */
+}
+
+.quiz-choice {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.quiz-choice label {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.badge:hover {
+  opacity: 0.8;
+}
+
+/* Custom scrollbar for the modal */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.user-count-badge:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.modal-content {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+  padding: 12px 16px;
+  background: #f8f9fa;
+}
+
+.modal-body {
+  padding: 0;
+}
+
+.user-list-item {
+  transition: background-color 0.2s ease;
+}
+
+.user-list-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Improved scrollbar styling */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.badge-toggle-btn {
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.badge-toggle-btn:hover {
+  background-color: #e9ecef;
+}
+
+.badge-toggle-btn svg {
+  font-size: 14px;
+}

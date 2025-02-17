@@ -1,0 +1,102 @@
+/* Accordion Styling */
+#accordion h3 {
+ 
+  color: #fafafa;
+  padding: 1em 1.5em;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+}
+
+#accordion h3::after {
+  content: "\25BA";
+  /* Right-pointing arrow */
+  position: absolute;
+  font-size: 50%;
+  left: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+#accordion .ui-accordion-content {
+  padding: 1em;
+  border: 1px solid #ddd;
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+#accordion .ui-accordion-header-active::after {
+  transform: translateY(-50%) rotate(90deg);
+  /* Down-pointing arrow */
+}
+
+/* Tab Styling */
+.tab {
+  overflow: hidden;
+
+}
+
+.tab button {
+
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  font-weight: normal;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #555;
+  color: #fafafa;
+  font-weight: normal;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  font-weight: normal;
+}
+
+#admissionCode,
+#enrollmentTarget {
+  font-weight: normal;
+}
+
+#accordion h3,
+#accordion div {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+#accordion div p {
+  margin: 0;
+
+  padding: 1em;
+  font-weight: normal;
+}
+
+#accordion div ul {
+  margin-left: 20px;
+  font-weight: normal;
+}
+
+@media (max-width: 768px) {
+  #title {
+    font-size: 1.5rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}

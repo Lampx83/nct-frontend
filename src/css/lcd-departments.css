@@ -1,0 +1,50 @@
+.two-members-row > .col-md-5 {
+  max-width: 20%; 
+}
+
+.two-members-row {
+  gap: 1rem; 
+}
+
+.department-buttons {
+  gap: 10px; 
+}
+
+
+.ctv-section {
+  padding: 20px 40px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #0d6efd;
+}
+
+.slick-slide {
+  padding: 0 10px;
+}
+
+.slick-dots {
+  bottom: -40px;
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+}
+
+.card-body p {
+  margin-bottom: 0.1em;
+}
+
+.card-body p.email {
+  color: #0466c2;
+  font-weight: 500;
+  font-size: 0.9rem; 
+  transition: color 0.3s ease;
+}
+
+.card-body p.email:hover {
+  color: #0056b3;
+  text-decoration: underline;
+  cursor: pointer;
+}

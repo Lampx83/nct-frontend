@@ -1,0 +1,47 @@
+// Define custom variables
+$primary: #0061bb;
+$secondary: #ccc;
+$light: #f8f8f8;
+
+$dark: #333;
+$headings-font-family: 'Barlow', sans-serif;
+$body-color: #444;
+$headings-color: $primary;
+$enable-responsive-font-sizes: true;
+$border-radius: 5px;
+$link-decoration: none;
+$enable-negative-margins: true;
+// Import Bootstrap SCSS
+@import '~bootstrap/scss/bootstrap';
+
+.hover-primary{
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: $primary;
+        color: white;
+    }
+}
+
+
+.hover-primary-light {
+    background-color: $light;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: $primary;
+        color: white;
+    }
+    &:hover h3 {
+        color: white;
+    }
+    &:hover h5 {
+        color: white;
+    }
+}
+
+.footer .btn.btn-social:hover {
+    color: $primary;
+}
+
+.theme-svg .primary-color {
+    fill: $primary;
+}

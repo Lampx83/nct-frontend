@@ -1,0 +1,22 @@
+img.carousel-img {
+  height: 100%;
+  object-fit: cover; 
+}
+
+.carousel-caption {
+  bottom: 20%;
+}
+
+.carousel-caption h1 {
+  font-size: 4rem;
+}
+
+@media (max-width: 768px) {
+  .carousel-item {
+    height: 50vh; /* Adjust height for smaller screens */
+  }
+
+  .carousel-caption h1 {
+    font-size: 1.75rem; /* Adjust font size for smaller screens */
+  }
+}

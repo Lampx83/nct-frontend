@@ -1,0 +1,920 @@
+:root {
+    --color-background: whitesmoke;
+    --color-pageSheet: #cfcfcf;
+    --color-pageBox: violet;
+    --color-paper: white;
+    --color-marginBox: transparent;
+    --pagedjs-crop-color: black;
+    --pagedjs-crop-shadow: white;
+    --pagedjs-crop-stroke: 1px;
+    --pagedjs-width: 20px;
+    --pagedjs-bleed-left: 10px;
+    --pagedjs-pagebox-width: 20px;
+    --offset-page: 1;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif !important;
+}
+
+
+.red-text {
+    /* color: red;
+    background-color: yellow; */
+}
+
+/* To define how the book look on the screen: */
+@media screen,
+pagedjs-ignore {
+    body {
+        background-color: var(--color-background);
+    }
+
+    /*.pagedjs_pages {*/
+    /*    display: flex;*/
+    /*    !*width: calc(var(--pagedjs-width) * 2);*!*/
+    /*    flex: 0;*/
+    /*    flex-wrap: wrap;*/
+    /*    margin: 0 auto;*/
+    /*}*/
+    .pagedjs_page {
+        background-color: var(--color-paper);
+        box-shadow: 0 0 0 1px var(--color-pageSheet);
+        margin: 0;
+        flex-shrink: 0;
+        flex-grow: 0;
+        margin-top: 10mm;
+    }
+
+    .pagedjs_page:last-of-type {
+        margin-bottom: 10mm;
+    }
+
+    .pagedjs_first_page {
+        margin-left: var(--pagedjs-width);
+    }
+
+    .pagedjs_pagebox {
+        box-shadow: 0 0 0 1px var(--color-pageBox);
+    }
+
+    /*.pagedjs_left_page {*/
+    /*    z-index: 20;*/
+    /*    width: calc(*/
+    /*            var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width)*/
+    /*    ) !important;*/
+    /*}*/
+    /*.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {*/
+    /*    border-color: transparent;*/
+    /*}*/
+    /*.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle {*/
+    /*    width: 0;*/
+    /*}*/
+    /*.pagedjs_right_page {*/
+    /*    z-index: 10;*/
+    /*    position: relative;*/
+    /*    left: calc(var(--pagedjs-bleed-left) * -1);*/
+    /*}*/
+    /* show the margin-box*/
+    /*.pagedjs_margin-top-left-corner-holder,*/
+    /*.pagedjs_margin-top,*/
+    /*.pagedjs_margin-top-left,*/
+    /*.pagedjs_margin-top-center,*/
+    /*.pagedjs_margin-top-right,*/
+    /*.pagedjs_margin-top-right-corner-holder,*/
+    /*.pagedjs_margin-bottom-left-corner-holder,*/
+    /*.pagedjs_margin-bottom,*/
+    /*.pagedjs_margin-bottom-left,*/
+    /*.pagedjs_margin-bottom-center,*/
+    /*.pagedjs_margin-bottom-right,*/
+    /*.pagedjs_margin-bottom-right-corner-holder,*/
+    /*.pagedjs_margin-right,*/
+    /*.pagedjs_margin-right-top,*/
+    /*.pagedjs_margin-right-middle,*/
+    /*.pagedjs_margin-right-bottom,*/
+    /*.pagedjs_margin-left,*/
+    /*.pagedjs_margin-left-top,*/
+    /*.pagedjs_margin-left-middle,*/
+    /*.pagedjs_margin-left-bottom {*/
+    /*    box-shadow: 0 0 0 1px inset var(--color-marginBox);*/
+    /*}*/
+    /* uncomment this part for recto/verso book : ------------------------------------ */
+    .pagedjs_page {
+        margin: 0 auto;
+        margin-top: 10mm;
+    }
+
+    /*.pagedjs_pages {*/
+    /*    flex-direction: column;*/
+    /*    width: 100%;*/
+    /*}*/
+    /*.pagedjs_first_page {*/
+    /*    margin-left: 0;*/
+    /*}*/
+    /*.pagedjs_left_page {*/
+    /*    width: calc(*/
+    /*            var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width) +*/
+    /*            var(--pagedjs-bleed-left)*/
+    /*    ) !important;*/
+    /*}*/
+    /*.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {*/
+    /*    border-color: var(--pagedjs-crop-color);*/
+    /*}*/
+    /*.pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle {*/
+    /*    width: var(--pagedjs-cross-size) !important;*/
+    /*}*/
+    /*.pagedjs_right_page {*/
+    /*    left: 0;*/
+    /*}*/
+    /* uncomment this par to see the baseline : -------------------------------------------*/
+    /* .pagedjs_pagebox {
+          --pagedjs-baseline: 22px;
+          --pagedjs-baseline-position: 5px;
+          --pagedjs-baseline-color: cyan;
+          background: linear-gradient(transparent 0%, transparent calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) var(--pagedjs-baseline)), transparent;
+          background-size: 100% var(--pagedjs-baseline);
+          background-repeat: repeat-y;
+          background-position-y: var(--pagedjs-baseline-position);
+      }  */
+}
+
+/* Marks (to delete when merge in paged.js) */
+
+.pagedjs_marks-crop {
+    z-index: 99;
+}
+
+.pagedjs_bleed-top .pagedjs_marks-crop,
+.pagedjs_bleed-bottom .pagedjs_marks-crop {
+    box-shadow: 1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_bleed-top .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-bottom .pagedjs_marks-crop:last-child {
+    box-shadow: -1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_bleed-left .pagedjs_marks-crop,
+.pagedjs_bleed-right .pagedjs_marks-crop {
+    box-shadow: 0px 1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_bleed-left .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-right .pagedjs_marks-crop:last-child {
+    box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.print .break-after-page {
+    break-after: page;
+}
+
+.print .thead {
+    display: table-header-group;
+    /* Giúp hiển thị phần header ở đầu mỗi trang */
+}
+
+.print .break-after-right {
+    /* break-before: right; */
+}
+
+
+.print .note::before {
+    content: "Note: ";
+    color: red;
+    font-weight: bold;
+}
+
+.print p.ref::before {
+    content: "Reference " attr(data-ref-id) ": ";
+}
+
+.print p img,
+.print h2,
+.print h3 {
+    break-after: avoid;
+}
+
+.print img.landscape {
+    max-width: 450px;
+    max-height: 270px;
+}
+
+.print img.square {
+    max-width: 340px;
+    max-height: 280px;
+}
+
+
+.print img.portrait {
+    max-width: 250px;
+    max-height: 310px;
+}
+
+
+.print .step-body h3 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.print p.Caption {
+    font-style: italic;
+}
+
+.print p.para {
+    margin-bottom: 4px;
+}
+
+.print figcaption {
+    counter-increment: figureNumber;
+}
+
+.print figcaption::before {
+    content: "Hình " counter(figureNumber) ".";
+    font-weight: bolder;
+}
+
+.print .glossary::after {
+    content: " " url("glossary-icon.jpg");
+}
+
+.print a {
+    color: var(--primary-color);
+}
+
+/*.print a::after {*/
+/*    content: " (" attr(href) ")";*/
+/*}*/
+
+.print .title {
+    position: running(titleRunning);
+}
+
+.print h3 {
+    page-break-after: avoid;
+}
+
+.print .link-page a::after {
+    content: target-counter(attr(href), page);
+}
+
+.print .link-page:last-of-type::after {
+    content: none;
+}
+
+.print #list-index-generated {
+    list-style-type: none;
+}
+
+.print .list-alphabet-element {
+    font-weight: bold;
+    padding-top: 18px;
+    padding-bottom: 9px;
+}
+
+.print .index-value {
+    display: inline-block;
+    min-width: 120px;
+}
+
+.print .index-value:first-letter {
+    text-transform: uppercase;
+}
+
+/* .index-value::after {
+    content: "none";
+  } */
+
+.print .link-page a {
+    text-decoration: none;
+    color: currentColor;
+    font-size: 12px;
+}
+
+.print .navbar,
+.print .step-footer,
+.print .button-visibility,
+.print .code-tool,
+.print .colored-line,
+.print .slide-title .step-body,
+.print .submit-code,
+.print .submit-file {
+    display: none !important;
+}
+
+
+.print ul {
+    margin: 5px 0px !important;
+}
+
+.print .content {
+    padding: 0px;
+}
+
+.print li p {
+    margin: 0;
+}
+
+.print table td {
+    padding: 5px;
+    break-inside: avoid;
+}
+
+.print thead td {
+    color: var(--second-color)
+}
+
+.print .step-body div>p {
+    text-align: justify;
+}
+
+
+
+.print .step-content {
+    border: 0px;
+    min-height: unset;
+}
+
+.print .step-body {
+    padding: 20px 20px 0px 20px;
+    flex-grow: 1;
+}
+
+.print .step-body {
+    padding: 0px 20px 0px 20px;
+    flex-grow: 1;
+}
+
+.print .quiz,
+.print .exercise {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.print .step-content {
+    font-size: unset;
+    font-weight: unset;
+
+}
+
+.print pre {
+    font-size: 0.75rem;
+    padding: 0px !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.print h0.step-title {
+    display: none;
+    /*display: block;*/
+    /*counter-increment: countHeading1;*/
+    /*padding-top: 50px !important;*/
+    /*padding-bottom: 30px !important;*/
+    /*border-bottom-left-radius: 10px !important;*/
+    /*border-bottom-right-radius: 10px !important;*/
+    /*font-size: 30px !important;*/
+    font-weight: bolder;
+    /*margin-bottom: 20px;*/
+}
+
+.print h1.step-title {
+    display: block;
+    /* Thêm dòng mới sau content */
+    counter-increment: countHeading1;
+    padding-top: 40px !important;
+    padding-bottom: 30px !important;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    font-size: 31px !important;
+    font-weight: bolder;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    background-color: var(--primary-color);
+    padding: 50px;
+    color: white;
+}
+
+.print .step-body p:not(.quiz p) .TableBody {
+    margin-top: 0px !important;
+}
+
+.print .quiz p,
+.print .exercise p {
+    margin: 0px !important;
+    font-size: 0.95rem;
+}
+
+.print .quiz,
+.print .exercise {
+    padding: 14px;
+    break-inside: avoid;
+}
+
+
+.print toc.index-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+div .mucluc {
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.print h2:not(.H2)::before {
+    content: counter(countHeading1) "." counter(titleLevel1) ". ";
+}
+
+.print h3:not(.H3)::before {
+    content: counter(countHeading1) "." counter(titleLevel1) "." counter(titleLevel2) ". ";
+}
+
+.print h2 {
+    font-size: unset !important;
+    padding: 20px 0px 0px 0px;
+    background: unset;
+    color: var(--primary-color);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.print h3 {
+    font-size: unset !important;
+    background: unset;
+    color: var(--second-color);
+    font-weight: bold;
+}
+
+.print .slide-title .step-title {
+    min-height: unset;
+}
+
+.print h2.step-title::before {
+    content: counter(countHeading2) ". ";
+}
+
+.print h2.step-title {
+    font-weight: bolder;
+    counter-increment: countHeading2;
+}
+
+.print h3.step-title::before {
+    content: counter(countHeading2) "." counter(countHeading3) ". ";
+}
+
+.print h3.step-title {
+    counter-increment: countHeading3;
+}
+
+#cover-org-blank {
+    width: 64px;
+}
+
+#cover-book-info {
+    margin-top: 150px;
+}
+
+#cover-pub-info {
+    margin-top: 280px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#cover-book-name1 {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#cover-book-name2 {
+    font-size: 60px;
+    font-weight: 1000;
+    text-align: center;
+}
+
+#lastpage-book-info .hr {
+    height: 2px;
+    /* Đặt độ dày của thẻ hr */
+    background-color: black;
+    /* Màu của đường kẻ */
+    width: 40%;
+    align-self: center;
+}
+
+#lastpage-pub-info {
+    margin-top: 70px;
+    text-align: center;
+}
+
+#lastpage-people-info {
+    margin-top: 60px;
+}
+
+#lastpage-footer-info {
+    margin-top: 120px;
+    font-size: 15px;
+}
+
+#lastpage-footer-info .hr {
+    height: 2px;
+    /* Đặt độ dày của thẻ hr */
+    background-color: black;
+    /* Màu của đường kẻ */
+}
+
+.print div.index-title,
+.print toc.index-title,
+.print h1 {
+    string-set: titleContent content();
+    counter-reset: titleLevel1;
+}
+
+.print h2.Heading2 {
+    counter-increment: titleLevel1;
+    counter-reset: titleLevel2;
+}
+
+.print h3.Heading3 {
+    counter-increment: titleLevel2;
+}
+
+
+.print .custom-font-large {
+    font-size: 18px;
+    /* Thiết lập kích thước chữ là 24px */
+}
+
+.print .step-title {
+    text-transform: uppercase;
+}
+
+.print h1::before {
+    content: "Chương " counter(countHeading1);
+    string-set: h1Before content(text);
+    display: block;
+    font-weight: bold;
+    border-radius: 5px !important;
+    font-size: 20px !important;
+    background-color: #ddd;
+    /* Màu nền của tiền tố */
+    padding: 10px 10px;
+    /* Điều chỉnh lề và độ rộng */
+    color: #222;
+    position: absolute;
+    /* Đặt vị trí tuyệt đối để chồng lên nội dung */
+    left: 20px;
+    top: -20px;
+}
+
+
+body {
+    font-family: "Times new Roman", "Tahoma";
+    line-height: 1.4;
+}
+
+div.table-of-content,
+toc,
+.print h1 {
+    string-set: chapter attr(data-chapter);
+    string-set: data-id attr(data-id);
+    position: relative;
+}
+
+@page {
+
+    size: 160mm 240mm;
+    margin: 20mm 12mm 15mm 12mm;
+    /*Top Right Bottom Left*/
+    /*bleed: 25mm 25mm 25mm 25mm;*/
+    /*margin: 20mm 5mm 0mm 5mm;*/
+    /*bleed: 20mm 5mm 0mm 5mm;*/
+    /*marks: crop cross;*/
+
+}
+
+
+@page :left {
+    @top-right {
+        content: string(chapter);
+        color: var(--primary-color);
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: bolder;
+        border-bottom: 1px solid var(--primary-color);
+    }
+
+    @top-left {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        content: counter(page);
+        font-weight: bolder;
+        border-bottom: 1px solid var(--primary-color);
+        color: var(--second-color);
+    }
+}
+
+@page :right {
+    @top-left {
+        content: string(chapter);
+        color: var(--primary-color);
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: bolder;
+        border-bottom: 1px solid var(--primary-color);
+    }
+
+    @top-right {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        content: counter(page);
+        font-weight: bolder;
+        border-bottom: 1px solid var(--primary-color);
+        color: var(--second-color);
+    }
+
+}
+
+@page :blank {
+    @top-right {
+        content: none;
+    }
+}
+
+@page :nth(1) {
+    @top-left {
+        content: none;
+        border-bottom: none;
+    }
+
+    @top-right {
+        content: none;
+        border-bottom: none;
+    }
+
+    @bottom-left {
+        content: none;
+    }
+
+    @bottom-right {
+        content: none;
+    }
+}
+
+@page :nth(2) {
+    @top-left {
+        content: none;
+        border-bottom: none;
+    }
+
+    @top-right {
+        content: none;
+        border-bottom: none;
+    }
+
+    @bottom-left {
+        content: none;
+    }
+
+    @bottom-right {
+        content: none;
+    }
+}
+
+
+
+
+
+/*TOC*/
+#list-toc-generated a {
+    text-decoration: none;
+    color: black;
+}
+
+#list-toc-generated {
+    list-style: none;
+}
+
+#list-toc-generated .toc-element a::after {
+    content: "" target-counter(attr(href), page);
+    float: right;
+}
+
+#list-toc-generated .toc-element-level-1 {
+    margin-top: 25px;
+    color: var(--primary-color);
+}
+
+#list-toc-generated .toc-element-level-2 {
+    margin-left: 25px;
+}
+
+#list-toc-generated .toc-element-level-3 {
+    margin-left: 45px;
+}
+
+#list-toc-generated {
+    counter-reset: counterTocLevel1;
+}
+
+#list-toc-generated .toc-element-level-1 {
+    counter-increment: counterTocLevel1;
+    counter-reset: counterTocLevel2;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#list-toc-generated .toc-element-level-1 a {
+    color: var(--primary-color);
+}
+
+#list-toc-generated .toc-element-level-1::before {
+    content: "CHƯƠNG " counter(counterTocLevel1) ".";
+    padding-right: 5px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#list-toc-generated .toc-element-level-2:not(.H2) {
+    counter-increment: counterTocLevel2;
+    counter-reset: counterTocLevel3;
+    font-weight: bold;
+}
+
+#list-toc-generated .toc-element-level-2:not(.H2)::before {
+    content: counter(counterTocLevel1) "." counter(counterTocLevel2) ".";
+    padding-right: 5px;
+    font-weight: bold;
+}
+
+#list-toc-generated .toc-element-level-2.H2 {
+    font-weight: bold;
+}
+
+#list-toc-generated .toc-element-level-3:not(.H3) {
+    counter-increment: counterTocLevel3;
+}
+
+#list-toc-generated .toc-element-level-3:not(.H3)::before {
+    content: counter(counterTocLevel1) "." counter(counterTocLevel2) "." counter(counterTocLevel3) ". ";
+    padding-right: 5px;
+}
+
+#list-toc-generated .toc-element-level-4 {
+    font-weight: bold;
+}
+
+#list-toc-generated li {
+    overflow-x: hidden;
+}
+
+#list-toc-generated .toc-element::after {
+    content: ".......................................................................";
+    float: left;
+    width: 0;
+    padding-left: 5px;
+    letter-spacing: 2px;
+}
+
+#list-toc-generated .toc-element {
+    display: flex;
+}
+
+#list-toc-generated .toc-element a::after {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    padding-left: 6px;
+}
+
+#list-toc-generated .toc-element a {
+    right: 0;
+}
+
+/*TOI*/
+#list-toi-generated a {
+    text-decoration: none;
+    color: black;
+}
+
+#list-toi-generated {
+    list-style: none;
+}
+
+#list-toi-generated .toi-element a::after {
+    content: "" target-counter(attr(href), page);
+    float: right;
+}
+
+#list-toi-generated .toi-element-level-1 {
+    /*margin-top: 5px;*/
+}
+
+#list-toi-generated {
+    counter-reset: countertoiLevel1;
+}
+
+#list-toi-generated .toi-element-level-1 {
+    counter-increment: countertoiLevel1;
+    counter-reset: countertoiLevel2;
+}
+
+#list-toi-generated .toi-element-level-1::before {
+    padding-right: 5px;
+}
+
+#list-toi-generated li {
+    overflow-x: hidden;
+}
+
+#list-toi-generated .toi-element::after {
+    content: ".................................................................................................................................................";
+    float: left;
+    width: 0;
+    padding-left: 5px;
+    letter-spacing: 2px;
+}
+
+#list-toi-generated .toi-element {
+    display: flex;
+}
+
+#list-toi-generated .toi-element a::after {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    padding-left: 6px;
+}
+
+#list-toi-generated .toi-element a {
+    right: 0;
+}
+
+/*TOT*/
+#list-tot-generated a {
+    text-decoration: none;
+    color: black;
+}
+
+#list-tot-generated {
+    list-style: none;
+}
+
+#list-tot-generated .tot-element a::after {
+    content: "" target-counter(attr(href), page);
+    float: right;
+}
+
+#list-tot-generated .tot-element-level-1 {
+    /*margin-top: 5px;*/
+}
+
+#list-tot-generated {
+    counter-reset: countertotLevel1;
+}
+
+.print .abstract {
+    text-align: justify;
+}
+
+
+#list-tot-generated .tot-element-level-1 {
+    counter-increment: countertotLevel1;
+    counter-reset: countertotLevel2;
+}
+
+#list-tot-generated .tot-element-level-1::before {
+    padding-right: 5px;
+}
+
+#list-tot-generated li {
+    overflow-x: hidden;
+}
+
+#list-tot-generated .tot-element::after {
+    content: ".................................................................................................................................................";
+    float: left;
+    width: 0;
+    padding-left: 5px;
+    letter-spacing: 2px;
+}
+
+#list-tot-generated .tot-element {
+    display: flex;
+}
+
+#list-tot-generated .tot-element a::after {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    padding-left: 6px;
+}
+
+#list-tot-generated .tot-element a {
+    right: 0;
+}

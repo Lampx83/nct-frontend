@@ -1,0 +1,43 @@
+.lecturer-info .img-lecture {
+    max-width: 390px;
+  }
+  
+  @media (max-width: 1200px) {
+    .img-lecture {
+      width: 85% !important;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .img-lecture {
+      width: 95% !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .img-lecture {
+      width: 85% !important;
+      margin: 0 10px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .img-lecture {
+      width: 100% !important;
+    }
+  }
+  .custom-h3 {
+    color: #0054a2;
+  }
+  
+  .custom-list ul, .custom-list li {
+    color: black;
+  }
+  .info-lecturer_content p {
+    margin-bottom: 0;
+  }
+  .custom-list::after, .custom-list p, .custom-list p i, .custom-list span {
+    margin-bottom: 0;
+    font-style: normal;
+    background-color: white !important;
+  }

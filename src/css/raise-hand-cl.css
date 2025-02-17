@@ -1,0 +1,15 @@
+.hand-icon {
+  font-size: 25px;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hand-icon.raised {
+  transform: scale(1);
+}
+
+button:disabled .hand-icon {
+  opacity: 0.7;
+}
