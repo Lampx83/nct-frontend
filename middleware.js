@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const url = request.nextUrl.clone();
   const rewrites = [
-    { path: "/admin", destination: "http://101.96.66.219:8015" },
+    { path: "/admin", destination: "http://101.96.66.218:8020" },
     { path: "/oj", destination: "http://203.113.132.48:8016" },
     { path: "/codelab", destination: "http://101.96.66.217:8015" },
     { path: "/search_api", destination: "http://101.96.66.219:8003" },
