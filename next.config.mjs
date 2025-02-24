@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/admin/:path*",
-        destination: "http://101.96.66.219:8015/:path*", // Backend strapi
+        destination: "http://101.96.66.218:8020/:path*", // Backend strapi
       },
       {
         source: "/oj/:path*",
