@@ -124,6 +124,7 @@ const Navbar = () => {
         backdropFilter: scrolled ? "blur(10px)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(10px)" : "none",
         zIndex: 1000,
+        transition: "all 1s ease",
       }}
     >
       <a
