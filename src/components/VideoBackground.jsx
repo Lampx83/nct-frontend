@@ -10,8 +10,8 @@ const VideoBackground = () => {
       </video>
       <div className="overlay">
         <div className="overlay-text">
-            <p>ĐÓN ĐẦU CÔNG NGHỆ
-                <span>TẠO DỰNG TƯƠNG LAI</span>
+            <p>Đón đầu công nghệ
+                <span>Tạo dựng tương lai</span>
             </p>
             <h1>TRƯỜNG CÔNG NGHỆ - ĐẠI HỌC KINH TẾ QUỐC DÂN</h1>
         </div>
