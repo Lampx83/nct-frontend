@@ -1,3 +1,8 @@
+/* Thêm quy tắc này để ngăn chặn khoảng trắng thừa */
+body {
+  overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+}
+
 a {
   text-decoration: none;
 }
@@ -135,7 +140,6 @@ a {
   margin-right: 0;
   padding: 10px;
 }
-
 
 @media (min-width: 992px) {
 

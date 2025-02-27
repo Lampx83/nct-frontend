@@ -34,6 +34,17 @@
 .overlay-text {
     text-align: center; /* Căn giữa văn bản */
     color: white; /* Màu chữ */
+    opacity: 0;
+    animation: fadeIn 2s forwards 4s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0; /* Bắt đầu với độ mờ 0 */
+    }
+    100% {
+        opacity: 1; /* Kết thúc với độ mờ 1 */
+    }
 }
 
 .overlay-text h1 {
