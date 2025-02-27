@@ -16,10 +16,10 @@ function Footer() {
       try {
         const [bulletResponse, rowResponse] = await Promise.all([
           fetch(
-            "https://fit.neu.edu.vn/admin/api/navigation/render/2?type=TREE"
+            "https://nct-frontend-liard.vercel.app/admin/api/navigation/render/2?type=TREE"
           ),
           fetch(
-            "https://fit.neu.edu.vn/admin/api/navigation/render/3?type=TREE"
+            "https://nct-frontend-liard.vercel.app/admin/api/navigation/render/3?type=TREE"
           ),
         ]);
 
@@ -61,6 +61,8 @@ function Footer() {
                       <i className="fa fa-phone-alt me-3"></i>
                     ) : item.title.includes("@") ? ( // Nếu chuỗi item.title chứa kí tự '@' -> email
                       <i className="fa fa-envelope me-3"></i>
+                    ) : item.title.includes("facebook") ? ( // Nếu chuỗi item.title chứa từ 'facebook' -> link
+                      <i className="fa-brands fa-facebook me-3"></i>
                     ) : (
                       <i className="fa fa-map-marker-alt me-3"></i>
                     )}
@@ -68,27 +70,6 @@ function Footer() {
                   </p>
                 ))}
 
-                {/* Mạng xã hội */}
-                <div className="d-flex pt-2">
-                  <a
-                    className="btn btn-outline-light btn-social"
-                    href="https://www.facebook.com/lcdkhoacntt.neu/"
-                  >
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a
-                    className="btn btn-outline-light btn-social"
-                    href="https://www.youtube.com/channel/UCV24tBVKuhkSC1kd36FbvmA"
-                  >
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a
-                    className="btn btn-outline-light btn-social"
-                    href="https://twitter.com/DaiHocKTQD"
-                  >
-                    <i className="fab fa-youtube"></i>
-                  </a>
-                </div>
               </div>
               {/* Menu Thông tin (Chia thành 2 cột) */}
               <div className="col-lg-6 d-none d-lg-block">
@@ -134,11 +115,11 @@ function Footer() {
             <div className="col-md-6 text-center text-md-start mb-3 mb-md-0 d-flex flex-wrap align-items-center justify-content-center justify-content-md-start">
               Bản quyền thuộc về:&nbsp;
               <a className="border-bottom" href="/">
-                Khoa Công nghệ thông tin
+                Trường Công nghệ
               </a>
               ,&nbsp;
               <a className="border-bottom" href="https://www.neu.edu.vn">
-                Đại học kinh tế quốc dân
+                Đại học Kinh tế Quốc dân
               </a>
             </div>
             {/* Menu cuối */}
