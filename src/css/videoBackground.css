@@ -23,6 +23,7 @@
     justify-content: center; /* Căn giữa theo chiều dọc */
     align-items: center; /* Căn giữa theo chiều ngang */
     z-index: 2; /* Để đảm bảo nó nằm trên video */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
 }
 
 .overlay-text {
