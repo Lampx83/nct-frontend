@@ -77,12 +77,9 @@ export function Portfolio() {
   };
 
   return (
-    <section id="portfolio" className="portfolio section">
+    <section id="portfolio" className="portfolio section mt-3">
       {/* Section Title */}
-      <div className="container section-title" data-aos="fade-up">
-        <h2>Portfolio</h2>
-        <p>CHECK OUR PORTFOLIO</p>
-      </div>
+        <h2 className="mb-2 fw-bold fs-2 text-center">Bộ Sưu Tập Ảnh</h2>
       {/* End Section Title */}
 
       <div className="container">
@@ -102,31 +99,31 @@ export function Portfolio() {
               onClick={() => handleFilterClick("*")}
               className={filterKey === "*" ? "filter-active" : ""}
             >
-              All
+              Tất Cả
             </li>
             <li
               onClick={() => handleFilterClick("app")}
               className={filterKey === "app" ? "filter-active" : ""}
             >
-              App
+              Sinh Viên
             </li>
             <li
               onClick={() => handleFilterClick("product")}
               className={filterKey === "product" ? "filter-active" : ""}
             >
-              Product
+              Giảng Viên
             </li>
             <li
               onClick={() => handleFilterClick("branding")}
               className={filterKey === "branding" ? "filter-active" : ""}
             >
-              Branding
+              Nghiên Cứu
             </li>
             <li
               onClick={() => handleFilterClick("books")}
               className={filterKey === "books" ? "filter-active" : ""}
             >
-              Books
+              Sự Kiện
             </li>
           </ul>
           {/* End Portfolio Filters */}
@@ -384,7 +381,6 @@ export function Portfolio() {
 
         /* Section Title */
         .section-title {
-          padding-bottom: 60px;
           position: relative;
         }
 
@@ -428,7 +424,6 @@ export function Portfolio() {
         .section {
           color: #444444; /* --default-color */
           background-color: #ffffff; /* --background-color */
-          padding: 60px 0;
           scroll-margin-top: 90px;
           overflow: clip;
         }
