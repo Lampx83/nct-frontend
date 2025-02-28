@@ -12,11 +12,16 @@ export function Intro() {
   }, []);
 
   return (
-    <section id="services" className="services section">
+    <section id="services" className="services section pt-3 mt-3 pb-3 mb-2">
       {/* Section Title */}
-      <div className="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>Featured Services</p>
+      <div className="container text-center" data-aos="fade-up">
+        <h2>TRƯỜNG CÔNG NGHỆ - ĐẠI HỌC KINH TẾ QUỐC DÂN</h2>
+        <p className="mb-1 fw-bold fs-4">ĐÓN ĐẦU CÔNG NGHỆ – TẠO DỰNG TƯƠNG LAI</p>
+      </div>
+      <div className="text-center mx-5 px-5 mt-0">
+        <p className="fs-6 mb-4">Trường Công nghệ – một thành viên của Trường Đại học Kinh tế Quốc dân, nơi khai phóng tiềm năng công nghệ và sáng tạo.
+Chúng tôi cam kết cung cấp một nền giáo dục chất lượng cao, đáp ứng nhu cầu thực tiễn và xu hướng phát triển toàn cầu.
+Với một đội ngũ giảng viên hàng đầu và cơ sở vật chất hiện đại, Trường Công nghệ tự hào là cái nôi đào tạo những nhà lãnh đạo công nghệ tương lai, sẵn sàng chinh phục các thách thức trong kỷ nguyên số.</p>
       </div>
       {/* End Section Title */}
 
@@ -26,7 +31,7 @@ export function Intro() {
             <div className="service-item">
               <div className="img">
                 <img
-                  src="https://picsum.photos/400/300?random=1"
+                  src="https://nct.neu.edu.vn/wp-content/uploads/2024/05/220814_ISFA_NEU0811.png"
                   className="img-fluid"
                   alt="Service 1"
                 />
@@ -35,8 +40,8 @@ export function Intro() {
                 <div className="icon">
                   <i className="bi bi-activity"></i> {/* Icon Bootstrap */}
                 </div>
-                <h3>Nesciunt Mete</h3>
-                <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis.</p>
+                <h3>Giảng Viên Kinh Nghiệm</h3>
+                <p>Chúng tôi cam kết cung cấp một nền giáo dục chất lượng cao, đáp ứng nhu cầu thực tiễn và xu hướng phát triển toàn cầu.</p>
               </div>
             </div>
           </div>
@@ -46,7 +51,7 @@ export function Intro() {
             <div className="service-item">
               <div className="img">
                 <img
-                  src="https://picsum.photos/400/300?random=2"
+                  src="https://nct.neu.edu.vn/wp-content/uploads/2024/05/4833ce6317447ce428ba973bd7531318.jpg"
                   className="img-fluid"
                   alt="Service 2"
                 />
@@ -55,8 +60,8 @@ export function Intro() {
                 <div className="icon">
                   <i className="bi bi-broadcast"></i> {/* Icon Bootstrap */}
                 </div>
-                <h3>Eosle Commodi</h3>
-                <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
+                <h3>Chất Lượng Quốc Tế</h3>
+                <p>Chúng tôi cam kết cung cấp một nền giáo dục chất lượng cao, đáp ứng nhu cầu thực tiễn và xu hướng phát triển toàn cầu.</p>
               </div>
             </div>
           </div>
@@ -66,7 +71,7 @@ export function Intro() {
             <div className="service-item">
               <div className="img">
                 <img
-                  src="https://picsum.photos/400/300?random=3"
+                  src="https://nct.neu.edu.vn/wp-content/uploads/2024/05/220814_ISFA_NEU0812.png"
                   className="img-fluid"
                   alt="Service 3"
                 />
@@ -75,8 +80,8 @@ export function Intro() {
                 <div className="icon">
                   <i className="bi bi-easel"></i> {/* Icon Bootstrap */}
                 </div>
-                <h3>Ledo Markt</h3>
-                <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
+                <h3>Đối Tác Đa Dạng</h3>
+                <p>Chúng tôi cam kết cung cấp một nền giáo dục chất lượng cao, đáp ứng nhu cầu thực tiễn và xu hướng phát triển toàn cầu.</p>
               </div>
             </div>
           </div>

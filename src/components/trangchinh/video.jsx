@@ -15,7 +15,7 @@ const Video = () => {
   }, []);
 
   return (
-    <div className="w-100 min-vh-100 position-relative overflow-hidden">
+    <div className="w-100 min-vh-100 position-relative overflow-hidden container-fluid">
       <video
         ref={videoRef}
         className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
@@ -26,7 +26,7 @@ const Video = () => {
         controls
         style={{ display: isVideoLoaded ? 'block' : 'none' }}
       >
-        <source src="https://download-video-ak.vimeocdn.com/v3-1/playback/e016d47c-7993-4989-affd-ebfaa6187753/1ae2e152-1d6bb0c6?__token__=st=1740547323~exp=1740561723~acl=%2Fv3-1%2Fplayback%2Fe016d47c-7993-4989-affd-ebfaa6187753%2F1ae2e152-1d6bb0c6%2A~hmac=80cb0d0cd93c9eba52498ebde7ea2b7e7ef4ead0c1999be6e7df7815710eb001&r=dXMtd2VzdDE%3D" type="video/mp4" />
+        <source src="https://player.vimeo.com/progressive_redirect/playback/946052449/rendition/720p/file.mp4?loc=external&signature=bc3b1b5435874b658b4e3d121e991cd96fd87c23b3a049294ac6de823c99ad5b" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       {isVideoLoaded && (

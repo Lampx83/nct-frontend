@@ -54,9 +54,9 @@ export function News() {
   ];
 
   return (
-    <div className="news-container">
+    <div className="container">
       <header className="news-header">
-        <h1>News</h1>
+        <h2 className="fw-bold fs-4">TIN TỨC</h2>
         <div className="topics-dropdown">
           <select
             value={selectedTopic}
@@ -75,8 +75,10 @@ export function News() {
       <div className="news-content">
         {/* Phần bên trái (50%) - 1 bài post lớn */}
         <div className="left-column">
-          <Link href={newsItems[0].url}>
-            <img src={newsItems[0].image} alt={newsItems[0].title} className="main-news-image" />
+          <Link href={newsItems[0].url} >
+            <div className="img-container">
+              <img src={newsItems[0].image} alt={newsItems[0].title} className="main-news-image rounded" />
+            </div>
             <div className="main-news-text">
               <span className="category">{newsItems[0].category}</span>
               <h2>{newsItems[0].title}</h2>
@@ -86,11 +88,13 @@ export function News() {
         </div>
 
         {/* Phần bên phải (50%) - 4 bài post nhỏ theo 2x2 */}
-        <div className="right-column">
+        <div className="right-column border-bottom">
           <div className="grid-2x2">
             {newsItems.slice(1, 5).map((item) => (
               <Link key={item.id} href={item.url} className="grid-item">
-                <img src={item.image} alt={item.title} className="grid-image" />
+                <div className="img-container">
+                  <img src={item.image} alt={item.title} className="grid-image" />
+                </div>
                 <div className="grid-text">
                   <span className="category">{item.category}</span>
                   <h3>{item.title}</h3>
@@ -98,23 +102,18 @@ export function News() {
                 </div>
               </Link>
             ))}
+            <div></div>
+            <div className="more-news text-end fs-5 fw-bolder my-0 py-0">
+              <Link href="/more-news">Xem Thêm</Link>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="more-news">
-        <Link href="/more-news">MORE NEWS VIA PENN TODAY</Link>
-      </div>
+      
 
       {/* CSS trực tiếp với styled-jsx */}
       <style jsx>{`
-        .news-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
-          font-family: Arial, sans-serif;
-        }
-
         .news-header {
           display: flex;
           justify-content: space-between;
@@ -156,6 +155,7 @@ export function News() {
 
         .left-column {
           padding: 10px;
+
         }
 
         .left-column a {
@@ -163,14 +163,30 @@ export function News() {
           color: inherit;
           display: block;
         }
-
         .main-news-image {
           width: 100%;
           height: 500px; /* Kích thước cố định cho hình chính, tỷ lệ 4:5 */
           object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
           border-radius: 4px;
+          transition: transform 0.5s ease-in-out;
+        }
+        .img-container {
+          display: block;
+          position: relative;
+          overflow: hidden;
         }
 
+        .grid-image {
+          width: 100%;
+          transition: transform 0.5s ease-in-out;
+        }
+
+        .img-container:hover .grid-image {
+          transform: scale(1.1); /* Hiệu ứng zoom */
+        }
+        .img-container:hover .main-news-image {
+          transform: scale(1.1); /* Hiệu ứng zoom */
+        }
         .main-news-text {
           padding: 15px 0;
           color: #00205b;
@@ -220,6 +236,10 @@ export function News() {
           height: 150px; /* Kích thước cố định cho hình nhỏ, tỷ lệ 4:3 */
           object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
           border-radius: 4px;
+          transition: transform 0.5s ease-in-out;
+        }
+        .grid-image:hover {
+          transform: scale(1.1);
         }
 
         .grid-text {
@@ -269,6 +289,8 @@ export function News() {
 
           .left-column, .right-column {
             padding: 5px;
+            overflow: hidden;
+            display: inline-block;
           }
 
           .main-news-image {
