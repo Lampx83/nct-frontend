@@ -1,0 +1,154 @@
+@font-face {
+    font-family: "utm_trajan";
+    src: url(./UTM-Trajan-Pro-Bold.ttf);
+}
+
+.video-container {
+  position: relative; /* Để video nằm trong luồng tài liệu */
+  width: 100%;
+  height: 100vh; /* Chiếm toàn bộ chiều cao của viewport */
+  overflow: hidden;
+  z-index: 1; /* Để video ở trên các thành phần khác */
+}
+
+.video-background {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Để video không bị biến dạng */
+}
+
+.overlay {
+    position: absolute; /* Để định vị overlay trên video */
+    top: 0; /* Đặt ở trên cùng */
+    left: 0; /* Đặt ở bên trái */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    height: 100%; /* Chiếm toàn bộ chiều cao */
+    display: flex; /* Sử dụng flexbox để căn giữa */
+    flex-direction: column; /* Đặt các phần tử theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    z-index: 2; /* Để đảm bảo nó nằm trên video */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+}
+
+.overlay-text {
+    text-align: center; /* Căn giữa văn bản */
+    color: white; /* Màu chữ */
+    opacity: 0;
+    animation: fadeIn 2s forwards 4s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0; /* Bắt đầu với độ mờ 0 */
+    }
+    100% {
+        opacity: 1; /* Kết thúc với độ mờ 1 */
+    }
+}
+
+.overlay-text h1 {
+  background: #990000;
+  color: #fff;
+  font-size: 17px;
+  line-height: 22px;
+  text-align: center;
+  display: table;
+  margin: 0px auto;
+  text-transform: uppercase;
+  padding: 4px 13px;
+}
+
+.overlay-text p {
+    color: #fff;
+    font-family: "utm_trajan";
+    font-size: 60px;
+    line-height: 87px;
+    text-align: center;
+    margin: 0px 0px 20px 0px;
+}
+
+.overlay-text span {
+    display: block;
+}
+
+.scrolldown {
+    --color: white;
+    --sizeX: 30px;
+    --sizeY: 50px;
+    position: absolute;
+    width: var(--sizeX);
+    height: var(--sizeY);
+    border: calc(var(--sizeX) / 9) solid var(--color);
+    border-radius: 50px;
+    box-sizing: border-box;
+    bottom: 3rem;
+  }
+  
+  .scrolldown::before {
+    content: "";
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    background-color: var(--color);
+    border-radius: 100%;
+    animation: scrolldown-anim 2s infinite;
+    box-sizing: border-box;
+    box-shadow: 0px -5px 3px 1px #ffffff66;
+  }
+  
+  @keyframes scrolldown-anim {
+    0% {
+      opacity: 0;
+      height: 6px;
+    }
+    40% {
+      opacity: 1;
+      height: 10px;
+    }
+    80% {
+      transform: translate(0, 20px);
+      height: 10px;
+      opacity: 0;
+    }
+    100% {
+      height: 3px;
+      opacity: 0;
+    }
+  }
+  .chevrons {
+    padding: 6px 0 0 0;
+    margin-left: -3px;
+    margin-top: 48px;
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .chevrondown {
+    margin-top: -6px;
+    position: relative;
+    border: solid var(--color);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+  }
+  .chevrondown:nth-child(odd) {
+    animation: pulse 500ms ease infinite alternate;
+  }
+  .chevrondown:nth-child(even) {
+    animation: pulse 500ms ease infinite alternate 250ms;
+  }
+  @keyframes pulse {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 0.5;
+    }
+  }

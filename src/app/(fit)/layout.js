@@ -16,12 +16,12 @@ import { ConfigProvider, Spin } from "antd";
 
 export const metadata = {
   title: {
-    absolute: "Khoa Công nghệ thông tin NEU",
-    default: "Khoa Công nghệ thông tin NEU",
-    template: " %s | Khoa Công nghệ thông tin NEU",
+    absolute: "Trường Công nghệ - Đại học Kinh tế Quốc dân",
+    default: "Trường Công nghệ - Đại học Kinh tế Quốc dân",
+    template: " %s | Trường Công nghệ - Đại học Kinh tế Quốc dân",
   },
   description:
-    "Khoa Công nghệ thông tin NEU, Trường công nghệ,  Đại học Kinh tế Quốc dân (NEU)",
+    "Trường Công nghệ – một thành viên của Trường Đại học Kinh tế Quốc dân, nơi khai phóng tiềm năng công nghệ và sáng tạo."
 };
 
 // Layout component
