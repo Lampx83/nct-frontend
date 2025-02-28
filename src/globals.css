@@ -206,4 +206,14 @@ a {
     padding: 25px 30px;
   }
 }
+/* Đổi màu nền của mục được chọn */
+.ant-menu-item-selected {
+  background-color: #990000 !important;
+  color: white !important; /* Chữ trắng để dễ đọc */
+}
+
+/* Khi hover vào mục menu */
+.ant-menu-item:hover {
+  background-color: #a31b1b !important; /* Màu hơi sáng hơn */
+}
 

@@ -219,7 +219,7 @@ function Enrollment() {
                     </p>
 
                     <a
-                      href="major/khoa-hoc-may-tinh"
+                      href="major/khoa-hoc-may-tinh-7480101"
                       className="btn btn-primary py-3 px-5 mt-3 rounded-0"
                     >
                       Xem thêm<i className="fa fa-arrow-right ms-3"></i>
