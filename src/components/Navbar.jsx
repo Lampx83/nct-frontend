@@ -8,91 +8,170 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null); // Theo dõi mục được hover để hiển thị submenu
 
-  // Dữ liệu menu tĩnh dựa trên yêu cầu của bạn
-  const staticMenuItems = [
-    {
-      id: 1,
-      title: "GIỚI THIỆU",
-      path: "#",
-      children: [
-        { id: 11, title: "Trường Công Nghệ", path: "/gioi-thieu/truong-cong-nghe" },
-        { id: 12, title: "Cơ cấu tổ chức", path: "/gioi-thieu/co-cau-to-chuc" },
-        { id: 13, title: "Liên hệ", path: "/gioi-thieu/lien-he" },
-      ],
-    },
-    {
-      id: 2,
-      title: "ĐÀO TẠO",
-      path: "#",
-      children: [
-        {
-          id: 21,
-          title: "Khoa Công Nghệ Thông Tin",
-          path: "/dao-tao/khoa-cong-nghe-thong-tin",
-          children: [
-            { id: 211, title: "Khoa học máy tính", path: "/dao-tao/khoa-hoc-may-tinh" },
-            { id: 212, title: "Công nghệ thông tin", path: "/dao-tao/cong-nghe-thong-tin" },
-            { id: 213, title: "Kỹ thuật phần mềm", path: "/dao-tao/ky-thuat-phan-mem" },
-            { id: 214, title: "An toàn thông tin", path: "/dao-tao/an-toan-thong-tin" },
-            { id: 215, title: "Công nghệ thông tin và chuyển đổi số", path: "/dao-tao/cong-nghe-thong-tin-chuyen-doi-so" },
-          ],
-        },
-        {
-          id: 22,
-          title: "Khoa Toán Kinh Tế",
-          path: "/dao-tao/khoa-toan-kinh-te",
-          children: [
-            { id: 221, title: "Phân tích Dữ Liệu", path: "/dao-tao/phan-tich-du-lieu" },
-            { id: 222, title: "Toán Kinh tế", path: "/dao-tao/toan-kinh-te" },
-            { id: 223, title: "Định Phí Bảo hiểm Và Quản Trị Rủi Ro", path: "/dao-tao/dinh-phi-bao-hiem-quan-tri-rui-ro" },
-          ],
-        },
-        { id: 23, title: "Khoa Khoa học cơ sở", path: "/dao-tao/khoa-khoa-hoc-co-so" },
-        { 
-          id: 24, 
-          title: "Khoa Trí Tuệ Nhân Tạo", 
-          path: "/dao-tao/khoa-tri-tue-nhan-tao",
-          children: [
-            { id: 241, title: "Trí Tuệ Nhân Tạo", path: "/dao-tao/tri-tue-nhan-tao" },
-            { id: 242, title: "Khoa Học Dữ Liệu", path: "/dao-tao/khoa-hoc-du-lieu" },
-          ],
-        },
-        { 
-          id: 25, 
-          title: "Khoa Thống Kê", 
-          path: "/dao-tao/khoa-thong-ke",
-          children: [
-            { id: 251, title: "Thống Kê Kinh Tế", path: "/dao-tao/thong-ke-kinh-te" }
-          ], 
-        },
-        {
-          id: 26,
-          title: "Khoa Hệ Thống Thông Tin",
-          path: "/dao-tao/khoa-he-thong-thong-tin",
-          children: [
-            { id: 261, title: "Hệ thống thông tin quản lý", path: "/dao-tao/he-thong-thong-tin-quan-ly" },
-            { id: 262, title: "Hệ thống thông tin", path: "/dao-tao/he-thong-thong-tin" },
-          ],
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "THÔNG TIN",
-      path: "#",
-      children: [
-        { id: 31, title: "Tuyển sinh", path: "/thong-tin/tuyen-sinh" },
-        { id: 32, title: "Sinh viên", path: "/thong-tin/sinh-vien" },
-        { id: 33, title: "Sự kiện", path: "/thong-tin/su-kien" },
-        { id: 34, title: "Tin tức", path: "/thong-tin/tin-tuc" },
-      ],
-    },
-  ];
-
+  // Fetching data using the fetch API
   useEffect(() => {
-    // Sử dụng dữ liệu tĩnh thay vì fetch API
-    setMenuItems(staticMenuItems);
+    const fetchMenuItems = async () => {
+      try {
+        const response = await fetch(
+          "https://nct-frontend-liard.vercel.app/admin/api/navigation/render/1?type=TREE"
+        );
+        const data = await response.json();
+        console.log(data)
+        setMenuItems(data);
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+      }
+    };
+
+    fetchMenuItems();
   }, []);
+
+  const MenuItems = (items, level = 0) => {
+    const handleSubmenuClick = (e, hasChildren) => {
+      if (hasChildren) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isMobile = window.innerWidth < 992;
+        const currentMenu = e.currentTarget.nextElementSibling;
+
+        if (isMobile) {
+          // Tìm tất cả menu cùng cấp (siblings)
+          const parentUl = e.currentTarget.closest("ul");
+          const siblingMenus = parentUl.querySelectorAll(
+            ":scope > li > .dropdown-menu.show"
+          );
+
+          // Chỉ đóng các menu cùng cấp, không đóng menu cha hoặc menu con
+          siblingMenus.forEach((menu) => {
+            if (
+              menu !== currentMenu &&
+              !menu.contains(currentMenu) &&
+              !currentMenu.contains(menu)
+            ) {
+              menu.classList.remove("show");
+              const toggleButton = menu.previousElementSibling;
+              if (toggleButton) {
+                toggleButton.classList.remove("show");
+                toggleButton.setAttribute("aria-expanded", "false");
+              }
+            }
+          });
+
+          // Toggle menu hiện tại
+          currentMenu.classList.toggle("show");
+          e.currentTarget.classList.toggle("show");
+          e.currentTarget.setAttribute(
+            "aria-expanded",
+            e.currentTarget.getAttribute("aria-expanded") === "true"
+              ? "false"
+              : "true"
+          );
+        } else {
+          // Desktop logic - giữ nguyên code xử lý cho desktop
+          const submenuWrapper = e.currentTarget.nextElementSibling;
+          if (submenuWrapper) {
+            const allSubmenus = document.querySelectorAll(
+              ".submenu-wrapper.show, .dropdown-menu.show"
+            );
+            allSubmenus.forEach((menu) => {
+              if (menu !== submenuWrapper) {
+                menu.classList.remove("show");
+                if (menu.previousElementSibling) {
+                  menu.previousElementSibling.classList.remove("show");
+                  menu.previousElementSibling.setAttribute(
+                    "aria-expanded",
+                    "false"
+                  );
+                }
+              }
+            });
+
+            submenuWrapper.classList.toggle("show");
+            e.currentTarget.classList.toggle("show");
+            e.currentTarget.setAttribute(
+              "aria-expanded",
+              e.currentTarget.getAttribute("aria-expanded") === "true"
+                ? "false"
+                : "true"
+            );
+          }
+        }
+      }
+    };
+
+    return items.map((item) => {
+      // Xử lý nút đặc biệt như ScoreUp
+      if (item.itemType === "button") {
+        return (
+          <li key={item.id} className="nav-item">
+            <a
+              href={item.path}
+              className="btn btn-primary navbar-button p-3 rounded-0 d-flex justify-content-center align-items-center "
+              style={{ backgroundColor: item.color || "" }}
+            >
+              {item.icon?.url && (
+                <img
+                  src={`https://nct-frontend-liard.vercel.app/admin${item.icon.url}`}
+                  alt={item.title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              )}
+              {!item.icon && item.title}
+            </a>
+          </li>
+        );
+      }
+      // Xử lý menu có submenu
+      if (item.items && item.items.length > 0) {
+        return (
+          <li
+            key={item.id}
+            className={`nav-item ${
+              level === 0 ? "dropdown hover-primary" : "dropdown-submenu"
+            }`}
+          >
+            <a
+              className={`${level === 0 ? "nav-link" : "dropdown-item"} ${
+                item.items.length > 0 ? "dropdown-toggle" : ""
+              }`}
+              href={item.path}
+              onClick={(e) => handleSubmenuClick(e, true)}
+              aria-expanded="false"
+            >
+              {item.title}
+            </a>
+            {level === 1 && (
+              <div className="submenu-wrapper">
+                {MenuItems(item.items, level + 1)}
+              </div>
+            )}
+            {level !== 1 && (
+              <ul className="dropdown-menu">
+                {MenuItems(item.items, level + 1)}
+              </ul>
+            )}
+          </li>
+        );
+      }
+      // Xử lý menu item bình thường
+      return (
+        <li key={item.id} className="nav-item">
+          <a
+            className={level === 0 ? "nav-link" : "dropdown-item"}
+            href={item.path}
+            onClick={(e) => handleSubmenuClick(e, false)}
+          >
+            {item.title}
+          </a>
+        </li>
+      );
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,6 +203,7 @@ const Navbar = () => {
         backdropFilter: scrolled ? "blur(10px)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(10px)" : "none",
         zIndex: 1000,
+        transition: "all 1s ease",
       }}
     >
       <a

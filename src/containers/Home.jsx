@@ -9,6 +9,7 @@ import Enrollment from "../components/home/Enrollment";
 import TopStudent from "../components/home/TopStudent";
 import Gallery from '../components/home/Gallery';
 import Video from '../components/home/Video';
+import VideoBackground from '../components/VideoBackground';
 
 export default function Home() {
   const [seoData, setSeoData] = useState(null);
@@ -46,13 +47,13 @@ export default function Home() {
 
   return (
     <>
-      <Carousel />
+      <VideoBackground />
+      {/* <Carousel /> */}
       <Service />
       <Video />
       <News />
       <Facts />
       <Enrollment />
-      {/* <TopStudent /> */}
       <Gallery />
       <Partners />
     </>
