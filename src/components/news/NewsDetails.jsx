@@ -4,13 +4,29 @@ import moment from "moment";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
-const API_URL = "https://nct-frontend-liard.vercel.app";
+const API_URL = "https://nct-frontend-liard.vercel.app/admin";
+
+const styles = `
+  .image {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
+.image img {
+  max-width: 100%; /* Đảm bảo ảnh không vượt quá kích thước container */
+  height:auto;
+  width: 80%;
+  border-radius: 8px; /* Bo góc ảnh */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
+}
+`;
 
 const NewsDetails = ({ newsData }) => {
-  const { slug } = useParams();
-
+console.log(newsData);
   return (
     <div>
+      <style>{styles}</style>
       <div
         className="cover"
         style={{
@@ -34,7 +50,11 @@ const NewsDetails = ({ newsData }) => {
         </div>
       </div>
       <div className="container my-5">
-        <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
+        <div className="row s-25">
+          <div className="col-lg-9 col-12 pr-lg-5" id="post-content">
+            <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
+          </div>
+        </div>
       </div>
     </div>
   );
