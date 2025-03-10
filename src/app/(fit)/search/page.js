@@ -1,4 +1,4 @@
-import SearchResults from "@/components/news/SearchResults";
+import SearchResults from "@/components/tin-tuc/SearchResults";
 
 export default function Page() {
   return <SearchResults />;

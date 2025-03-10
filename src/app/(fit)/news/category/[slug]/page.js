@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import axios from "axios";
-import NewsPage from "@/components/news/NewsPage";
+import NewsPage from "@/components/tin-tuc/NewsPage";
 import config from "@/utils/config";
 
 async function getData(slug, page) {
