@@ -13,57 +13,57 @@ const items = [
   {
     key: 'an-toan-thong-tin-7480202',
     icon: <SettingOutlined />,
-    label: <Link href="/major/an-toan-thong-tin-7480202">An toàn thông tin</Link>,
+    label: <Link href="/tuyen-sinh/an-toan-thong-tin-7480202">An toàn thông tin</Link>,
   },
   {
     key: 'cong-nghe-thong-tin-7480201',
     icon: <SettingOutlined />,
-    label: <Link href="/major/cong-nghe-thong-tin-7480201">Công nghệ thông tin</Link>,
+    label: <Link href="/tuyen-sinh/cong-nghe-thong-tin-7480201">Công nghệ thông tin</Link>,
   },
   {
     key: 'he-thong-thong-tin-7480104',
     icon: <SettingOutlined />,
-    label: <Link href="/major/he-thong-thong-tin-7480104">Hệ thống thông tin</Link>,
+    label: <Link href="/tuyen-sinh/he-thong-thong-tin-7480104">Hệ thống thông tin</Link>,
   },
   {
     key: 'he-thong-thong-tin-quan-ly-7340405',
     icon: <SettingOutlined />,
-    label: <Link href="/major/he-thong-thong-tin-quan-ly-7340405">Hệ thống thông tin quản lí</Link>,
+    label: <Link href="/tuyen-sinh/he-thong-thong-tin-quan-ly-7340405">Hệ thống thông tin quản lí</Link>,
   },
   {
     key: 'khoa-hoc-may-tinh-7480101',
     icon: <SettingOutlined />,
-    label: <Link href="/major/khoa-hoc-may-tinh-7480101">Khoa học máy tính</Link>,
+    label: <Link href="/tuyen-sinh/khoa-hoc-may-tinh-7480101">Khoa học máy tính</Link>,
   },
   {
     key: 'thong-ke-kinh-te-7310107',
     icon: <SettingOutlined />,
-    label: <Link href="/major/thong-ke-kinh-te-7310107">Thống kê kinh tế</Link>,
+    label: <Link href="/tuyen-sinh/thong-ke-kinh-te-7310107">Thống kê kinh tế</Link>,
   },
   {
     key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02',
     icon: <SettingOutlined />,
-    label: <Link href="/major/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro</Link>,
+    label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro</Link>,
   },
   {
     key: 'phan-tich-du-lieu-kinh-te-EP03',
     icon: <SettingOutlined />,
-    label: <Link href="/major/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế</Link>,
+    label: <Link href="/tuyen-sinh/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế</Link>,
   },
   {
     key: 'khoa-hoc-du-lieu-EP15',
     icon: <SettingOutlined />,
-    label: <Link href="/major/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu</Link>,
+    label: <Link href="/tuyen-sinh/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu</Link>,
   },
   {
     key: 'tri-tue-nhan-tao-EP16',
     icon: <SettingOutlined />,
-    label: <Link href="/major/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo</Link>,
+    label: <Link href="/tuyen-sinh/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo</Link>,
   },
   {
     key: 'ky-thuat-phan-mem-EP17',
     icon: <SettingOutlined />,
-    label: <Link href="/major/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
+    label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
   },
 
   
@@ -74,16 +74,14 @@ const MenuComponent = () => {
     <Menu
       mode="vertical"
       style={{
-        width: '350px',
+        width: '23%',
         position: 'fixed',
         top: '90px',
         left: 0,
-        height: '100vh',
+        maxHeight: 'calc(100vh - 90px - 100px)',
         padding: '15px',
         overflowY: 'auto',
         zIndex: 1000,
-        background: '#fff',
-        borderRight: '1px solid #ddd',
         fontSize: '16px'
       }}
       items={items}
