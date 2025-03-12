@@ -1,5 +1,5 @@
 // app/posts/[slug]/page.js
-import NewsDetails from "@/components/news/NewsDetails";
+import NewsDetails from "@/components/tin-tuc/NewsDetails";
 
 async function getBlogData(slug) {
   try {
