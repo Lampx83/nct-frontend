@@ -124,8 +124,9 @@ export function Events() {
   return (
     <div className="container">
       <header className="events-header">
-        <h2>SỰ KIỆN</h2>
-        <div className="events-filter-button">
+        <h2 className="fw-bold">SỰ KIỆN</h2>
+        {/* <h2 className="text-center fw-bold mb-3">CÁC KHOA VIỆN TRỰC THUỘC</h2> */}
+        <div className="events-filter-button" style={{ fontFamily: "Barlow, sans-serif"}}>
           {filters.map((filter) => (
             <button
               key={filter}
@@ -165,7 +166,7 @@ export function Events() {
           }}
         >
           {filteredEvents.map((event) => (
-            <SwiperSlide key={event.id}>
+            <SwiperSlide key={event.id} style={{ fontFamily: "Barlow, sans-serif"}}>
               <Link href={event.url} className="event-card">
                 <div className="event-image-container">
                   <img src={event.image} alt={event.title} className="event-image rounded" />
@@ -182,9 +183,8 @@ export function Events() {
           ))}
         </Swiper>
       </div>
-
-      <div className="more-events text-end fw-bold">
-        <Link href="/more-events">Sự kiện khác</Link>
+      <div className="more-news text-end fs-5 my-0 py-0">
+        <Link href="/more-news" style={{ fontFamily: "Barlow, sans-serif"}}>Xem Thêm</Link>
       </div>
 
       {/* CSS trực tiếp với styled-jsx */}
@@ -193,7 +193,8 @@ export function Events() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 20px;
-          font-family: Arial, sans-serif;
+          font-family: Barlow, sans-serif;
+          
           background-color: #fff;
         }
 
