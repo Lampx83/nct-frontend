@@ -1,62 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export function News() {
-  const [selectedTopic, setSelectedTopic] = useState("Featured");
+  const [selectedTopic, setSelectedTopic] = useState("Tất Cả"); // Giá trị mặc định
+  const [newsItems, setNewsItems] = useState([]);
+  const [topics, setTopics] = useState([]); // Danh sách topics từ API
+  const [allNews, setAllNews] = useState([]); // Lưu toàn bộ bài viết từ API
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const newsItems = [
-    {
-      id: 1,
-      category: "CAMPUS & COMMUNITY",
-      title: "Matthew Grossman named head of University Communications at Penn",
-      image: "https://picsum.photos/400/500?random=1", // Hình ảnh lớn (4:5)
-      url: "/news/matthew-grossman",
-    },
-    {
-      id: 2,
-      category: "ANNOUNCEMENTS",
-      title: "An update to the University community on recent executive orders",
-      image: "https://picsum.photos/200/150?random=2", // Hình ảnh nhỏ (4:3)
-      url: "/news/announcements",
-    },
-    {
-      id: 3,
-      category: "ARTS, HUMANITIES, & SOCIAL SCIENCES",
-      title: "Corine Labridy leads an exploration of French Caribbean culture and literature",
-      image: "https://picsum.photos/200/150?random=3", // Hình ảnh nhỏ (4:3)
-      url: "/news/corine-labridy",
-    },
-    {
-      id: 4,
-      category: "SCIENCE & TECHNOLOGY",
-      title: "Getting to the root of root canals",
-      image: "https://picsum.photos/200/150?random=4", // Hình ảnh nhỏ (4:3)
-      url: "/news/root-canals",
-    },
-    {
-      id: 5,
-      category: "ARTS, HUMANITIES, & SOCIAL SCIENCES",
-      title: "From the Archives: Raymond and Sadie Alexander family home movies",
-      image: "https://picsum.photos/200/150?random=5", // Hình ảnh nhỏ (4:3)
-      url: "/news/alexander-movies",
-    },
-  ];
+  // Gọi API khi component mount
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "https://nct-frontend-liard.vercel.app/admin/api/blog-categories?populate=*"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch news");
+        }
+        const result = await response.json();
 
-  const topics = [
-    "Featured",
-    "Arts, Humanities, & Social Sciences",
-    "Campus & Community",
-    "Education, Business, & Law",
-    "Health Sciences",
-    "Science & Technology",
-  ];
+        // Lấy danh sách topics từ attributes.title
+        const fetchedTopics = result.data.map((category) => category.attributes.title);
+        setTopics(fetchedTopics);
+
+        // Ánh xạ toàn bộ bài viết từ API
+        const mappedNews = result.data.flatMap((category) =>
+          category.attributes.blogs.data.map((blog) => ({
+            id: blog.id,
+            category: category.attributes.title, // Danh mục từ API
+            title: blog.attributes.title,
+            image: extractFirstImage(blog.attributes.content) || "https://picsum.photos/400/500",
+            url: `/post/${blog.attributes.slug}`,
+          }))
+        );
+
+        setAllNews(mappedNews); // Lưu toàn bộ bài viết
+        setNewsItems(mappedNews.filter((item) => item.category === "Tất Cả").slice(0, 5)); // Hiển thị mặc định
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  // Cập nhật newsItems khi selectedTopic thay đổi
+  useEffect(() => {
+    if (allNews.length > 0) {
+      const filteredNews = allNews.filter((item) => item.category === selectedTopic);
+      setNewsItems(filteredNews.slice(0, 5)); // Lấy tối đa 5 bài
+    }
+  }, [selectedTopic, allNews]);
+
+  // Hàm trích xuất ảnh đầu tiên từ content HTML
+  const extractFirstImage = (content) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const img = doc.querySelector("img");
+    return img ? img.src : null;
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="container">
       <header className="news-header">
-        <h2 className="fw-bold fs-4">TIN TỨC</h2>
+        <h2 className="fw-bold fs-4 ">TIN TỨC</h2>
         <div className="topics-dropdown">
           <select
             value={selectedTopic}
@@ -74,21 +91,27 @@ export function News() {
 
       <div className="news-content">
         {/* Phần bên trái (50%) - 1 bài post lớn */}
-        <div className="left-column">
-          <Link href={newsItems[0].url} >
-            <div className="img-container">
-              <img src={newsItems[0].image} alt={newsItems[0].title} className="main-news-image rounded" />
-            </div>
-            <div className="main-news-text">
-              <span className="category">{newsItems[0].category}</span>
-              <h2>{newsItems[0].title}</h2>
-              <span className="divider">—</span>
-            </div>
-          </Link>
-        </div>
+        {newsItems[0] && (
+          <div className="left-column">
+            <Link href={newsItems[0].url}>
+              <div className="img-container">
+                <img
+                  src={newsItems[0].image}
+                  alt={newsItems[0].title}
+                  className="main-news-image rounded"
+                />
+              </div>
+              <div className="main-news-text">
+                <span className="category" style={{ fontFamily: "Barlow, sans-serif"}}>{newsItems[0].category}</span>
+                <h2>{newsItems[0].title}</h2>
+                <span className="divider">—</span>
+              </div>
+            </Link>
+          </div>
+        )}
 
         {/* Phần bên phải (50%) - 4 bài post nhỏ theo 2x2 */}
-        <div className="right-column border-bottom">
+        <div className="right-column">
           <div className="grid-2x2">
             {newsItems.slice(1, 5).map((item) => (
               <Link key={item.id} href={item.url} className="grid-item">
@@ -96,21 +119,18 @@ export function News() {
                   <img src={item.image} alt={item.title} className="grid-image" />
                 </div>
                 <div className="grid-text">
-                  <span className="category">{item.category}</span>
+                  <span className="category" style={{ fontFamily: "Barlow, sans-serif"}}>{item.category}</span>
                   <h3>{item.title}</h3>
                   <span className="divider">—</span>
                 </div>
               </Link>
             ))}
-            <div></div>
-            <div className="more-news text-end fs-5 fw-bolder my-0 py-0">
-              <Link href="/more-news">Xem Thêm</Link>
-            </div>
+          </div>
+          <div className="more-news text-end fs-5 my-0 py-0 border-top">
+            <Link href="/news" style={{ fontFamily: "Barlow, sans-serif"}}>Xem Thêm</Link>
           </div>
         </div>
       </div>
-
-      
 
       {/* CSS trực tiếp với styled-jsx */}
       <style jsx>{`
@@ -134,7 +154,7 @@ export function News() {
         }
 
         .topics-select {
-          padding: 8px 16px;
+          padding: 8px 25px;
           border: 1px solid #ccc;
           border-radius: 4px;
           font-size: 14px;
@@ -155,7 +175,6 @@ export function News() {
 
         .left-column {
           padding: 10px;
-
         }
 
         .left-column a {
@@ -178,6 +197,9 @@ export function News() {
 
         .grid-image {
           width: 100%;
+          height: 150px; /* Kích thước cố định cho hình nhỏ, tỷ lệ 4:3 */
+          object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
+          border-radius: 4px;
           transition: transform 0.5s ease-in-out;
         }
 
@@ -231,17 +253,6 @@ export function News() {
           padding-bottom: 10px;
         }
 
-        .grid-image {
-          width: 100%;
-          height: 150px; /* Kích thước cố định cho hình nhỏ, tỷ lệ 4:3 */
-          object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
-          border-radius: 4px;
-          transition: transform 0.5s ease-in-out;
-        }
-        .grid-image:hover {
-          transform: scale(1.1);
-        }
-
         .grid-text {
           padding: 10px 0;
           color: #00205b;
@@ -287,7 +298,8 @@ export function News() {
             grid-template-columns: 1fr; /* Chuyển thành 1 cột trên mobile */
           }
 
-          .left-column, .right-column {
+          .left-column,
+          .right-column {
             padding: 5px;
             overflow: hidden;
             display: inline-block;

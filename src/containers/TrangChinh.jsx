@@ -17,7 +17,7 @@ export default function TrangChinh() {
         <Khoa/>
         <StatsSection/>
         <News/>
-        <Events/>
+        {/* <Events/> */}
         {/* <FaqSection/> */}
         <Portfolio />
     </>
