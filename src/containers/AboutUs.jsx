@@ -33,7 +33,6 @@ const AboutUs = ({ aboutUs }) => {
                 />
             </div>
 
-            {/* Nội dung chính */}
             <div className="container mx-auto p-5" style={{ width: "80%" }}>
                 <h4 style={{ fontWeight: "620", textTransform: "uppercase" }}>
                     TRƯỜNG CÔNG NGHỆ – ĐẠI HỌC KINH TẾ QUỐC DÂN
