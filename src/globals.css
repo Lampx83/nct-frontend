@@ -3,6 +3,7 @@ body {
   overflow-x: hidden; /* Ẩn thanh cuộn ngang */
   font-family: "Roboto", sans-serif;
   color: rgb(119, 119, 119);
+  letter-spacing: 0.6px;
 }
 
 a {
