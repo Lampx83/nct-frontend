@@ -1,6 +1,8 @@
 /* Thêm quy tắc này để ngăn chặn khoảng trắng thừa */
 body {
   overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  font-family: "Roboto", sans-serif;
+  color: rgb(119, 119, 119);
 }
 
 a {
