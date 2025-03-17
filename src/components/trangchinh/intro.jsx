@@ -87,7 +87,7 @@ export function Intro() {
                         }`}
                       
                       />
-                      <i class="fa-solid fa-award"></i>
+                      <i className="fa-solid fa-award"></i>
                     </div>
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
