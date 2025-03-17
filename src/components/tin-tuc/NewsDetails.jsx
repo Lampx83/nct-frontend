@@ -7,19 +7,34 @@ import { useState } from "react";
 const API_URL = "https://nct-frontend-liard.vercel.app/admin";
 
 const styles = `
-  .image {
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-}
+      figure.image {
+          text-align: center;
+      }
 
-.image img {
-  max-width: 100%; /* Đảm bảo ảnh không vượt quá kích thước container */
-  height:auto;
-  width: 70%;
-  border-radius: 8px; /* Bo góc ảnh */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
-}
+      figure.image img {
+          width: 50%;
+          height: auto;
+          display: block;
+          margin: 0 auto;
+      }
+      figure.image_resized {
+    margin: 0 auto; 
+     }
+
+      p{
+        font-family: "Roboto", sans-serif;
+        line-height: 1.6;
+        }
+      figure.image figcaption {
+       background-color: rgba(0, 0, 0, 0.05); /* Màu nền nhẹ */
+        font-style: italic; 
+        text-align: center; 
+        padding: 8px 12px; /* Tạo khoảng cách */
+        width: 50%; 
+        margin:auto; /* Căn giữa figcaption */ }
+      figure.image figcaption span {
+     background-color: transparent !important; }
+
 `;
 
 const NewsDetails = ({ newsData }) => {
@@ -49,7 +64,7 @@ const NewsDetails = ({ newsData }) => {
           </div>
         </div>
       </div>
-      <div className="container my-5">
+      <div className="container p-5">
         <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
       </div>
     </div>

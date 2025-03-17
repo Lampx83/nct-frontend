@@ -1,7 +1,7 @@
 import AboustUs from "@/containers/AboutUs";
 async function getAboutUs() {
     const response = await fetch(
-      `https://nct-frontend-liard.vercel.app/admin/api/about-us-page`
+      `https://nct-frontend-liard.vercel.app/admin/api/about-us-page?populate=*`
     );
     const data = await response.json();
 
