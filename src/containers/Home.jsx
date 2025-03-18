@@ -11,6 +11,7 @@ import Gallery from '../components/home/Gallery';
 import Video from '../components/home/Video';
 import VideoBackground from '../components/VideoBackground';
 
+
 export default function Home() {
   const [seoData, setSeoData] = useState(null);
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function Home() {
             description: seo.metaDescription || "Khoa Công nghệ thông tin",
             keywords: seo.keywords || "",
             canonicalURL: seo.canonicalURL || "",
-            image: imageUrl ? `https://fit.neu.edu.vn${imageUrl}` : ""  // Ensure full URL
+            image: "https://nct-frontend-liard.vercel.app/favicon.ico"|| ""   // Ensure full URL
           });
         } else {
           console.warn("SEO data is missing or incorrectly structured.");
