@@ -1,94 +1,109 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function Intro() {
-  // Khởi tạo AOS cho animation
+  const [introData, setIntroData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const AOS = require("aos");
       AOS.init();
     }
+
+    const fetchIntroData = async () => {
+      try {
+        const response = await fetch(
+          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[imagesIntroduction][populate]=*"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        console.log("API Response:", data); // Debug dữ liệu API
+        setIntroData(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchIntroData();
   }, []);
 
-  return (
-    <section id="services" className="services section">
-      {/* Section Title */}
-      <div className="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>Featured Services</p>
-      </div>
-      {/* End Section Title */}
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
+  const imagesIntroduction = introData?.data?.attributes?.imagesIntroduction || [];
+  const introductionHtml = introData?.data?.attributes?.introduction || "";
+  const baseUrl = "https://nct-frontend-liard.vercel.app/admin"; // Base URL của API
+
+  // Hàm xử lý HTML từ API
+  const renderIntroduction = () => {
+    return { __html: introductionHtml };
+  };
+
+  return (
+    <section id="services" className="services section pt-3 mt-3 pb-3 mb-2">
+      {/* Section Title và Introduction từ API */}
+      <div dangerouslySetInnerHTML={renderIntroduction()} />
+
+      {/* Images Introduction */}
       <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="row gy-5">
-          <div className="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-            <div className="service-item">
-              <div className="img">
-                <img
-                  src="https://picsum.photos/400/300?random=1"
-                  className="img-fluid"
-                  alt="Service 1"
-                />
-              </div>
-              <div className="details position-relative">
-                <div className="icon">
-                  <i className="bi bi-activity"></i> {/* Icon Bootstrap */}
-                </div>
-                <h3>Nesciunt Mete</h3>
-                <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis.</p>
-              </div>
-            </div>
-          </div>
-          {/* End Service Item */}
+          {imagesIntroduction.map((item, index) => {
+            const imageUrl = item.image?.data?.attributes?.url
+              ? `${baseUrl}${item.image.data.attributes.url}`
+              : "https://via.placeholder.com/400x300"; // Fallback image
+            console.log("Image URL:", imageUrl); // Debug URL ảnh
 
-          <div className="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-            <div className="service-item">
-              <div className="img">
-                <img
-                  src="https://picsum.photos/400/300?random=2"
-                  className="img-fluid"
-                  alt="Service 2"
-                />
-              </div>
-              <div className="details position-relative">
-                <div className="icon">
-                  <i className="bi bi-broadcast"></i> {/* Icon Bootstrap */}
+            return (
+              <div
+                key={item.id}
+                className="col-xl-4 col-md-6"
+                data-aos="zoom-in"
+                data-aos-delay={200 + index * 100}
+              >
+                <div className="service-item">
+                  <div className="img">
+                    <img
+                      src={imageUrl}
+                      className="img-fluid"
+                      alt={item.title || `Service ${index + 1}`}
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/400x300"; // Fallback nếu ảnh lỗi
+                        console.error("Image failed to load:", imageUrl);
+                      }}
+                    />
+                  </div>
+                  <div className="details position-relative">
+                    <div className="icon">
+                      <i
+                        className={`bi bi-${
+                          index === 0 ? "activity" : index === 1 ? "broadcast" : "easel"
+                        }`}
+                      
+                      />
+                      <i className="fa-solid fa-award"></i>
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
                 </div>
-                <h3>Eosle Commodi</h3>
-                <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
               </div>
-            </div>
-          </div>
-          {/* End Service Item */}
-
-          <div className="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-            <div className="service-item">
-              <div className="img">
-                <img
-                  src="https://picsum.photos/400/300?random=3"
-                  className="img-fluid"
-                  alt="Service 3"
-                />
-              </div>
-              <div className="details position-relative">
-                <div className="icon">
-                  <i className="bi bi-easel"></i> {/* Icon Bootstrap */}
-                </div>
-                <h3>Ledo Markt</h3>
-                <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
-              </div>
-            </div>
-          </div>
-          {/* End Service Item */}
+            );
+          })}
         </div>
       </div>
 
       {/* CSS trực tiếp với styled-jsx */}
       <style jsx>{`
         .services {
-          color: #444444; /* --default-color */
-          background-color: #ffffff; /* --background-color */
+          color: #444444;
+          background-color: #ffffff;
           padding: 60px 0;
           scroll-margin-top: 90px;
           overflow: clip;
@@ -102,12 +117,12 @@ export function Intro() {
         .services .img img {
           transition: 0.6s;
           width: 100%;
-          height: 300px; /* Kích thước cố định cho hình ảnh, tỷ lệ 4:3 */
-          object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
+          height: 300px;
+          object-fit: cover;
         }
 
         .services .details {
-          background: rgba(255, 255, 255, 0.95); /* --surface-color với opacity */
+          background: rgba(255, 255, 255, 0.95);
           padding: 50px 30px;
           margin: -100px 30px 0 30px;
           transition: all ease-in-out 0.3s;
@@ -121,9 +136,9 @@ export function Intro() {
           margin: 0;
           width: 72px;
           height: 72px;
-          background: #ff4a17; /* --accent-color */
-          color: #ffffff; /* --contrast-color */
-          border: 6px solid #ffffff; /* --contrast-color */
+          background: #780614;
+          color: #ffffff;
+          border: 6px solid #ffffff;
           border-radius: 50px;
           display: flex;
           align-items: center;
@@ -141,78 +156,36 @@ export function Intro() {
           margin: 10px 0 15px 0;
           font-size: 22px;
           transition: ease-in-out 0.3s;
-          color: #273d4e; /* --heading-color */
+          color: #273d4e;
         }
 
         .services .details p {
-          color: rgba(68, 68, 68, 0.9); /* color-mix approximation */
+          color: rgba(68, 68, 68, 0.9);
           line-height: 24px;
           font-size: 14px;
           margin-bottom: 0;
         }
 
         .services .service-item:hover .details h3 {
-          color: #ff4a17; /* --accent-color */
+          color: #780614;
         }
 
         .services .service-item:hover .details .icon {
-          background: #ffffff; /* --surface-color */
-          border: 2px solid #ff4a17; /* --accent-color */
+          background: #ffffff;
+          border: 2px solid #780614;
         }
 
         .services .service-item:hover .details .icon i {
-          color: #ff4a17; /* --accent-color */
+          color: #780614;
         }
 
         .services .service-item:hover .img img {
           transform: scale(1.2);
         }
 
-        /* Section Title */
-        .section-title {
-          padding-bottom: 60px;
-          position: relative;
-        }
-
-        .section-title h2 {
-          font-size: 14px;
-          font-weight: 500;
-          padding: 0;
-          line-height: 1px;
-          margin: 0;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: rgba(68, 68, 68, 0.5); /* color-mix approximation */
-          position: relative;
-        }
-
-        .section-title h2::after {
-          content: "";
-          width: 120px;
-          height: 1px;
-          display: inline-block;
-          background: #ff4a17; /* --accent-color */
-          margin: 4px 10px;
-        }
-
-        .section-title p {
-          color: #273d4e; /* --heading-color */
-          margin: 0;
-          font-size: 36px;
-          font-weight: 800;
-          text-transform: uppercase;
-          font-family: "Raleway", sans-serif;
-        }
-
-        @media (max-width: 768px) {
-          .section-title p {
-            font-size: 24px;
-          }
-        }
-
         @media (max-width: 768px) {
           .services .img img {
-            height: 200px; /* Giảm kích thước trên mobile */
+            height: 200px;
           }
 
           .services .details {

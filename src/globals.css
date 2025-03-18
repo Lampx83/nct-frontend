@@ -1,10 +1,15 @@
 /* Thêm quy tắc này để ngăn chặn khoảng trắng thừa */
 body {
   overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  font-family: "Roboto", sans-serif;
+  color: rgb(119, 119, 119);
+  letter-spacing: 0.6px;
 }
 
 a {
   text-decoration: none;
+  color: black !important; /* Đổi thành màu mong muốn */
+
 }
 
 /*** Spinner ***/
@@ -206,4 +211,11 @@ a {
     padding: 25px 30px;
   }
 }
+
+
+/* Khi hover vào mục menu */
+.ant-menu-item:hover {
+  background-color: #a31b1b !important; /* Màu hơi sáng hơn */
+}
+
 

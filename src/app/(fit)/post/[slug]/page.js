@@ -1,30 +1,41 @@
-import NewsDetails from "@/components/news/NewsDetails";
-import axios from "axios";
-import config from "@/utils/config";
+// app/posts/[slug]/page.js
+import NewsDetails from "@/components/tin-tuc/NewsDetails";
 
-async function getData(slug) {
-  const response1 = await axios.get(
-    `${config.API_URL}/api/blogs/slug/${slug}?populate=*`
-  );
-  const newsData = response1.data.data.attributes
-  const categorySlug = newsData.blog_category.data.attributes.slug;
+async function getBlogData(slug) {
+  try {
+    const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/blogs", {
+      cache: "no-store", // Đảm bảo dữ liệu luôn cập nhật
+    });
 
-  const response2 = await axios.get(
-    `${config.API_URL}/api/blogs?populate=*&filters[blog_category][slug]=${categorySlug}&pagination[start]=0&pagination[limit]=4&sort=createdAt:desc`
-  );
+    if (!response.ok) {
+      throw new Error(`Lỗi khi gọi API: ${response.statusText}`);
+    }
 
-  const previousNews = response2.data.data.filter(news => news.attributes.slug !== slug);;
+    const data = await response.json();
 
-  const response3 = await axios.get(
-    `${config.API_URL}/api/blog-categories?populate=blogs`
-  );
+    // Tìm bài viết có slug khớp
+    const filteredData = data.data.find(
+      (item) => item.attributes.slug.trim().toLowerCase() === slug.trim().toLowerCase()
+    );
 
-  const categories = response3.data.data
-  return { newsData, previousNews, categories }; // Trả về dữ liệu cần thiết
+    if (!filteredData) {
+      return null;
+    }
+
+    return filteredData.attributes;
+  } catch (error) {
+    console.error("Lỗi khi gọi API:", error);
+    return null;
+  }
 }
-export default async function Page({ params }) {
-  const { newsData, previousNews, categories } = await getData(params.slug);
-  return (
-    <NewsDetails newsData={newsData} previousNews={previousNews} categories={categories} />
-  );
+
+export default async function PostPage({ params }) {
+  const { slug } = params;
+  const newsData = await getBlogData(slug);
+
+  if (!newsData) {
+    return <p>Không tìm thấy bài viết!</p>;
+  }
+
+  return <NewsDetails newsData={newsData} />;
 }

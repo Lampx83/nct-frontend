@@ -10,10 +10,14 @@ const Isotope = dynamic(() => import("isotope-layout"), { ssr: false });
 
 export function Portfolio() {
   const [iso, setIso] = useState(null); // Isotope instance
-  const [filterKey, setFilterKey] = useState("*");
+  const [filterKey, setFilterKey] = useState("*"); // Mặc định là "Tất Cả"
   const [lightbox, setLightbox] = useState(null); // GLightbox instance
+  const [portfolioItems, setPortfolioItems] = useState([]); // Danh sách ảnh từ API
+  const [categories, setCategories] = useState([]); // Danh sách category từ API
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Initialize AOS, GLightbox, and Isotope on mount
+  // Initialize AOS, GLightbox, Isotope và fetch API on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -28,27 +32,67 @@ export function Portfolio() {
     });
     setLightbox(glightbox);
 
-    // Initialize Isotope after images are loaded
-    import("imagesloaded").then((imagesLoaded) => {
-      const grid = document.querySelector(".isotope-container");
-      if (grid) {
-        console.log("Grid found:", grid); // Debug: Kiểm tra grid
-        imagesLoaded.default(grid, () => {
-          console.log("Images loaded"); // Debug: Ảnh đã tải xong
-          import("isotope-layout").then((IsotopeModule) => {
-            const isotope = new IsotopeModule.default(grid, {
-              itemSelector: ".portfolio-item",
-              layoutMode: "masonry",
-              sortBy: "original-order",
+    // Fetch data từ API
+    const fetchPortfolioData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[imagesLibrary][populate]=*"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch portfolio data");
+        }
+        const result = await response.json();
+
+        // Ánh xạ dữ liệu từ imagesLibrary
+        const images = result.data.attributes.imagesLibrary.flatMap((item) =>
+          item.image.data.map((image) => ({
+            id: `${item.id}-${image.id}`, // Đảm bảo ID là duy nhất
+            category: item.category.toLowerCase().replace(/\s+/g, "-"),
+            title: image.attributes.name.replace(/\.[^/.]+$/, ""),
+            url: `https://nct-frontend-liard.vercel.app/admin${image.attributes.url}`,
+          }))
+        );
+        
+
+        console.log("Số ảnh từ API:", result.data.attributes.imagesLibrary.length);
+        console.log("Danh sách ảnh đã ánh xạ:", images);
+
+        // Lấy danh sách category duy nhất từ imagesLibrary
+        const uniqueCategories = [
+          ...new Set(result.data.attributes.imagesLibrary.map((item) => item.category)),
+        ];
+        setCategories(uniqueCategories);
+        setPortfolioItems(images);
+
+        // Initialize Isotope sau khi ảnh được tải
+        import("imagesloaded").then((imagesLoaded) => {
+          const grid = document.querySelector(".isotope-container");
+          if (grid) {
+            imagesLoaded.default(grid, () => {
+              import("isotope-layout").then((IsotopeModule) => {
+                const isotope = new IsotopeModule.default(grid, {
+                  itemSelector: ".portfolio-item",
+                  layoutMode: "masonry",
+                  sortBy: "original-order",
+                  transitionDuration: "0.6s", // Thời gian hiệu ứng chuyển động
+                });
+                setIso(isotope);
+                console.log("Số ảnh trong Isotope:", isotope.getItemElements().length);
+              });
             });
-            console.log("Isotope initialized:", isotope); // Debug: Kiểm tra instance
-            setIso(isotope);
-          });
+          } else {
+            console.error("Isotope grid not found!");
+          }
         });
-      } else {
-        console.error("Grid not found!"); // Debug: Nếu không tìm thấy grid
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
+
+    fetchPortfolioData();
 
     // Cleanup
     return () => {
@@ -64,25 +108,22 @@ export function Portfolio() {
   // Handle filter change
   useEffect(() => {
     if (iso && typeof iso.arrange === "function") {
-      console.log("Filtering with:", filterKey); // Debug: Kiểm tra filterKey
       iso.arrange({ filter: filterKey === "*" ? "*" : `.filter-${filterKey}` });
-    } else {
-      console.warn("Isotope not ready or invalid:", iso); // Debug: Nếu iso không hợp lệ
+      console.log("Số ảnh hiển thị sau lọc:", iso.getFilteredItemElements().length);
     }
   }, [filterKey, iso]);
 
   const handleFilterClick = (filter) => {
-    console.log("Filter clicked:", filter); // Debug: Kiểm tra nút bấm
     setFilterKey(filter);
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <section id="portfolio" className="portfolio section">
+    <section id="portfolio" className="portfolio section mt-3">
       {/* Section Title */}
-      <div className="container section-title" data-aos="fade-up">
-        <h2>Portfolio</h2>
-        <p>CHECK OUR PORTFOLIO</p>
-      </div>
+      <h2 className="mb-2 fw-bold fs-2 text-center">BỘ SƯU TẬP ẢNH</h2>
       {/* End Section Title */}
 
       <div className="container">
@@ -97,37 +138,27 @@ export function Portfolio() {
             className="portfolio-filters isotope-filters"
             data-aos="fade-up"
             data-aos-delay="100"
+            style={{ fontFamily: "Barlow, sans-serif"}}
           >
             <li
               onClick={() => handleFilterClick("*")}
               className={filterKey === "*" ? "filter-active" : ""}
             >
-              All
+              Tất Cả
             </li>
-            <li
-              onClick={() => handleFilterClick("app")}
-              className={filterKey === "app" ? "filter-active" : ""}
-            >
-              App
-            </li>
-            <li
-              onClick={() => handleFilterClick("product")}
-              className={filterKey === "product" ? "filter-active" : ""}
-            >
-              Product
-            </li>
-            <li
-              onClick={() => handleFilterClick("branding")}
-              className={filterKey === "branding" ? "filter-active" : ""}
-            >
-              Branding
-            </li>
-            <li
-              onClick={() => handleFilterClick("books")}
-              className={filterKey === "books" ? "filter-active" : ""}
-            >
-              Books
-            </li>
+            {categories.map((category) => (
+              <li
+                key={category}
+                onClick={() => handleFilterClick(category.toLowerCase().replace(/\s+/g, "-"))}
+                className={
+                  filterKey === category.toLowerCase().replace(/\s+/g, "-")
+                    ? "filter-active"
+                    : ""
+                }
+              >
+                {category}
+              </li>
+            ))}
           </ul>
           {/* End Portfolio Filters */}
 
@@ -137,135 +168,34 @@ export function Portfolio() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div className="portfolio-content h-100">
-                <img
-                  src="https://picsum.photos/400/300?random=1"
-                  className="img-fluid"
-                  alt="App 1"
-                />
-                <div className="portfolio-info">
-                  <h4>App 1</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a
-                    href="https://picsum.photos/400/300?random=1"
-                    title="App 1"
-                    data-gallery="portfolio-gallery-app"
-                    className="glightbox preview-link"
-                  >
-                    <i className="bi bi-zoom-in"></i>
-                  </a>
-                  <Link href="/details" title="More Details" className="details-link">
-                    <i className="bi bi-link-45deg"></i>
-                  </Link>
+            {portfolioItems.length > 0 ? (
+              portfolioItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`col-lg-4 col-md-6 portfolio-item isotope-item filter-${item.category}`}
+                >
+                  <div className="portfolio-content">
+                    <img src={item.url} className="img-fluid" alt={item.title} />
+                    <div className="portfolio-info">
+                      <h4>{item.title}</h4>
+                      <a
+                        href={item.url}
+                        title={item.title}
+                        data-gallery={`portfolio-gallery-${item.category}`}
+                        className="glightbox preview-link"
+                      >
+                        <i className="bi bi-zoom-in"></i>
+                      </a>
+                      <Link href="/details" title="More Details" className="details-link">
+                        <i className="bi bi-link-45deg"></i>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/* End Portfolio Item */}
-
-            <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-              <div className="portfolio-content h-100">
-                <img
-                  src="https://picsum.photos/400/300?random=2"
-                  className="img-fluid"
-                  alt="Product 1"
-                />
-                <div className="portfolio-info">
-                  <h4>Product 1</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a
-                    href="https://picsum.photos/400/300?random=2"
-                    title="Product 1"
-                    data-gallery="portfolio-gallery-product"
-                    className="glightbox preview-link"
-                  >
-                    <i className="bi bi-zoom-in"></i>
-                  </a>
-                  <Link href="/details" title="More Details" className="details-link">
-                    <i className="bi bi-link-45deg"></i>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* End Portfolio Item */}
-
-            <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-              <div className="portfolio-content h-100">
-                <img
-                  src="https://picsum.photos/400/300?random=3"
-                  className="img-fluid"
-                  alt="Branding 1"
-                />
-                <div className="portfolio-info">
-                  <h4>Branding 1</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a
-                    href="https://picsum.photos/400/300?random=3"
-                    title="Branding 1"
-                    data-gallery="portfolio-gallery-branding"
-                    className="glightbox preview-link"
-                  >
-                    <i className="bi bi-zoom-in"></i>
-                  </a>
-                  <Link href="/details" title="More Details" className="details-link">
-                    <i className="bi bi-link-45deg"></i>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* End Portfolio Item */}
-
-            <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-              <div className="portfolio-content h-100">
-                <img
-                  src="https://picsum.photos/400/300?random=4"
-                  className="img-fluid"
-                  alt="Books 1"
-                />
-                <div className="portfolio-info">
-                  <h4>Books 1</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a
-                    href="https://picsum.photos/400/300?random=4"
-                    title="Books 1"
-                    data-gallery="portfolio-gallery-book"
-                    className="glightbox preview-link"
-                  >
-                    <i className="bi bi-zoom-in"></i>
-                  </a>
-                  <Link href="/details" title="More Details" className="details-link">
-                    <i className="bi bi-link-45deg"></i>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* End Portfolio Item */}
-
-            <div className="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <div className="portfolio-content h-100">
-                <img
-                  src="https://picsum.photos/400/300?random=5"
-                  className="img-fluid"
-                  alt="App 2"
-                />
-                <div className="portfolio-info">
-                  <h4>App 2</h4>
-                  <p>Lorem ipsum, dolor sit amet consectetur</p>
-                  <a
-                    href="https://picsum.photos/400/300?random=5"
-                    title="App 2"
-                    data-gallery="portfolio-gallery-app"
-                    className="glightbox preview-link"
-                  >
-                    <i className="bi bi-zoom-in"></i>
-                  </a>
-                  <Link href="/details" title="More Details" className="details-link">
-                    <i className="bi bi-link-45deg"></i>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* End Portfolio Item */}
+              ))
+            ) : (
+              <div className="col-12 text-center">Không có ảnh nào để hiển thị.</div>
+            )}
           </div>
           {/* End Portfolio Container */}
         </div>
@@ -294,7 +224,7 @@ export function Portfolio() {
 
         .portfolio .portfolio-filters li:hover,
         .portfolio .portfolio-filters li.filter-active {
-          color: #ff4a17; /* --accent-color */
+          color: #780614; /* --accent-color */
         }
 
         .portfolio .portfolio-filters li:first-child {
@@ -315,20 +245,28 @@ export function Portfolio() {
         .portfolio .portfolio-content {
           position: relative;
           overflow: hidden;
+          height: 300px; /* Kích thước cố định cho ảnh */
         }
 
         .portfolio .portfolio-content img {
-          transition: 0.3s;
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* Đảm bảo ảnh vừa khung và giữ tỷ lệ */
+          transition: transform 0.3s ease; /* Hiệu ứng zoom khi hover */
         }
 
         .portfolio .portfolio-content .portfolio-info {
-          opacity: 0;
           position: absolute;
-          inset: 0;
-          z-index: 3;
-          transition: all ease-in-out 0.3s;
-          background: rgba(0, 0, 0, 0.6);
-          padding: 15px;
+          bottom: 10px;
+          left: 0;
+          right: 0;
+          text-align: center;
+          opacity: 0; /* Ẩn mặc định */
+          transition: opacity 0.3s ease; /* Hiệu ứng fade khi hover */
+        }
+
+        .portfolio .portfolio-content:hover .portfolio-info {
+          opacity: 1; /* Hiện khi hover */
         }
 
         .portfolio .portfolio-content .portfolio-info h4 {
@@ -337,30 +275,16 @@ export function Portfolio() {
           font-weight: 400;
           color: #ffffff;
           display: inline-block;
-          background-color: #ff4a17; /* --accent-color */
-        }
-
-        .portfolio .portfolio-content .portfolio-info p {
-          position: absolute;
-          bottom: 10px;
-          text-align: center;
-          display: inline-block;
-          left: 0;
-          right: 0;
-          font-size: 16px;
-          font-weight: 600;
-          color: rgba(255, 255, 255, 0.8);
+          background-color: #780614; /* --accent-color */
+          margin-bottom: 10px;
         }
 
         .portfolio .portfolio-content .portfolio-info .preview-link,
         .portfolio .portfolio-content .portfolio-info .details-link {
-          position: absolute;
-          left: calc(50% - 40px);
           font-size: 26px;
-          top: calc(50% - 14px);
           color: #fff;
           transition: 0.3s;
-          line-height: 1.2;
+          margin: 0 10px;
         }
 
         .portfolio .portfolio-content .portfolio-info .preview-link:hover,
@@ -368,75 +292,8 @@ export function Portfolio() {
           color: #ff4a17; /* --accent-color */
         }
 
-        .portfolio .portfolio-content .portfolio-info .details-link {
-          left: 50%;
-          font-size: 34px;
-          line-height: 0;
-        }
-
-        .portfolio .portfolio-content:hover .portfolio-info {
-          opacity: 1;
-        }
-
         .portfolio .portfolio-content:hover img {
-          transform: scale(1.1);
-        }
-
-        /* Section Title */
-        .section-title {
-          padding-bottom: 60px;
-          position: relative;
-        }
-
-        .section-title h2 {
-          font-size: 14px;
-          font-weight: 500;
-          padding: 0;
-          line-height: 1px;
-          margin: 0;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: rgba(68, 68, 68, 0.5); /* color-mix approximation */
-          position: relative;
-        }
-
-        .section-title h2::after {
-          content: "";
-          width: 120px;
-          height: 1px;
-          display: inline-block;
-          background: #ff4a17; /* --accent-color */
-          margin: 4px 10px;
-        }
-
-        .section-title p {
-          color: #273d4e; /* --heading-color */
-          margin: 0;
-          font-size: 36px;
-          font-weight: 800;
-          text-transform: uppercase;
-          font-family: "Raleway", sans-serif;
-        }
-
-        @media (max-width: 768px) {
-          .section-title p {
-            font-size: 24px;
-          }
-        }
-
-        /* Global Section */
-        .section {
-          color: #444444; /* --default-color */
-          background-color: #ffffff; /* --background-color */
-          padding: 60px 0;
-          scroll-margin-top: 90px;
-          overflow: clip;
-        }
-
-        @media (max-width: 1199px) {
-          .section {
-            scroll-margin-top: 76px;
-          }
+          transform: scale(1.1); /* Hiệu ứng zoom khi hover */
         }
       `}</style>
     </section>

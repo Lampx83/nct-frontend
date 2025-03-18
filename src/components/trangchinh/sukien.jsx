@@ -11,7 +11,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 
 export function Events() {
-  const [selectedFilter, setSelectedFilter] = useState("Upcoming"); // Mặc định lọc "Sắp diễn ra"
+  const [selectedFilter, setSelectedFilter] = useState("Sắp Diễn Ra"); // Mặc định lọc "Sắp diễn ra"
   const [events, setEvents] = useState([]); // State để lưu danh sách sự kiện
 
   // Dữ liệu sự kiện mẫu (giả lập)
@@ -24,7 +24,7 @@ export function Events() {
       time: "12:00 PM PT",
       description: "Explore the innovative technology driving unmanned systems in today's world.",
       image: "https://picsum.photos/300/200?random=1", // Hình ảnh placeholder (kích thước 300x200, tỷ lệ 3:2)
-      status: "upcoming", // Trạng thái: upcoming, popular, past
+      status: "upcoming", // Trạng thái: upcoming, Nổi Bật, Đã Diễn Ra
       url: "/events/hand-unmanned",
     },
     {
@@ -46,7 +46,7 @@ export function Events() {
       time: "07:30 PM PT",
       description: "Join us for an evening under the stars, exploring constellations and celestial wonders.",
       image: "https://picsum.photos/300/200?random=3", // Hình ảnh placeholder
-      status: "popular", // Trạng thái: popular
+      status: "popular", // Trạng thái: Nổi Bật
       url: "/events/stargazing",
     },
     {
@@ -68,8 +68,41 @@ export function Events() {
       time: "02:00 PM PT",
       description: "A deep dive into the evolution of art history over the centuries.",
       image: "https://picsum.photos/300/200?random=5", // Hình ảnh placeholder
-      status: "past", // Trạng thái: past
+      status: "popular", // Trạng thái: Đã Diễn Ra
       url: "/events/art-history",
+    },
+    {
+      id: 6,
+      date: "FEB 25",
+      category: "LECTURE/PRESENTATION/TALK",
+      title: "Food for Thought: Agave Fibers from Plant to Pad",
+      time: "05:30 PM PT",
+      description: "Learn how agave plants are transformed into sustainable fibers for modern use.",
+      image: "https://picsum.photos/300/200?random=2", // Hình ảnh placeholder
+      status: "upcoming", // Trạng thái: upcoming
+      url: "/events/food-thought",
+    },
+    {
+      id: 7,
+      date: "FEB 25",
+      category: "LECTURE/PRESENTATION/TALK",
+      title: "Food for Thought: Agave Fibers from Plant to Pad",
+      time: "05:30 PM PT",
+      description: "Learn how agave plants are transformed into sustainable fibers for modern use.",
+      image: "https://picsum.photos/300/200?random=2", // Hình ảnh placeholder
+      status: "last", // Trạng thái: upcoming
+      url: "/events/food-thought",
+    },
+    {
+      id: 8,
+      date: "FEB 25",
+      category: "LECTURE/PRESENTATION/TALK",
+      title: "Food for Thought: Agave Fibers from Plant to Pad",
+      time: "05:30 PM PT",
+      description: "Learn how agave plants are transformed into sustainable fibers for modern use.",
+      image: "https://picsum.photos/300/200?random=2", // Hình ảnh placeholder
+      status: "upcoming", // Trạng thái: upcoming
+      url: "/events/food-thought",
     },
   ];
 
@@ -80,19 +113,20 @@ export function Events() {
 
   // Lọc sự kiện dựa trên selectedFilter
   const filteredEvents = events.filter((event) => {
-    if (selectedFilter === "Upcoming") return event.status === "upcoming";
-    if (selectedFilter === "Popular") return event.status === "popular";
-    if (selectedFilter === "Past") return event.status === "past";
+    if (selectedFilter === "Sắp Diễn Ra") return event.status === "upcoming";
+    if (selectedFilter === "Nổi Bật") return event.status === "popular";
+    if (selectedFilter === "Đã Diễn Ra") return event.status === "last";
     return true; // Mặc định hiển thị tất cả nếu không lọc
   });
 
-  const filters = ["Upcoming", "Popular", "Past"];
+  const filters = ["Sắp Diễn Ra", "Nổi Bật", "Đã Diễn Ra"];
 
   return (
-    <div className="events-container">
+    <div className="container">
       <header className="events-header">
-        <h1>Events</h1>
-        <div className="events-filter-button">
+        <h2 className="fw-bold">SỰ KIỆN</h2>
+        {/* <h2 className="text-center fw-bold mb-3">CÁC KHOA VIỆN TRỰC THUỘC</h2> */}
+        <div className="events-filter-button" style={{ fontFamily: "Barlow, sans-serif"}}>
           {filters.map((filter) => (
             <button
               key={filter}
@@ -105,7 +139,7 @@ export function Events() {
         </div>
       </header>
 
-      <div className="events-content">
+      <div className="overflow-hidden">
         <Swiper
           slidesPerView={4} // Hiển thị 4 sự kiện trên 1 hàng
           spaceBetween={20} // Khoảng cách giữa các slide
@@ -132,10 +166,10 @@ export function Events() {
           }}
         >
           {filteredEvents.map((event) => (
-            <SwiperSlide key={event.id}>
+            <SwiperSlide key={event.id} style={{ fontFamily: "Barlow, sans-serif"}}>
               <Link href={event.url} className="event-card">
                 <div className="event-image-container">
-                  <img src={event.image} alt={event.title} className="event-image" />
+                  <img src={event.image} alt={event.title} className="event-image rounded" />
                   <span className="event-date">{event.date}</span>
                 </div>
                 <div className="event-details">
@@ -149,9 +183,8 @@ export function Events() {
           ))}
         </Swiper>
       </div>
-
-      <div className="more-events">
-        <Link href="/more-events">More events</Link>
+      <div className="more-news text-end fs-5 my-0 py-0">
+        <Link href="/more-news" style={{ fontFamily: "Barlow, sans-serif"}}>Xem Thêm</Link>
       </div>
 
       {/* CSS trực tiếp với styled-jsx */}
@@ -160,7 +193,8 @@ export function Events() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 20px;
-          font-family: Arial, sans-serif;
+          font-family: Barlow, sans-serif;
+          
           background-color: #fff;
         }
 
@@ -174,9 +208,6 @@ export function Events() {
           color: #000;
           font-size: 24px;
           font-weight: bold;
-          margin: 0;
-          padding-bottom: 10px;
-          border-bottom: 2px solid #ccc;
         }
 
         .events-filter-button {
@@ -208,10 +239,6 @@ export function Events() {
           border-color: #999;
         }
 
-        .events-content {
-          padding: 20px 0;
-          overflow: hidden; /* Ngăn chặn tràn ngoài carousel */
-        }
 
         .events-swiper {
           width: 100%;
@@ -240,17 +267,19 @@ export function Events() {
         .event-image-container {
           position: relative;
           width: 100%;
+          overflow: hidden;
+          display: inline-block;
         }
 
         .event-image {
           width: 100%;
           height: 200px; /* Kích thước cố định cho hình ảnh, tỷ lệ 3:2 */
           object-fit: cover; /* Giữ tỷ lệ và cắt phần dư */
-          transition: filter 0.3s ease; /* Hiệu ứng zoom bằng cách làm mờ/sáng thay vì scale */
+          transition: transform 0.5s ease-in-out; /* Hiệu ứng zoom */
         }
 
         .event-image:hover {
-          filter: brightness(1.2); /* Hiệu ứng zoom bằng cách làm sáng, không thay đổi kích thước */
+          transform: scale(1.2); /* Hiệu ứng zoom bằng cách làm sáng, không thay đổi kích thước */
         }
 
         .event-date {
@@ -296,11 +325,6 @@ export function Events() {
           font-size: 14px;
           color: #000;
           margin-top: 5px;
-        }
-
-        .more-events {
-          text-align: center;
-          margin-top: 20px;
         }
 
         .more-events a {
