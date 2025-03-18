@@ -56,22 +56,28 @@ const ClientsSection = () => {
                 const logoUrl = department.thumbnail?.data?.attributes?.url
                   ? `${baseUrl}${department.thumbnail.data.attributes.url}`
                   : "https://via.placeholder.com/150";
+                
+                const departmentLink = department.link || "#"; // Nếu không có link thì không điều hướng
 
                 return (
                   <div
                     key={department.id}
                     className="client-logo d-flex flex-column align-items-center"
                   >
-                    <img
-                      src={logoUrl}
-                      alt={department.name}
-                      className="logo-img"
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/150";
-                        console.error("Image failed to load:", logoUrl);
-                      }}
-                    />
-                    <h5>{department.name}</h5>
+                    <a href={departmentLink} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={logoUrl}
+                        alt={department.name}
+                        className="logo-img"
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/150";
+                          console.error("Image failed to load:", logoUrl);
+                        }}
+                      />
+                    </a>
+                    <a href={department.link} target="_blank" rel="noopener noreferrer">
+                      <h5>{department.name}</h5>
+                    </a>
                   </div>
                 );
               })}
@@ -88,37 +94,39 @@ const ClientsSection = () => {
         .clients .container {
           margin: 0 auto;
           padding: 0 15px;
-          width: 95%; /* Gần full màn hình */
+          width: 95%;
           max-width: none;
         }
         .clients .clients-wrap {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 10px; /* Thu hẹp khoảng cách giữa các hàng và cột */
+          gap: 10px;
         }
         .clients .client-logo {
           background-color: #fff;
           display: flex;
           flex-direction: column;
-          justify-content: space-between; /* Đẩy logo lên trên, tiêu đề xuống dưới */
+          justify-content: center;
+          text-align: center;
           align-items: center;
           overflow: hidden;
           flex: 0 0 31%;
           max-width: 31%;
-          padding: 20px; /* Giảm padding */
-          min-height: 280px; /* Giảm chiều cao tối thiểu để thu hẹp khoảng cách */
+          padding: 20px;
+          min-height: 280px;
         }
         .clients .client-logo .logo-img {
-          width: 100%;
-          max-width: 180px;
-          height: auto;
-          padding: 20px 0 10px 0; /* Giảm padding dưới */
+          display: block;  
+          width: 220px;
+          height: 220px;
+          padding: 20px 0 10px 0;
           transition: transform 0.3s ease;
           object-fit: contain;
         }
+
         .clients .client-logo h5 {
-          margin: 0; /* Bỏ margin để tiêu đề sát dưới cùng */
+          margin: 0;
           padding: 10px 15px;
           font-size: 20px;
           color: #333;
@@ -127,10 +135,12 @@ const ClientsSection = () => {
           max-width: 90%;
           word-wrap: break-word;
           transition: color 0.3s ease;
+          white-space: nowrap; /* Ngăn tiêu đề xuống dòng */
           cursor: pointer;
+          text-decoration: none;
         }
         .clients .client-logo h5:hover {
-          color: #780614; /* Đổi màu chữ khi hover */
+          color: #780614;
         }
         .clients .client-logo:hover .logo-img {
           transform: scale(1.1);
@@ -139,20 +149,21 @@ const ClientsSection = () => {
           .clients .client-logo {
             flex: 0 0 48%;
             max-width: 48%;
-            min-height: 240px; /* Giảm chiều cao */
+            min-height: 240px;
           }
           .clients .client-logo .logo-img {
             max-width: 150px;
           }
           .clients .client-logo h5 {
             font-size: 18px;
+            white-space: normal;
           }
         }
         @media (max-width: 640px) {
           .clients .client-logo {
             flex: 0 0 100%;
             max-width: 100%;
-            min-height: 200px; /* Giảm chiều cao */
+            min-height: 200px;
           }
           .clients .client-logo .logo-img {
             max-width: 120px;
@@ -160,6 +171,7 @@ const ClientsSection = () => {
           }
           .clients .client-logo h5 {
             font-size: 16px;
+            white-space: normal; /* Cho phép tiêu đề xuống dòng */
           }
         }
         .skeleton {
