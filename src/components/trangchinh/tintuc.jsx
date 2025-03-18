@@ -1,17 +1,19 @@
-"use client";
+"use client"; 
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export function News() {
-  const [selectedTopic, setSelectedTopic] = useState("Tất Cả"); // Giá trị mặc định
+  const [selectedTopic, setSelectedTopic] = useState("Tất Cả");
   const [newsItems, setNewsItems] = useState([]);
-  const [topics, setTopics] = useState([]); // Danh sách topics từ API
-  const [allNews, setAllNews] = useState([]); // Lưu toàn bộ bài viết từ API
+  const [topics, setTopics] = useState([]);
+  const [allNews, setAllNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Gọi API khi component mount
+  // Danh sách slug cần loại bỏ
+  const excludedSlugs = ["su-kien-da-dien-ra", "su-kien-sap-dien-ra", "su-kien-noi-bat"];
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -24,23 +26,30 @@ export function News() {
         }
         const result = await response.json();
 
-        // Lấy danh sách topics từ attributes.title
-        const fetchedTopics = result.data.map((category) => category.attributes.title);
-        setTopics(fetchedTopics);
+        // Lọc bỏ các category có slug không mong muốn
+        const validCategories = result.data.filter(
+          (category) => !excludedSlugs.includes(category.attributes.slug)
+        );
 
-        // Ánh xạ toàn bộ bài viết từ API
-        const mappedNews = result.data.flatMap((category) =>
+        // Lấy danh sách topic từ các category hợp lệ
+        const fetchedTopics = validCategories.map((category) => category.attributes.title);
+        setTopics(["Tất Cả", ...fetchedTopics]);
+
+        // Xây dựng danh sách bài viết
+        const mappedNews = validCategories.flatMap((category) =>
           category.attributes.blogs.data.map((blog) => ({
             id: blog.id,
-            category: category.attributes.title, // Danh mục từ API
+            category: category.attributes.title,
             title: blog.attributes.title,
             image: extractFirstImage(blog.attributes.content) || "https://picsum.photos/400/500",
             url: `/post/${blog.attributes.slug}`,
           }))
         );
 
-        setAllNews(mappedNews); // Lưu toàn bộ bài viết
-        setNewsItems(mappedNews.filter((item) => item.category === "Tất Cả").slice(0, 5)); // Hiển thị mặc định
+        setAllNews(mappedNews);
+
+        // "Tất Cả" chứa tất cả bài viết từ category hợp lệ
+        setNewsItems(mappedNews.slice(0, 5));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -54,8 +63,12 @@ export function News() {
   // Cập nhật newsItems khi selectedTopic thay đổi
   useEffect(() => {
     if (allNews.length > 0) {
-      const filteredNews = allNews.filter((item) => item.category === selectedTopic);
-      setNewsItems(filteredNews.slice(0, 5)); // Lấy tối đa 5 bài
+      if (selectedTopic === "Tất Cả") {
+        setNewsItems(allNews.slice(0, 5)); // Lấy tối đa 5 bài viết
+      } else {
+        const filteredNews = allNews.filter((item) => item.category === selectedTopic);
+        setNewsItems(filteredNews.slice(0, 5));
+      }
     }
   }, [selectedTopic, allNews]);
 
@@ -73,7 +86,7 @@ export function News() {
   return (
     <div className="container">
       <header className="news-header">
-        <h2 className="fw-bold fs-4 ">TIN TỨC</h2>
+        <h2 className="fw-bold fs-4">TIN TỨC</h2>
         <div className="topics-dropdown">
           <select
             value={selectedTopic}
@@ -102,14 +115,13 @@ export function News() {
                 />
               </div>
               <div className="main-news-text">
-                <span className="category" style={{ fontFamily: "Barlow, sans-serif"}}>{newsItems[0].category}</span>
+                <span className="category">{newsItems[0].category}</span>
                 <h2>{newsItems[0].title}</h2>
-                <span className="divider">—</span>
+                {/* <span className="divider">—</span> */}
               </div>
             </Link>
           </div>
         )}
-
         {/* Phần bên phải (50%) - 4 bài post nhỏ theo 2x2 */}
         <div className="right-column">
           <div className="grid-2x2">
@@ -119,21 +131,20 @@ export function News() {
                   <img src={item.image} alt={item.title} className="grid-image" />
                 </div>
                 <div className="grid-text">
-                  <span className="category" style={{ fontFamily: "Barlow, sans-serif"}}>{item.category}</span>
+                  <span className="category">{item.category}</span>
                   <h3>{item.title}</h3>
-                  <span className="divider">—</span>
+                  {/* <span className="divider">—</span> */}
                 </div>
               </Link>
             ))}
           </div>
-          <div className="more-news text-end fs-5 my-0 py-0 border-top">
-            <Link href="/news" style={{ fontFamily: "Barlow, sans-serif"}}>Xem Thêm</Link>
+          <div className="more-news text-end fs-5 my-0 py-0">
+            <Link href="/tin-tuc" className="text-primary" style={{ fontFamily: "Barlow, sans-serif"}}>Xem Thêm</Link>
           </div>
         </div>
       </div>
-
-      {/* CSS trực tiếp với styled-jsx */}
-      <style jsx>{`
+ {/* CSS trực tiếp với styled-jsx */}
+ <style jsx>{`
         .news-header {
           display: flex;
           justify-content: space-between;
@@ -211,6 +222,7 @@ export function News() {
         }
         .main-news-text {
           padding: 15px 0;
+          padding-bottom: 0;
           color: #00205b;
         }
 
@@ -319,6 +331,7 @@ export function News() {
           }
         }
       `}</style>
+
     </div>
   );
 }
