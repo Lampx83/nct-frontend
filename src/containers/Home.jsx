@@ -17,20 +17,19 @@ export default function Home() {
     async function fetchSeoData() {
       try {
 
-        const response = await fetch("https://fit.neu.edu.vn/admin/api/index-page?populate=*");
+        const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/index-page?populate=deep");
         const data = await response.json();
-
         // Check if data exists and is structured as expected
         if (data?.data?.attributes?.seo) {
           const seo = data.data.attributes.seo;
           const imageUrl = seo.metaImage?.data?.attributes?.url;
 
           setSeoData({
-            title: seo.metaTitle || "Trang chủ | Khoa Công nghệ thông tin",
-            description: seo.metaDescription || "Khoa Công nghệ thông tin",
+            title: seo.metaTitle || "Trang chủ | Trường Công Nghệ",
+            description: seo.metaDescription || "Trường Công Nghệ",
             keywords: seo.keywords || "",
             canonicalURL: seo.canonicalURL || "",
-            image: imageUrl ? `https://fit.neu.edu.vn${imageUrl}` : ""  // Ensure full URL
+            image: imageUrl ? `https://nct-frontend-liard.vercel.app/admin${imageUrl}` : ""  // Ensure full URL
           });
         } else {
           console.warn("SEO data is missing or incorrectly structured.");
@@ -42,7 +41,6 @@ export default function Home() {
 
     fetchSeoData();
   }, []);
-
   if (!seoData) return null;  // Render nothing if seoData is not yet set
 
   return (
