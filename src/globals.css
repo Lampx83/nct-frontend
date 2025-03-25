@@ -92,7 +92,15 @@ a {
 .footer {
   background-color: #134D8B;
   font-size: large;
+  position: relative;
+  overflow: hidden;
 }
+
+.footer-bg-overlay {
+  pointer-events: none;
+  filter: contrast(1.1) brightness(1.2); /* Tăng độ tương phản và độ sáng */
+}
+
 .footer .btn.btn-social {
   margin-right: 5px;
   width: 35px;
