@@ -16,17 +16,11 @@ function Footer() {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const [footerResponse, rowResponse] = await Promise(
-          fetch("https://nct-frontend-liard.vercel.app/admin/api/navigation/render/2?type=TREE")
-        );
-
-        const footerData = await footerResponse.json();
-        const rowData = await rowResponse.json();
-
-        setFooterData(footerData);
-        setRowMenu(rowData);
+        const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/navigation/render/2?type=TREE");
+        const data = await response.json();
+        setFooterData(data);
       } catch (error) {
-        console.error("Error fetching menu data:", error);
+        console.error("Lỗi khi tải dữ liệu menu:", error);
       } finally {
         setLoading(false);
       }
@@ -66,9 +60,22 @@ function Footer() {
       <div style={{ position: "relative", zIndex: 2 }}>
         {/* Phần trên của footer - Logo và Thông tin liên hệ */}
         <div className="container">
-          <div className="row g-5 align-items-center ms-0">
-            {/* Cột logo */}
-            <div className="col-lg-4 col-md-5">
+          <div className="row g-5 align-items-center">
+            {/* Row cho Logo trên màn hình sm và md */}
+            <div className="d-block d-lg-none col-sm-12">
+              <img 
+                src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
+                alt="Logo trường" 
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "contain"
+                }}
+              />
+            </div>
+
+            {/* Logo cho màn hình lg trở lên */}
+            <div className="d-none d-lg-block col-lg-3">
               <img 
                 src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
                 alt="Logo trường" 
@@ -80,14 +87,56 @@ function Footer() {
               />
             </div>
             
-            {/* Cột thông tin liên hệ */}
-            <div className="col-lg-8 col-md-7">
+            {/* Row cho thông tin và QR code trên màn hình sm và md */}
+            <div className="d-block d-lg-none col-sm-12">
+              <div className="row align-items-center">
+                {/* Cột thông tin liên hệ */}
+                <div className="col-8">
+                  <h4 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h4>
+                  {addressItems.map((item) => (
+                    <p key={item.id} className="mb-2">
+                      {item.title}
+                    </p>
+                  ))}
+                </div>
+                {/* QR Code */}
+                <div className="col-4">
+                  <img 
+                    src="/images/NCT-QRCode.svg" 
+                    alt="QR Code"
+                    className="qr-code"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      maxWidth: "150px"
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Thông tin liên hệ cho màn hình lg trở lên */}
+            <div className="d-none d-lg-block col-lg-7">
               <h4 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h4>
               {addressItems.map((item) => (
                 <p key={item.id} className="mb-2">
                   {item.title}
                 </p>
               ))}
+            </div>
+
+            {/* QR Code cho màn hình lg trở lên */}
+            <div className="d-none d-lg-flex col-lg-2 justify-content-end align-items-center">
+              <img 
+                src="/images/NCT-QRCode.svg" 
+                alt="QR Code"
+                className="qr-code"
+                style={{
+                  maxWidth: "120px",
+                  width: "100%",
+                  height: "auto"
+                }}
+              />
             </div>
           </div>
         </div>
@@ -97,7 +146,7 @@ function Footer() {
           <div className="copyright">
             <div className="row align-items-center">
               {/* Phần bản quyền */}
-              <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
+              <div className="col-md-8 col-sm-9 text-md-start mb-3 mb-md-0">
                 Bản quyền thuộc về:&nbsp;
                 <a className="border-bottom text-light" href="/">
                   Trường Công nghệ
@@ -108,7 +157,7 @@ function Footer() {
                 </a>
               </div>
               {/* Nút scroll to top */}
-              <div className="col-md-6">
+              <div className="col-md-4 col-sm-3">
                 <div className="footer-menu d-flex align-items-center justify-content-center justify-content-md-end">
                   <button
                     className="scroll-to-top-btn"

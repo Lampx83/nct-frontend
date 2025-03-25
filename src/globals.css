@@ -260,4 +260,27 @@ a {
   background-color: #a31b1b !important; /* Màu hơi sáng hơn */
 }
 
+/* Thêm style cho QR code */
+.qr-code {
+  transition: transform 0.3s ease;
+}
+
+/* Điều chỉnh responsive */
+@media (max-width: 991px) {
+
+  .footer h4 {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer h4 {
+    font-size: 1.2rem;
+  }
+  
+  .footer p {
+    font-size: 0.9rem;
+  }
+}
+
 
