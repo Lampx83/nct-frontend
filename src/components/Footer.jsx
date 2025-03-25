@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 function Footer() {
+  const [footerData, setFooterData] = useState([]);
   const [rowMenu, setRowMenu] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,10 +16,14 @@ function Footer() {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const rowResponse = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/navigation/render/3?type=TREE"
+        const [footerResponse, rowResponse] = await Promise(
+          fetch("https://nct-frontend-liard.vercel.app/admin/api/navigation/render/2?type=TREE")
         );
+
+        const footerData = await footerResponse.json();
         const rowData = await rowResponse.json();
+
+        setFooterData(footerData);
         setRowMenu(rowData);
       } catch (error) {
         console.error("Error fetching menu data:", error);
@@ -31,6 +36,11 @@ function Footer() {
   }, []);
 
   if (loading) return null;
+
+  // Lấy thông tin từ API
+  const schoolName = footerData[0]?.title || "";
+  const addressTitle = footerData[1]?.title || "";
+  const addressItems = footerData[1]?.items || [];
 
   return (
     <div className="container-fluid text-light footer pt-5 mt-5 position-relative" style={{ backgroundColor: "#134D8B" }}>
@@ -58,9 +68,9 @@ function Footer() {
         <div className="container">
           <div className="row g-5 align-items-center ms-0">
             {/* Cột logo */}
-            <div className="col-lg-4">
+            <div className="col-lg-4 col-md-5">
               <img 
-                src="https://nct.neu.edu.vn/wp-content/uploads/2024/05/NEU-NCT-02-01.png" 
+                src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
                 alt="Logo trường" 
                 style={{
                   width: "100%",
@@ -71,14 +81,13 @@ function Footer() {
             </div>
             
             {/* Cột thông tin liên hệ */}
-            <div className="col-lg-8">
-              <h4 className="text-light fw-bold mb-4 utm-trajan">Trường Công nghệ - Đại học Kinh tế Quốc dân</h4>
-              <p className="mb-2">
-                Phòng 1209B Nhà A1, Đại Học Kinh tế Quốc dân
-              </p>
-              <p className="mb-2">
-                207 Giải Phóng, Phường Đồng Tâm, Quận Hai Bà Trưng, TP. Hà Nội
-              </p>
+            <div className="col-lg-8 col-md-7">
+              <h4 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h4>
+              {addressItems.map((item) => (
+                <p key={item.id} className="mb-2">
+                  {item.title}
+                </p>
+              ))}
             </div>
           </div>
         </div>
@@ -105,7 +114,7 @@ function Footer() {
                     className="scroll-to-top-btn"
                     onClick={scrollToTop}
                   >
-                    <i class="fa-solid fa-angle-up"></i>
+                    <i className="fa-solid fa-angle-up"></i>
                   </button>
                 </div>
               </div>
