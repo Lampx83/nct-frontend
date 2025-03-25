@@ -1,3 +1,7 @@
+@font-face {
+  font-family: "utm_trajan";
+  src: url(/UTM-Trajan-Pro-Bold.ttf);
+}
 /* Thêm quy tắc này để ngăn chặn khoảng trắng thừa */
 body {
   overflow-x: hidden; /* Ẩn thanh cuộn ngang */
@@ -81,10 +85,13 @@ a {
   color: #ffffff !important;
 }
 /*** Footer ***/
+.utm-trajan{
+  font-family: "utm_trajan";
+}
+
 .footer {
-  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
-    url(/images/carousel-bg-1.jpg) center center no-repeat;
-  background-size: cover;
+  background-color: #134D8B;
+  font-size: large;
 }
 .footer .btn.btn-social {
   margin-right: 5px;
@@ -134,11 +141,38 @@ a {
   margin-right: 15px;
   padding-right: 15px;
   border-right: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff !important;
 }
 .footer .footer-menu a:last-child {
   margin-right: 0;
   padding-right: 0;
   border-right: none;
+}
+
+/* Thêm style cho nút scroll to top */
+.scroll-to-top-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: solid 1px grey;
+  color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.scroll-to-top-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-to-top-btn i {
+  font-size: 18px;
 }
 
 .navbar-light .navbar-nav .nav-link {
