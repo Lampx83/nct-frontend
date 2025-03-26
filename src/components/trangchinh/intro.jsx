@@ -1,4 +1,5 @@
 "use client";
+import '../../css/introHome.css';
 
 import { useEffect, useState } from "react";
 
@@ -47,9 +48,9 @@ export function Intro() {
   };
 
   return (
-    <section id="services" className="services section pt-3 mt-3 pb-3 mb-2 text-center">
+    <section id="services" className="services section text-center">
       {/* Section Title và Introduction từ API */}
-      <div dangerouslySetInnerHTML={renderIntroduction()} />
+      <div className="intro" dangerouslySetInnerHTML={renderIntroduction()} />
 
       {/* Images Introduction */}
       {/* <div className="container" data-aos="fade-up" data-aos-delay="100">
