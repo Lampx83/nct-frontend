@@ -52,7 +52,7 @@ export function Intro() {
       <div dangerouslySetInnerHTML={renderIntroduction()} />
 
       {/* Images Introduction */}
-      <div className="container" data-aos="fade-up" data-aos-delay="100">
+      {/* <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="row gy-5">
           {imagesIntroduction.map((item, index) => {
             const imageUrl = item.image?.data?.attributes?.url
@@ -97,10 +97,10 @@ export function Intro() {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {/* CSS trực tiếp với styled-jsx */}
-      <style jsx>{`
+      {/* <style jsx>{`
         .services {
           color: #444444;
           background-color: #ffffff;
@@ -193,7 +193,7 @@ export function Intro() {
             padding: 30px 20px;
           }
         }
-      `}</style>
+      `}</style> */}
     </section>
   );
 }
