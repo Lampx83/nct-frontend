@@ -1,6 +1,9 @@
 .lecturer-info .img-lecture {
     max-width: 390px;
+    display: block;
+    margin: auto;
   }
+
   
   @media (max-width: 1200px) {
     .img-lecture {
