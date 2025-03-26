@@ -16,7 +16,7 @@
 }
 
 .service-card {
-  background: linear-gradient(to bottom, #f8f9fa 50%, white 50%);
+  background: white;
   border-radius: 1rem;
   overflow: hidden;
   height: 100%;
