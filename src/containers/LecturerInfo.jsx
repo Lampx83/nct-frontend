@@ -49,40 +49,24 @@ const LecturerInfo = ({ lecturer, slug }) => {
   document.title = `${lecturer.attributes.displayName} | Khoa Công nghệ thông tin`;
 
   return (
-    <div className="lecturer-info container">
-      <div className="row mt-2 mb-5">
-        <div className="col-lg-5 col-md-6 col-12 mt-4 pt-3">
-          <div className="h-100 w-100 d-flex justify-content-center align-items-center overflow-hidden">
-            <img
-              style={{ height: "500px", objectFit: "cover" }}
-              className="img-lecture"
-              src={avatarUrl}
-              alt={displayName}
-            />
+    <div className="lecturer-info container mt-5 pt-3">
+      <div className="row mt-2 mb-5 mt-5 pt-3">
+        <div className="col-3 col-lg-4 col-md-12 col-xs-12">
+          <div className="row h-100 w-100 d-flex justify-content-center ">
+              <div className="col-12">
+                <img
+                  style={{ objectFit: "cover" }}
+                  className="img-lecture mb-3 align-self-center"
+                  src={avatarUrl}
+                  alt={displayName}
+                />
+                <p className="m-0 py-1 text-dark"><i class="fa-solid fa-award fa-lg"></i><b> Chức vụ: </b>{position}</p>
+                <p className="m-0 py-1 text-dark"><i class="fa-solid fa-phone"></i><b> Số điện thoại: </b>{phone}</p>
+                <p className="m-0 py-1 text-dark"><i class="fa-solid fa-envelope"></i><b> Email: </b>{email}</p>
+              </div>
           </div>
         </div>
-        <div className="col-lg-7 col-md-6 col-12 mt-4 pt-3">
-          <div className="info-lecturer_name-content">
-            <h1 className="mb-4 fw-bold">
-              <span className="custom-h3">{displayName}</span>
-            </h1>
-            <h3 className="mb-4 fw-bold" style={{ fontWeight: "bolder" }}>
-              <span className="custom-h3">GIỚI THIỆU</span>
-            </h3>
-          </div>
-          <div className="info-lecturer_content" style={{ fontSize: "18px" }}>
-            <p>
-              {position} Khoa Công nghệ thông tin, Trường Công nghệ, Đại học
-              Kinh tế quốc dân
-            </p>
-            <div dangerouslySetInnerHTML={{ __html: introduction }}></div>
-            <p>{`Số điện thoại: ${phone}`}</p>
-            <p>{`Email: ${email}`}</p>
-          </div>
-        </div>
-      </div>
-      <div className="row mx-md-4 mt-2">
-        <div className="col-12">
+        <div className="col-9 col-lg-8 col-md-12 col-xs-12">
           <div style={{ fontSize: "18px" }}>
             <div
               className="custom-h3 custom-list"
