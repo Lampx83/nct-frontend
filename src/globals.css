@@ -189,6 +189,10 @@ a {
 }
 
 @media (min-width: 992px) {
+  /* Chỉ áp dụng transition trên màn hình lớn */
+  .navbar {
+    transition: all 0.5s ease;
+  }
 
   ul.dropdown-menu > li {
     position: relative;
@@ -239,6 +243,13 @@ a {
     visibility: visible;
     transition: 0.5s;
     opacity: 1;
+  }
+}
+
+@media (max-width: 991.98px) {
+  /* Bỏ transition trên màn hình nhỏ */
+  .navbar {
+    transition: none;
   }
 }
 

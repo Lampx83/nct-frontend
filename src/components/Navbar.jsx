@@ -9,6 +9,7 @@ const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isToggleClicked, setIsToggleClicked] = useState(false);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -35,22 +36,27 @@ const Navbar = () => {
   }, []);
 
   const handleNavCollapse = () => {
+    setIsToggleClicked(true);
     setIsNavCollapsed(!isNavCollapsed);
+    setTimeout(() => {
+      setIsToggleClicked(false);
+    }, 500);
   };
 
   return (
     <nav
-      className="navbar navbar-expand-lg navbar-light fixed-top p-0 transition-colors duration-300"
+      className="navbar navbar-expand-lg navbar-light fixed-top p-0"
       style={{
         backgroundColor:
           pathname === "/"
             ? scrolled || !isNavCollapsed
-              ? "var(--bs-heading-color)" // Màu đỏ khi scroll hoặc menu được mở
-              : "transparent" // Trong suốt khi ở đầu trang chủ và menu đóng
-            : "var(--bs-heading-color)", // Màu đỏ cho các trang khác
+              ? "var(--bs-heading-color)"
+              : "transparent"
+            : "var(--bs-heading-color)",
         backdropFilter: (pathname === "/" && scrolled) || !isNavCollapsed ? "blur(10px)" : "none",
         WebkitBackdropFilter: (pathname === "/" && scrolled) || !isNavCollapsed ? "blur(10px)" : "none",
-        zIndex: 1000
+        zIndex: 1000,
+        transition: isToggleClicked ? "none" : "all 0.5s ease",
       }}
     >
       <a href="/" className="navbar-brand d-flex align-items-center px-1 px-xxl-5">
@@ -62,19 +68,21 @@ const Navbar = () => {
         />
         <div className="d-flex flex-column ms-2 d-none d-md-block d-xxl-block">
           <h5
-            className="m-0 fs-6 text-white"
+            className="m-0 text-white"
             style={{
               textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
-              transition: "color 0.3s ease",
+              transition: "color 0.3s ease", fontSize: "1rem"
             }}
           >
             ĐẠI HỌC KINH TẾ QUỐC DÂN
           </h5>
           <h1
-            className="m-0 fs-4 text-white"
+            className="m-0 text-white"
             style={{
               textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
               transition: "color 0.3s ease",
+              fontSize: "1.5rem",
+              fontWeight: "bold"
             }}
           >
             TRƯỜNG CÔNG NGHỆ
@@ -122,9 +130,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-// "use client";
 // import React, { useEffect, useState } from "react";
 // import LogoSVG from "@/components/LogoSVG";
 
