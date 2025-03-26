@@ -17,9 +17,9 @@ function Service() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('https://nct-frontend-liard.vercel.app/admin/api/services?populate=*');
+        const response = await fetch('https://nct-frontend-liard.vercel.app/admin/api/index-page?populate=deep,3');
         const data = await response.json();
-        setServices(data.data || []);
+        setServices(data.data.attributes.imagesIntroduction || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -104,8 +104,7 @@ function Service() {
   // Xác định số lượng cards trên mỗi slide dựa vào kích thước màn hình
   const getCardsPerSlide = () => {
     if (windowWidth >= 768 && windowWidth < 992) return 2;
-    if (windowWidth >= 576 && windowWidth < 768) return 2;
-    if (windowWidth < 576) return 1;
+    if (windowWidth < 768) return 1;
     return 3;
   };
 
@@ -126,7 +125,7 @@ function Service() {
       <Splide options={{
         rewind: true,
         type: "loop",
-        perPage: 3,
+        perPage: cardsPerSlide,
         gap: 20,
         arrows: true,
         pagination: false,
@@ -150,10 +149,10 @@ function Service() {
 
   // Component cho mỗi card
   const ServiceCard = ({ service }) => {
-    const imageUrl = service.attributes.image?.data?.attributes?.url;
+    const imageUrl = `https://nct-frontend-liard.vercel.app/admin/${service.image?.data?.attributes?.url}`;
     const fullImageUrl = imageUrl ? 
       (imageUrl.startsWith('/') && !imageUrl.startsWith('//') ? 
-        `https://nct-frontend-liard.vercel.app/admin${imageUrl}` : imageUrl) 
+        `https://nct-frontend-liard.vercel.app${imageUrl}` : imageUrl) 
       : '';
 
     return (
@@ -161,15 +160,15 @@ function Service() {
         <div className="service-image">
           <img 
             src={fullImageUrl || '/images/default-service.jpg'} 
-            alt={service.attributes.title} 
+            alt={service.title} 
             className="img-fluid"
           />
         </div>
         <div className="service-header">
-          <h4>{service.attributes.title}</h4>
+          <h4>{service.title}</h4>
         </div>
         <div className="service-content">
-          <p>{service.attributes.description}</p>
+          <p>{service.description}</p>
         </div>
       </div>
     );
