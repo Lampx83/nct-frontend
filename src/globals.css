@@ -257,8 +257,14 @@ a {
 
 /* Khi hover vào mục menu */
 .ant-menu-item:hover {
-  background-color: #a31b1b !important; /* Màu hơi sáng hơn */
+  background-color: #a31b1b !important; /* Màu hơi sáng hơn */  
 }
+.ant-menu-item:hover,
+.ant-menu-item:hover * {  
+  color: white !important; /* Đảm bảo chữ trắng */
+}
+
+
 
 /* Thêm style cho QR code */
 .qr-code {
@@ -282,5 +288,7 @@ a {
     font-size: 0.9rem;
   }
 }
+
+
 
 
