@@ -10,7 +10,7 @@ export function generationViewport() {
 }
 
 export async function generateMetadata() {
-    const respone = await axios.get(`${config.API_URL}/api/index-page?populate=deep`);
+    const response = await axios.get(`${config.API_URL}/api/index-page?populate=deep`);
     const data = response.data.data;
     const seo = data.attributes.seo;
     const carousel = data.attributes.carousel;

@@ -26,7 +26,7 @@ const sharedOnCell = (record) => {
 const styleCell = (
   record,
   groupColor = "rgba(8,92,167,0.4)",
-  typeColor = "rgba(8,92,167,0.2)"
+  typeColor = "rgba(8,92,167,0.2)",
 ) => {
   const res = {
     style: {},
@@ -36,11 +36,14 @@ const styleCell = (
     res.style = {
       fontWeight: "bold",
       backgroundColor: groupColor,
+      color: "var(--bs-light)",
     };
   } else if (record.type === "required" || record.type === "optional") {
     res.style = {
       fontWeight: "bold",
       backgroundColor: typeColor,
+      color: "var(--bs-white)",
+
     };
   }
 
@@ -53,7 +56,7 @@ const TableCurriculum = forwardRef(
       curriculum,
       loading = false,
       isEmbed = false,
-      primaryColor = "#990000",
+      primaryColor = "#a31b1b",
       secondaryColor = "#a31b1b",
       tertiaryColor = "#a31b1b",
     },
