@@ -2,145 +2,106 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import useFetch from "../utils/fetch";
-import config from "../utils/config";
 import "../css/lectureList.css";
 
 const LecturerList = () => {
-  //document.title = "Giảng viên - Cán bộ | Khoa Công nghệ thông tin";
   const { data, error, loading } = useFetch(
-    `${config.API_URL}/api/lecturers?populate=*&pagination[pageSize]=100`
+    `https://nct-frontend-liard.vercel.app/admin/api/lecturers?populate=*&pagination[pageSize]=100`
   );
 
   const itemsPerPage = 12;
-
-  // Initialize the currentPage state with 1 or value from localStorage
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // Only access localStorage in the browser
     if (typeof window !== "undefined") {
-      const savedPage = parseInt(localStorage.getItem("currentPage"), 10) || 1;
-      setCurrentPage(savedPage);
+      const savedPage = parseInt(localStorage.getItem("currentPage"), 10);
+      if (!isNaN(savedPage) && savedPage > 0) {
+        setCurrentPage(savedPage);
+      }
     }
   }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("currentPage", currentPage); // Save current page to localStorage
+      localStorage.setItem("currentPage", currentPage);
     }
   }, [currentPage]);
 
-  if (loading) return null;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>Lỗi: {error.message}</div>;
 
-  const handleClick = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn lên đầu trang
-    }
-  };
-
-  // Sắp xếp dữ liệu theo thứ tự index tăng dần
   const sortedData = data?.data?.slice().sort((a, b) => {
-    const indexA = a.attributes.index;
-    const indexB = b.attributes.index;
-
-    if (indexA === null) return 1;
-    if (indexB === null) return -1;
+    const indexA = a.attributes.index ?? Number.MAX_VALUE;
+    const indexB = b.attributes.index ?? Number.MAX_VALUE;
     return indexA - indexB;
   });
 
-  const totalItems = sortedData?.length || 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  if (!sortedData || sortedData.length === 0) {
+    return <div className="text-center">Không có dữ liệu giảng viên.</div>;
+  }
 
+  const totalItems = sortedData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = sortedData?.slice(startIndex, endIndex);
+  const itemsToDisplay = sortedData.slice(startIndex, startIndex + itemsPerPage);
+
+  const handleClick = (page) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="lecturer-list">
-      <div className="container pt-5">
-        <h1 className="text-center mb-5 text-primary bold">
+      <div className="container pt-5 mt-5">
+        <h1 className="text-center mt-2 mb-4 text-primary fw-bolder">
           Giảng viên - cán bộ
         </h1>
 
-        {/* Danh sách giảng viên */}
         <div className="row">
           {itemsToDisplay.map((lecturer) => (
-            <div
-              key={lecturer.id}
-              className="col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 wow fadeIn mb-4"
-            >
-              <div className="card  bg-light h-100 text-center">
+            <div key={lecturer.id} className="col-md-6 col-lg-4 col-xl-3 mb-4">
+              <div className="card bg-light h-100 text-center">
                 <Link href={`/lecturer/${lecturer.attributes.slug}`}>
-                 
-                  <img
-                    className="object-fit-cover"
-                    src={`https://fit.neu.edu.vn/admin${lecturer.attributes.avatarNew.data.attributes.url}`}
-                    alt={lecturer.attributes.displayName}
-                    style={{
-                      cursor: "pointer",
-                      width: "100%",
-                      aspectRatio: "3 / 4", // Tỷ lệ 4:3
-                    }}
-                  />
+                  <div className="event-image-container">
+                    <img
+                      className="event-image"
+                      src={`https://nct-frontend-liard.vercel.app/admin${lecturer.attributes.avatarNew?.data?.attributes?.url || "/default-avatar.jpg"}`}
+                      alt={lecturer.attributes.displayName}
+                      style={{ cursor: "pointer", width: "100%", aspectRatio: "3 / 4" }}
+                    />
+                  </div>
                 </Link>
-                <Link
-                  href={`/lecturer/${lecturer.attributes.slug}`}
-                  className="lecturer-name-link"
-                >
-                  <div className="card-body d-flex flex-column align-content-center">
-                    <h2 className="text-truncate">{lecturer.attributes.displayName}</h2>
-                    <h3 className="text-dark position">{lecturer.attributes.position}</h3>
-                  </div>{" "}
+                <Link href={`/lecturer/${lecturer.attributes.slug}`} className="lecturer-name-link">
+                  <div className="card-body">
+                    <h2 className="text-truncate name-lecturer fw-bolder fs-5">{lecturer.attributes.displayName}</h2>
+                    <h3 className="text-dark position fs-6 px-3">{lecturer.attributes.position || "Chưa cập nhật"}</h3>
+                  </div>
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Phân trang */}
         <nav>
           <ul className="pagination justify-content-center">
-            {/* Nút trước */}
             <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-              <button
-                className="page-link"
-                onClick={() => handleClick(currentPage - 1)}
-                aria-label="Previous"
-              >
+              <button className="page-link" onClick={() => handleClick(currentPage - 1)}>
                 <i className="fa fa-chevron-left"></i>
               </button>
             </li>
 
-            {/* Các số trang */}
             {Array.from({ length: totalPages }, (_, index) => (
-              <li
-                key={index}
-                className={`page-item ${
-                  index + 1 === currentPage ? "active" : ""
-                }`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handleClick(index + 1)}
-                >
+              <li key={index} className={`page-item ${index + 1 === currentPage ? "active" : ""}`}>
+                <button className="page-link" onClick={() => handleClick(index + 1)}>
                   {index + 1}
                 </button>
               </li>
             ))}
 
-            {/* Nút sau */}
-            <li
-              className={`page-item ${
-                currentPage === totalPages ? "disabled" : ""
-              }`}
-            >
-              <button
-                className="page-link"
-                onClick={() => handleClick(currentPage + 1)}
-                aria-label="Next"
-              >
+            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+              <button className="page-link" onClick={() => handleClick(currentPage + 1)}>
                 <i className="fa fa-chevron-right"></i>
               </button>
             </li>
