@@ -3,9 +3,12 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const url = request.nextUrl.clone();
   const rewrites = [
-    { path: "/admin", destination: "http://101.96.66.218:8020" },
-    { path: "/codelab", destination: "http://101.96.66.217:8015" },
-    { path: "/search_api", destination: "http://101.96.66.219:8003" },
+    // { path: "/admin", destination: "http://101.96.66.218:8020" },
+    // { path: "/codelab", destination: "http://101.96.66.217:8015" },
+    // { path: "/search_api", destination: "http://101.96.66.219:8003" },
+    { path: "/admin", destination: "http://localhost:8020" },
+    { path: "/codelab", destination: "http://192.168.204.83:8015" },
+    { path: "/search_api", destination: "http://192.168.204.85:8003" },
   ];
 
   for (const { path, destination } of rewrites) {
