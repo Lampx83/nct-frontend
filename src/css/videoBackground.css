@@ -68,6 +68,33 @@
     margin: 0px 0px 20px 0px;
 }
 
+/* Thêm media queries cho màn hình nhỏ hơn */
+@media (max-width: 768px) {
+    .overlay-text p {
+        font-size: 40px;
+        line-height: 60px;
+    }
+
+    .overlay-text h1 {
+        font-size: 15px;
+        line-height: 20px;
+        padding: 4px 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .overlay-text p {
+        font-size: 30px;
+        line-height: 45px;
+    }
+
+    .overlay-text h1 {
+        font-size: 13px;
+        line-height: 18px;
+        padding: 3px 8px;
+    }
+}
+
 .overlay-text span {
     display: block;
 }
