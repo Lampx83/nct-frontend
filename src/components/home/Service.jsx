@@ -177,7 +177,7 @@ function Service() {
     <section className="service-section py-5">
       <div className="container">
         <div className="text-center mb-5">
-          <h1 className="utm-trajan text-white">TẠI SAO NÊN CHỌN TRƯỜNG CÔNG NGHỆ</h1>
+          <h2 className="utm-trajan text-white">TẠI SAO NÊN CHỌN TRƯỜNG CÔNG NGHỆ</h2>
         </div>
         {windowWidth >= 1200 ? renderNormalView() : renderCarouselView()}
       </div>
