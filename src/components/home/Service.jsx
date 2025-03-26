@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Carousel } from 'react-bootstrap';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/splide/dist/css/splide.min.css'; // Import CSS cho Splide
 import '../../css/Service.css';
 
 function Service() {
@@ -118,31 +119,32 @@ function Service() {
     </div>
   );
 
-  const renderCarouselView = () => {
+  const renderSplideView = () => {
     const cardsPerSlide = getCardsPerSlide();
-    const groupedServices = chunkArray(displayServices, cardsPerSlide);
 
     return (
-      <Carousel 
-        interval={3000}
-        indicators={false}
-        className="service-carousel"
-      >
-        {groupedServices.map((group, groupIndex) => (
-          <Carousel.Item key={groupIndex}>
-            <div className="row g-4 justify-content-center">
-              {group.map((service) => (
-                <div 
-                  key={service.id} 
-                  className={`col-${12/cardsPerSlide}`}
-                >
-                  <ServiceCard service={service} />
-                </div>
-              ))}
-            </div>
-          </Carousel.Item>
+      <Splide options={{
+        rewind: true,
+        type: "loop",
+        perPage: 3,
+        gap: 20,
+        arrows: true,
+        pagination: false,
+        breakpoints: {
+          768: {
+            perPage: 2,
+          },
+          576: {
+            perPage: 1,
+          },
+        },
+      }}>
+        {displayServices.map((service) => (
+          <SplideSlide key={service.id}>
+            <ServiceCard service={service} />
+          </SplideSlide>
         ))}
-      </Carousel>
+      </Splide>
     );
   };
 
@@ -179,7 +181,7 @@ function Service() {
         <div className="text-center mb-5">
           <h2 className="utm-trajan text-white">TẠI SAO NÊN CHỌN TRƯỜNG CÔNG NGHỆ</h2>
         </div>
-        {windowWidth >= 1200 ? renderNormalView() : renderCarouselView()}
+        {windowWidth >= 1200 ? renderNormalView() : renderSplideView()}
       </div>
     </section>
   );
