@@ -44,14 +44,13 @@ const Navbar = () => {
       style={{
         backgroundColor:
           pathname === "/"
-            ? scrolled
-              ? "var(--bs-heading-color)" // Màu đỏ khi scroll trên trang chủ
-              : "transparent" // Trong suốt khi ở đầu trang chủ
+            ? scrolled || !isNavCollapsed
+              ? "var(--bs-heading-color)" // Màu đỏ khi scroll hoặc menu được mở
+              : "transparent" // Trong suốt khi ở đầu trang chủ và menu đóng
             : "var(--bs-heading-color)", // Màu đỏ cho các trang khác
-        backdropFilter: pathname === "/" && scrolled ? "blur(10px)" : "none",
-        WebkitBackdropFilter: pathname === "/" && scrolled ? "blur(10px)" : "none",
-        zIndex: 1000,
-        transition: "all 0.5s ease",
+        backdropFilter: (pathname === "/" && scrolled) || !isNavCollapsed ? "blur(10px)" : "none",
+        WebkitBackdropFilter: (pathname === "/" && scrolled) || !isNavCollapsed ? "blur(10px)" : "none",
+        zIndex: 1000
       }}
     >
       <a href="/" className="navbar-brand d-flex align-items-center px-1 px-xxl-5">
@@ -92,11 +91,26 @@ const Navbar = () => {
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`} id="navbarCollapse">
+      <div 
+        className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`} 
+        id="navbarCollapse"
+        style={{
+          backgroundColor: !isNavCollapsed ? "var(--bs-heading-color)" : "transparent",
+          margin: !isNavCollapsed ? "0 -12px" : "0",
+          padding: !isNavCollapsed ? "1rem" : "0",
+        }}
+      >
         <ul className="navbar-nav ms-auto p-4 p-lg-0">
           {menuItems.map((item) => (
             <li key={item.id} className="nav-item position-relative">
-              <a className="nav-link text-white" href={item.path}>
+              <a 
+                className="nav-link text-white" 
+                href={item.path}
+                style={{
+                  borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none", // Thêm đường kẻ phân cách giữa các menu items
+                  padding: !isNavCollapsed ? "1rem 0" : "10px", // Tăng padding cho menu items khi mở
+                }}
+              >
                 {item.title}
               </a>
             </li>
