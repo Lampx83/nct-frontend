@@ -106,7 +106,7 @@ export function Events() {
   return (
     <div className="container">
       <header className="events-header">
-        <h2 className="fw-bold">SỰ KIỆN</h2>
+        <h2 className="fw-bold pb-2 mb-2">SỰ KIỆN</h2>
         <div className="events-filter-button" style={{ fontFamily: "Barlow, sans-serif" }}>
           {filters.map((filter) => (
             <button

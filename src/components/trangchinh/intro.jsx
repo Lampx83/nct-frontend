@@ -52,8 +52,8 @@ export function Intro() {
       <div className="intro" dangerouslySetInnerHTML={renderIntroduction()} />
 
       {/* Images Introduction */}
-      {/* <div className="container" data-aos="fade-up" data-aos-delay="100">
-        <div className="row gy-5">
+      <div className="container-fuild px-5 mx-1" data-aos="fade-up" data-aos-delay="100">
+        <div className="row gy-5 d-flex align-items-stretch">
           {imagesIntroduction.map((item, index) => {
             const imageUrl = item.image?.data?.attributes?.url
               ? `${baseUrl}${item.image.data.attributes.url}`
@@ -63,11 +63,11 @@ export function Intro() {
             return (
               <div
                 key={item.id}
-                className="col-xl-4 col-md-6"
+                className="col-xl-3 col-md-6" 
                 data-aos="zoom-in"
                 data-aos-delay={200 + index * 100}
               >
-                <div className="service-item">
+                <div className="service-item d-flex flex-column h-100">
                   <div className="img">
                     <img
                       src={imageUrl}
@@ -79,7 +79,7 @@ export function Intro() {
                       }}
                     />
                   </div>
-                  <div className="details position-relative">
+                  <div className="details position-relative d-flex flex-column align-items-center text-center p-4 flex-grow-1">
                     <div className="icon">
                       <i
                         className={`bi bi-${
@@ -90,23 +90,23 @@ export function Intro() {
                       <i className="fa-solid fa-award"></i>
                     </div>
                     <h3>{item.title}</h3>
-                    <p>{item.description}</p>
+                    <p className="text-content">{item.description}</p>
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
-      </div> */}
+      </div> 
 
       {/* CSS trực tiếp với styled-jsx */}
-      {/* <style jsx>{`
+      <style jsx>{`
         .services {
           color: #444444;
           background-color: #ffffff;
-          padding: 60px 0;
           scroll-margin-top: 90px;
           overflow: clip;
+          
         }
 
         .services .img {
@@ -123,8 +123,8 @@ export function Intro() {
 
         .services .details {
           background: rgba(255, 255, 255, 0.95);
-          padding: 50px 30px;
-          margin: -100px 30px 0 30px;
+          padding: 35px 22px;
+          margin: -100px 15px 0 15px;
           transition: all ease-in-out 0.3s;
           position: relative;
           text-align: center;
@@ -154,9 +154,10 @@ export function Intro() {
         .services .details h3 {
           font-weight: 700;
           margin: 10px 0 15px 0;
-          font-size: 22px;
+          font-size: clamp(1.25rem,1.25vw,1.5em);
           transition: ease-in-out 0.3s;
           color: #273d4e;
+
         }
 
         .services .details p {
@@ -193,7 +194,7 @@ export function Intro() {
             padding: 30px 20px;
           }
         }
-      `}</style> */}
+      `}</style>
     </section>
   );
 }
