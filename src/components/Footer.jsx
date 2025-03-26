@@ -92,7 +92,7 @@ function Footer() {
               <div className="row align-items-center">
                 {/* Cột thông tin liên hệ */}
                 <div className="col-8">
-                  <h4 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h4>
+                  <h5 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h5>
                   {addressItems.map((item) => (
                     <p key={item.id} className="mb-2">
                       {item.title}
