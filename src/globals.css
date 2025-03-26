@@ -316,6 +316,76 @@ a {
   }
 }
 
+/* International Training Section */
+.international-training {
+  background-color: #fff;
+}
+
+.training-carousel {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.training-carousel .carousel-item {
+  padding: 2rem;
+}
+
+.training-carousel .feature-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.training-carousel .carousel-indicators {
+  bottom: -50px;
+}
+
+.training-carousel .carousel-indicators [data-bs-target] {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+  opacity: 0.5;
+}
+
+.training-carousel .carousel-indicators .active {
+  background-color: var(--bs-primary);
+  opacity: 1;
+}
+
+.training-carousel .carousel-control-prev,
+.training-carousel .carousel-control-next {
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.training-carousel .carousel-control-prev:hover,
+.training-carousel .carousel-control-next:hover {
+  opacity: 1;
+}
+
+.training-carousel h4 {
+  color: #333;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .training-carousel h4 {
+    font-size: 1.2rem;
+  }
+  
+  .training-carousel .feature-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+
 
 
 
