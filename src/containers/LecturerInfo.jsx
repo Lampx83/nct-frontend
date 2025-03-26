@@ -51,12 +51,12 @@ const LecturerInfo = ({ lecturer, slug }) => {
   return (
     <div className="lecturer-info container mt-5 pt-3">
       <div className="row mt-2 mb-5 mt-5 pt-3">
-        <div className="col-3 col-lg-4 col-md-12 col-xs-12">
-          <div className="row h-100 w-100 d-flex justify-content-center ">
-              <div className="col-12">
+        <div className="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+          <div className="row h-100 w-100 justify-content-md-center">
+              <div className="col-12 ">
                 <img
                   style={{ objectFit: "cover" }}
-                  className="img-lecture mb-3 align-self-center"
+                  className="img-lecture mb-3"
                   src={avatarUrl}
                   alt={displayName}
                 />
@@ -66,7 +66,7 @@ const LecturerInfo = ({ lecturer, slug }) => {
               </div>
           </div>
         </div>
-        <div className="col-9 col-lg-8 col-md-12 col-xs-12">
+        <div className="col-xxl-9 col-xl-9 col-lg-8 col-md-6 col-sm-12 col-xs-12">
           <div style={{ fontSize: "18px" }}>
             <div
               className="custom-h3 custom-list"

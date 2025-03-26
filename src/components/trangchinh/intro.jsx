@@ -129,7 +129,7 @@ export function Intro() {
           position: relative;
           text-align: center;
           border-radius: 8px;
-          box-shadow: 0px 0 25px rgba(0, 0, 0, 0.1);
+          box-shadow: inset 0px 0 20px rgba(0, 0, 0, 0.1); 
         }
 
         .services .details .icon {
