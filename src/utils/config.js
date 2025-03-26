@@ -1,3 +1,5 @@
+// Project: nct-frontend
+
 export default {
   // API_URL: 'http://localhost:1337'
   API_URL: "https://nct-frontend-liard.vercel.app/admin",
