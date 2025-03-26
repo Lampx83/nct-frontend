@@ -35,7 +35,6 @@ export function Intro() {
     fetchIntroData();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   const imagesIntroduction = introData?.data?.attributes?.imagesIntroduction || [];

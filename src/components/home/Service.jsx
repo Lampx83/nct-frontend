@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Carousel } from 'react-bootstrap';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/splide/dist/css/splide.min.css'; // Import CSS cho Splide
 import '../../css/Service.css';
 
 function Service() {
@@ -16,9 +17,9 @@ function Service() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('https://nct-frontend-liard.vercel.app/admin/api/services?populate=*');
+        const response = await fetch('https://nct-frontend-liard.vercel.app/admin/api/index-page?populate=deep,3');
         const data = await response.json();
-        setServices(data.data || []);
+        setServices(data.data.attributes.imagesIntroduction || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -103,8 +104,7 @@ function Service() {
   // Xác định số lượng cards trên mỗi slide dựa vào kích thước màn hình
   const getCardsPerSlide = () => {
     if (windowWidth >= 768 && windowWidth < 992) return 2;
-    if (windowWidth >= 576 && windowWidth < 768) return 2;
-    if (windowWidth < 576) return 1;
+    if (windowWidth < 768) return 1;
     return 3;
   };
 
@@ -118,40 +118,41 @@ function Service() {
     </div>
   );
 
-  const renderCarouselView = () => {
+  const renderSplideView = () => {
     const cardsPerSlide = getCardsPerSlide();
-    const groupedServices = chunkArray(displayServices, cardsPerSlide);
 
     return (
-      <Carousel 
-        interval={3000}
-        indicators={false}
-        className="service-carousel"
-      >
-        {groupedServices.map((group, groupIndex) => (
-          <Carousel.Item key={groupIndex}>
-            <div className="row g-4 justify-content-center">
-              {group.map((service) => (
-                <div 
-                  key={service.id} 
-                  className={`col-${12/cardsPerSlide}`}
-                >
-                  <ServiceCard service={service} />
-                </div>
-              ))}
-            </div>
-          </Carousel.Item>
+      <Splide options={{
+        rewind: true,
+        type: "loop",
+        perPage: cardsPerSlide,
+        gap: 20,
+        arrows: true,
+        pagination: false,
+        breakpoints: {
+          768: {
+            perPage: 2,
+          },
+          576: {
+            perPage: 1,
+          },
+        },
+      }}>
+        {displayServices.map((service) => (
+          <SplideSlide key={service.id}>
+            <ServiceCard service={service} />
+          </SplideSlide>
         ))}
-      </Carousel>
+      </Splide>
     );
   };
 
   // Component cho mỗi card
   const ServiceCard = ({ service }) => {
-    const imageUrl = service.attributes.image?.data?.attributes?.url;
+    const imageUrl = `https://nct-frontend-liard.vercel.app/admin/${service.image?.data?.attributes?.url}`;
     const fullImageUrl = imageUrl ? 
       (imageUrl.startsWith('/') && !imageUrl.startsWith('//') ? 
-        `https://nct-frontend-liard.vercel.app/admin${imageUrl}` : imageUrl) 
+        `https://nct-frontend-liard.vercel.app${imageUrl}` : imageUrl) 
       : '';
 
     return (
@@ -159,15 +160,15 @@ function Service() {
         <div className="service-image">
           <img 
             src={fullImageUrl || '/images/default-service.jpg'} 
-            alt={service.attributes.title} 
+            alt={service.title} 
             className="img-fluid"
           />
         </div>
         <div className="service-header">
-          <h4>{service.attributes.title}</h4>
+          <h4>{service.title}</h4>
         </div>
         <div className="service-content">
-          <p>{service.attributes.description}</p>
+          <p>{service.description}</p>
         </div>
       </div>
     );
@@ -179,7 +180,7 @@ function Service() {
         <div className="text-center mb-5">
           <h2 className="utm-trajan text-white">TẠI SAO NÊN CHỌN TRƯỜNG CÔNG NGHỆ</h2>
         </div>
-        {windowWidth >= 1200 ? renderNormalView() : renderCarouselView()}
+        {windowWidth >= 1200 ? renderNormalView() : renderSplideView()}
       </div>
     </section>
   );
