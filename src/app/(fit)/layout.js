@@ -80,7 +80,7 @@ export default async function RootLayout({ children, params }) {
             >
               <RouteChangeTracker />
               <Navbar />
-              <div style={{ minHeight: "50vh" }}>{children}</div>
+                <div style={{ minHeight: "50vh" }}>{children}</div>
               <Footer />
             </ConfigProvider>
           </AntdRegistry>
