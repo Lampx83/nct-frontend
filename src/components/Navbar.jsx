@@ -104,8 +104,11 @@ const Navbar = () => {
         id="navbarCollapse"
         style={{
           backgroundColor: !isNavCollapsed ? "var(--bs-heading-color)" : "transparent",
-          margin: !isNavCollapsed ? "0 -12px" : "0",
+          // margin: !isNavCollapsed ? "0px -12px" : "0",
           padding: !isNavCollapsed ? "1rem" : "0",
+          marginRight: !isNavCollapsed ? "48px" : "60px",
+          // marginTop: !isNavCollapsed ? "0px -12px" : "0",
+          // marginBottom: !isNavCollapsed ? "0px -12px" : "0",
         }}
       >
         <ul className="navbar-nav ms-auto p-4 p-lg-0">
