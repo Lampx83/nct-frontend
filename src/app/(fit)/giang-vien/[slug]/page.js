@@ -2,7 +2,7 @@ import LecturerInfo from "@/containers/LecturerInfo";
 import axios from "axios";
 async function getData(slug) {
   const res = await axios.get(
-    `https://fit.neu.edu.vn/admin/api/lecturers?filters[slug][$eq]=${slug}&populate=*`
+    `https://nct-frontend-liard.vercel.app/admin/api/lecturers?filters[slug][$eq]=${slug}&populate=*`
   );
   return res.data;
 }

@@ -16,8 +16,8 @@ export default function TrangChinh() {
     <>
         <VideoBackground/>
         <Intro/>
-        <Service/>
         <Khoa/>
+        {/* <Service/> */}
         <StatsSection/>
         <News/>
         <Events/>

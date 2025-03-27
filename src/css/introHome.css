@@ -10,7 +10,7 @@ h2 {
 }
 
 .services.section {
-    background-image: url('/images/logoNCT_transparent.png');
+    /* background-image: url('/images/logoNCT_transparent.png'); */
     background-size:cover;
     background-position: center;
     position: relative;
@@ -19,6 +19,6 @@ h2 {
 
 .intro p {
     font-size: 1.24rem;
-    width: 70% !important;
+    width: 85% !important;
     margin: auto;
 }

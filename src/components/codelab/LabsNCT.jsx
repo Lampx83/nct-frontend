@@ -112,4 +112,4 @@ const LecturerList = () => {
   );
 };
 
-export default LecturerList;
+export default LabNCT;
