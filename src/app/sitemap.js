@@ -68,11 +68,12 @@ export default async function sitemap() {
   const baseUrl = "https://nct.neu.edu.vn";
   const staticUrls = [
     "/moi-truong-hoc", "/contact", "/research", "/information", "/smartdoc", "/theses", "/tin-tuc",
-    "/topstudent", "/trangchu", "/theses", "/ve-chung-toi", "/youth","tuyen-sinh"
+    "/topstudent", "/trangchu", "/theses", "/ve-chung-toi", "/youth","/tuyen-sinh","lecturer"
   ];
   // lecturer, post, syllabus, tuyen-sinh
   let majorUrls = [];
 let subjectUrls = [];
+let lecturerUrls = [];
 
 try {
   const majors = await getMajors();
