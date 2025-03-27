@@ -1,4 +1,3 @@
-// import SEO from "@/components/SEO";
 import CurriculumDetail from "@/containers/CurriculumDetail";
 import axios from "axios"
 import { checkLocaleSubjects } from "@/helpers/curriculumTable";
