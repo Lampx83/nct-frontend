@@ -83,7 +83,7 @@ const items = [
           maxHeight: 'calc(100vh - 90px - 100px)',
           padding: '15px',
           overflowY: 'auto',
-          zIndex: 1000,
+          zIndex: 999,
           fontSize: '16px'
         }}
         items={items}
