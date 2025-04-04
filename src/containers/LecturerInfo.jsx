@@ -55,7 +55,7 @@ const LecturerInfo = ({ lecturer, slug }) => {
           <div className="row h-100 w-100 justify-content-md-center">
               <div className="col-12 ">
                 <img
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover",maxWidth: "280px" }}
                   className="img-lecture mb-3"
                   src={avatarUrl}
                   alt={displayName}

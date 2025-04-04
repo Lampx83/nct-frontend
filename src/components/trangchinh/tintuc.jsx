@@ -121,8 +121,8 @@ export function News() {
                 />
               </div>
               <div className="main-news-text">
-                <span className="category">{newsItems[0].category}</span>
-                <h2>{newsItems[0].title}</h2>
+                <span className="category" style={{ fontFamily: "Barlow, sans-serif" }}>{newsItems[0].category}</span>
+                <h2  style={{ fontFamily: "Barlow, sans-serif" }}>{newsItems[0].title}</h2>
               </div>
             </Link>
           </div>
@@ -136,7 +136,7 @@ export function News() {
                     <img src={item.image} alt={item.title} className="grid-image" />
                   </div>
                   <div className="grid-text">
-                    <span className="category">{item.category}</span>
+                    <span className="category" style={{ fontFamily: "Barlow, sans-serif" }}>{item.category}</span>
                     <h3>{item.title}</h3>
                   </div>
                 </Link>
