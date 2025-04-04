@@ -63,7 +63,7 @@ const LecturerList = () => {
           {itemsToDisplay.map((lecturer) => (
             <div key={lecturer.id} className="col-md-6 col-lg-4 col-xl-3 mb-4">
               <div className="card bg-light h-100 text-center">
-                <Link href={`/lecturer/${lecturer.attributes.slug}`}>
+                <Link href={`/giang-vien/${lecturer.attributes.slug}`}>
                   <div className="event-image-container">
                     <img
                       className="event-image"
