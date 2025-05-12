@@ -57,7 +57,7 @@ const NewsDetails = ({ newsData }) => {
       >
         <div
           className="mask d-flex align-items-center"
-          style={{ backgroundColor: "rgba(0,0,0,0.2)", height: "100%" }}
+          style={{ backgroundColor: "rgba(0,0,0,0.1)", height: "100%" }}
         >
           <div className="container text-center text-white">
             <h2 className="display-7 text-light my-4 ">{newsData?.title || "Tin tức"}</h2>
