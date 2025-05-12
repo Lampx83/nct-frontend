@@ -33,16 +33,16 @@ const AboutUs = ({ aboutUs }) => {
                 />
             </div>
 
-            <div className="container mx-auto p-5" style={{ width: "80%" }}>
+            <div className="container py-5">
                 <h4 style={{ fontWeight: "620", textTransform: "uppercase" }}>
                     TRƯỜNG CÔNG NGHỆ – ĐẠI HỌC KINH TẾ QUỐC DÂN
                 </h4>
                 <h3 className="text-dark">LỜI CHÀO MỪNG</h3>
                 <div className="row">
-                    <div className="col-9 py-5">
+                    <div className="col-sm-9 py-5">
                         <div dangerouslySetInnerHTML={{ __html: aboutUs.attributes.content }}></div>
                     </div>
-                    <div className="col-3 py-5">
+                    <div className="col-sm-3 py-5">
                         <img src={`${config.API_URL}${aboutUs.attributes.thumbnail.data.attributes.url}`} />
                     </div>
                 </div>

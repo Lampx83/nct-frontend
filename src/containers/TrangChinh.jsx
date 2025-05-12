@@ -9,20 +9,21 @@ import Service from "@/components/home/Service";
 import StatsSection from '../components/trangchinh/fact';
 import Khoa from '../components/trangchinh/khoa';
 import CustomCarousel from "@/components/home/CustomCarousel";
+import SlideInWhenVisible from "@/components/SlideInWhenVisible";
 
 export default function TrangChinh() { 
 
   return (
     <>
         <VideoBackground/>
-        <Intro/>
-        <Khoa/>
+        <SlideInWhenVisible direction="up"><Intro/></SlideInWhenVisible>
+        <SlideInWhenVisible direction="left"><Khoa/></SlideInWhenVisible>
         {/* <Service/> */}
-        <StatsSection/>
-        <News/>
-        <Events/>
+        <SlideInWhenVisible direction="right"><StatsSection/></SlideInWhenVisible>
+        <SlideInWhenVisible direction="down"><News/></SlideInWhenVisible>
+        <SlideInWhenVisible direction="up"><Events/></SlideInWhenVisible>
         {/* <FaqSection/> */}
-        <Portfolio />
+        <SlideInWhenVisible direction="up"><Portfolio /></SlideInWhenVisible>
     </>
   );
 }

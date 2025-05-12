@@ -7,6 +7,11 @@ import { useState } from "react";
 const API_URL = "https://nct-frontend-liard.vercel.app/admin";
 
 const styles = `
+figure.table {
+  height: auto !important;
+  width: 100% !important; /* hoặc giữ 98.99% nếu bạn muốn */
+}
+
       figure.image {
           text-align: center;
       }
@@ -34,7 +39,6 @@ const styles = `
         margin:auto; /* Căn giữa figcaption */ }
       figure.image figcaption span {
      background-color: transparent !important; }
-
 `;
 
 const NewsDetails = ({ newsData }) => {
@@ -64,10 +68,11 @@ const NewsDetails = ({ newsData }) => {
           </div>
         </div>
       </div>
-      <div className="container p-5">
+      <div className="container p-3">
         <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
       </div>
-    </div>
+      </div>
+    
 
   );
 };
