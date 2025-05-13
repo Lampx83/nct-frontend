@@ -8,8 +8,10 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TableCurriculum from '@/containers/TableCurriculum';
 import 'antd/dist/reset.css';
+import { Collapse } from 'antd';
 
-const items = [
+
+const items1 = [
   {
     key: 'an-toan-thong-tin-7480202',
     icon: <SettingOutlined />,
@@ -66,29 +68,9 @@ const items = [
     label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
   },
 
-  
+
 ];
 
-const MenuComponent = ({ onSelect }) => {
-  return (
-    <Menu
-      mode="vertical"
-      style={{
-        width: '23%',
-        position: 'fixed',
-        top: '90px',
-        left: 0,
-        maxHeight: 'calc(100vh - 90px - 100px)',
-        padding: '15px',
-        overflowY: 'auto',
-        zIndex: 1000,
-        fontSize: '16px',
-      }}
-      items={items}
-      onClick={({ key }) => onSelect(key)}
-    />
-  );
-};
 
 export default function CurriculumDetail({ major }) {
   const searchParams = useSearchParams();
@@ -102,6 +84,8 @@ export default function CurriculumDetail({ major }) {
     searchParams.get('year') || major?.versions[0]?.year || 'N/A'
   );
   const [messageApi, contextHolder] = message.useMessage();
+     const [activeKey, setActiveKey] = useState(['1']);
+  
 
   useEffect(() => {
     setLoading(false);
@@ -122,76 +106,121 @@ export default function CurriculumDetail({ major }) {
   };
 
   const currVersion = major?.versions?.find((version) => version.year === selectedYear);
+  useEffect(() => {
+    const handleResize = () => {
+      const isDesktop = window.width >= 992;
+      setActiveKey(isDesktop ? ['1'] : []);
+    };
+
+    handleResize(); // Thiết lập giá trị ban đầu
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  const items = [
+    {
+      key: "1",
+      label: (
+        <span style={{ fontSize: "18px", fontWeight: "bold", fontFamily: "Roboto, sans-serif", }}>
+          Các chương trình đào tạo
+        </span>
+      ),
+      children: (
+        <div style={{ padding: "8px 16px" }}>
+          {items1.map((item) => (
+            <div key={item.key}>
+              <p >{item.label}</p>
+              <hr />
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="container" style={{ display: 'flex' }}>
-      <MenuComponent onSelect={handleMenuSelect} />
-      <div className="container mt-5" style={{ marginLeft: '270px', width: '100%' }}>
-        {contextHolder}
-        {loading ? (
-          <div className="d-flex justify-content-center align-items-center vh-100 w-100">
-            <Spin size="large" />
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-sm-3"  >
+          <div className="mt-5" style={{ width: "fit-content", margin: "auto" }}>
+            <Collapse items={items} defaultActiveKey={activeKey}
+              expandIconPosition="end"
+              style={{
+                fontFamily: "Roboto, sans-serif",
+                color: "rgb(119, 119, 119)",
+                letterSpacing: "0.6px",
+              }} />
           </div>
-        ) : (
-          <>
-            <h1
-              className="text-center"
-              style={{ color: '#780614', marginTop: '5%', fontSize: '2.4rem', fontWeight: '600' }}
-            >
-              {currVersion?.name?.replace(/K\d{2}/, '')?.trim() || major.title} - {major.admissionCode}
-            </h1>
-            <div className="my-4 description" dangerouslySetInnerHTML={{ __html: major?.description || '' }}></div>
-            <hr style={{ borderColor: 'var(--text-primary-blue)' }} />
-            <div className="d-flex justify-content-end align-items-center gap-2 mb-4">
-              <Select
-                value={selectedYear}
-                onChange={handleYearChange}
-                options={major.versions.map((version) => ({
-                  label: version.year,
-                  value: version.year,
-                }))}
-                loading={isPending}
-              />
-              <Button
-                type="primary"
-                style={{ background: '#a31b1b' }}
-                icon={<FaShare />}
-                onClick={() => setIsModalOpen(true)}
-              >
-                Chia sẻ
-              </Button>
-              <Modal
-                title="Chia sẻ"
-                open={isModalOpen}
-                onOk={() => setIsModalOpen(false)}
-                onCancel={() => setIsModalOpen(false)}
-                footer={null}
-                style={{ minWidth: '40%' }}
-              >
-                <div className="d-flex align-items-center flex-column flex-md-row">
-                  <QRCodeComponent
-                    value={`https://courses.neu.edu.vn${pathname}?${searchParams.toString()}`}
-                    size={180}
-                    style={{ minWidth: '180px' }}
+        </div>
+        <div className="col-sm-9" >
+          <div className="container mt-5">
+            {contextHolder}
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center vh-100 w-100">
+                <Spin size="large" />
+              </div>
+            ) : (
+              <>
+                <h1
+                  className="text-center"
+                  style={{ color: '#780614', marginTop: '5%', fontSize: '2.4rem', fontWeight: '600' }}
+                >
+                  {currVersion?.name?.replace(/K\d{2}/, '')?.trim() || major.title} - {major.admissionCode}
+                </h1>
+                <div className="my-4 description" dangerouslySetInnerHTML={{ __html: major?.description || '' }}></div>
+                <hr style={{ borderColor: 'var(--text-primary-blue)' }} />
+                <div className="d-flex justify-content-end align-items-center gap-2 mb-4">
+                  <Select
+                    value={selectedYear}
+                    onChange={handleYearChange}
+                    options={major.versions.map((version) => ({
+                      label: version.year,
+                      value: version.year,
+                    }))}
+                    loading={isPending}
                   />
-                  <Divider style={{ borderColor: 'gray' }} className="my-3" />
-                  <div className="w-100 d-flex flex-column gap-2 align-items-center">
-                    <Space.Compact style={{ width: '100%' }}>
-                      <Input defaultValue={`https://courses.neu.edu.vn${pathname}`} />
-                      <Button
-                        type="primary"
-                        onClick={() => navigator.clipboard.writeText(`https://courses.neu.edu.vn${pathname}`)}
-                      >
-                        <FaCopy />
-                      </Button>
-                    </Space.Compact>
-                  </div>
+                  <Button
+                    type="primary"
+                    style={{ background: '#a31b1b' }}
+                    icon={<FaShare />}
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Chia sẻ
+                  </Button>
+                  <Modal
+                    title="Chia sẻ"
+                    open={isModalOpen}
+                    onOk={() => setIsModalOpen(false)}
+                    onCancel={() => setIsModalOpen(false)}
+                    footer={null}
+                    style={{ minWidth: '40%' }}
+                  >
+                    <div className="d-flex align-items-center flex-column flex-md-row">
+                      <QRCodeComponent
+                        value={`https://courses.neu.edu.vn${pathname}?${searchParams.toString()}`}
+                        size={180}
+                        style={{ minWidth: '180px' }}
+                      />
+                      <Divider style={{ borderColor: 'gray' }} className="my-3" />
+                      <div className="w-100 d-flex flex-column gap-2 align-items-center">
+                        <Space.Compact style={{ width: '100%' }}>
+                          <Input defaultValue={`https://courses.neu.edu.vn${pathname}`} />
+                          <Button
+                            type="primary"
+                            onClick={() => navigator.clipboard.writeText(`https://courses.neu.edu.vn${pathname}`)}
+                          >
+                            <FaCopy />
+                          </Button>
+                        </Space.Compact>
+                      </div>
+                    </div>
+                  </Modal>
                 </div>
-              </Modal>
-            </div>
-            <TableCurriculum ref={tableRef} curriculum={currVersion?.curriculum || major.versions[0].curriculum} />
-          </>
-        )}
+                <TableCurriculum ref={tableRef} curriculum={currVersion?.curriculum || major.versions[0].curriculum} />
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
