@@ -49,7 +49,7 @@ export function Intro() {
   return (
     <section id="services" className="services section text-center">
       {/* Section Title và Introduction từ API */}
-      <div className="intro" dangerouslySetInnerHTML={renderIntroduction()} />
+      <div className="intro p-md-5 pt-5 pb-5" dangerouslySetInnerHTML={renderIntroduction()} />
 
       {/* Images Introduction */}
       <div className="container-fuild px-5 mx-1" data-aos="fade-up" data-aos-delay="100">

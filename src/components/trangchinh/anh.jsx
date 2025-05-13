@@ -176,7 +176,7 @@ export function Portfolio() {
                 >
                   <div className="portfolio-content">
                     <img src={item.url} className="img-fluid" alt={item.title} />
-                    <div className="portfolio-info">
+                    {/* <div className="portfolio-info">
                       <h4>{item.title}</h4>
                       <a
                         href={item.url}
@@ -189,7 +189,7 @@ export function Portfolio() {
                       <Link href="/details" title="More Details" className="details-link">
                         <i className="bi bi-link-45deg"></i>
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))
