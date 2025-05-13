@@ -26,6 +26,7 @@ const Tintuc = ({ newsData }) => {
                         <Col key={index} xs={24} sm={12} md={8}>
                             <Card
                                 hoverable
+                                className="h-100"
                                 cover={
                                     <Link href={`/post/${news.attributes.slug}`}>
                                         <img
