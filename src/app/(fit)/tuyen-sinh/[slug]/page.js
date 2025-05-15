@@ -3,7 +3,7 @@ import axios from "axios"
 import { checkLocaleSubjects } from "@/helpers/curriculumTable";
 import { notFound } from "next/navigation";
 export const generateMetadata = async ({ params }) => {
-  const { slug } =  params;
+  const { slug } = await params;
   const res = await axios.get(`https://courses.neu.edu.vn/backend/api/curriculum-majors`, {
     params: {
       "filters[slug][$eq]": slug,
@@ -69,7 +69,6 @@ export default async function Page({ params }) {
   try {
     const { slug : majorCode } = await params;
     // setInterceptorLocale(locale);
-    console.log(majorCode)
     const res = await axios.get(`https://courses.neu.edu.vn/backend/api/curriculum-majors`, {
       params: {
         "filters[slug][$eq]": majorCode,
@@ -132,11 +131,6 @@ export default async function Page({ params }) {
 
     return (
       <>
-        {/* <SEO
-          title={`${major.title} - ${major.admissionCode}`}
-          description={`${major.description}`}
-          path={`/m ajor/${major.slug}`}
-        /> */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

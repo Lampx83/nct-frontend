@@ -1,10 +1,19 @@
 import { denormalizeSubjectCode } from "@/helpers/curriculumTable";
 import Syllabus from "@/components/Syllabus";
+import { convertKNumber } from "@/constant/versionSyllabus";
 
 export const generateMetadata = async ({ params }) => {
   const { slug } = await params || {};
   const validateParams = denormalizeSubjectCode(slug?.toString().replaceAll(",", "/"));
-  const url = `https://fit.neu.edu.vn/codelab/api/doc/${validateParams}`;
+
+  const language = validateParams.split("/")[1]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
+  const courseCode = validateParams.split("/").slice(-1)[0]; // Lấy mã môn học (phần cuối cùng của URL)
+  let KNumber = validateParams.split("/")[0]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
+  KNumber = convertKNumber(KNumber);
+
+  const canonicalBaseURL = `https://fit.neu.edu.vn/syllabus/${KNumber}/${language}`;
+  const canonicalURL = `${canonicalBaseURL}/${courseCode}`;
+  const url = `https://fit.neu.edu.vn/codelab/api/doc/${KNumber}/${language}/${courseCode}`;
   const response = await fetch(url);
   if (!response.ok) {
     return {
@@ -41,7 +50,7 @@ export const generateMetadata = async ({ params }) => {
       },
     ],
     alternates: {
-      canonical: `https://courses.neu.edu.vn/syllabus/${validateParams}`
+      canonical: canonicalURL
     }
   };
 };
@@ -49,8 +58,11 @@ export const generateMetadata = async ({ params }) => {
 export default async function Page({ params }) {
   const { slug } = await params || {};
   const validateParams = denormalizeSubjectCode(slug?.toString().replaceAll(",", "/"));
-
-  const url = `https://fit.neu.edu.vn/codelab/api/doc/${validateParams}`;
+  const language = validateParams.split("/")[1]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
+  const courseCode = validateParams.split("/").slice(-1)[0]; // Lấy mã môn học (phần cuối cùng của URL)
+  let KNumber = validateParams.split("/")[0]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
+  KNumber = convertKNumber(KNumber);
+  const url = `https://fit.neu.edu.vn/codelab/api/doc/${KNumber}/${language}/${courseCode}`;
   const response = await fetch(url);
 
   if (!response.ok) {

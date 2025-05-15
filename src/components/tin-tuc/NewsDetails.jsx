@@ -53,6 +53,8 @@ const NewsDetails = ({ newsData }) => {
           height: "500px",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          fontFamily:"Roboto sans-serif !important",
+
         }}
       >
         <div

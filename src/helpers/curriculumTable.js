@@ -69,9 +69,7 @@ export function sortAndGroupSubjects(curriculum) {
       group[type].sort((a, b) => a.attributes.semester - b.attributes.semester);
     });
   });
-
-  // Remove groups with IDs 7 and 8 ("GDQP" and "THECHAT")
-  return Object.values(omit(groups, ["7", "8"]));
+  return Object.values(groups);
 }
 
 export function processSubjectGroups(groups, locale = "vi") {
@@ -88,8 +86,8 @@ export function processSubjectGroups(groups, locale = "vi") {
       name: `${groupIndex}. ${group.name}`,
       type: "group",
       key: `group-${groupIndex}`,
-      credits: requiredCredits + optionalCredits,
-      ...generateSemestersSummary(group),
+      credits: requiredCredits ? requiredCredits : undefined,
+      // ...generateSemestersSummary(group),
     });
 
     if (group.required.length > 0) {
@@ -107,16 +105,30 @@ export function processSubjectGroups(groups, locale = "vi") {
     }
 
     if (group.optional.length > 0) {
+      let minimum = parseInt(group?.optional[0]?.attributes?.knowledgeBlockMin) || undefined;
+      minimum = minimum < group.optional.length ? minimum : undefined;
+
       flatted.push({
         type: "optional",
-        name: locale === "vi" ? `Tự chọn` : `Optional`,
+        name: locale === "vi" ? `Tự chọn${minimum ? ` (SV tự chọn ${minimum}/${group.optional.length} học phần)` : ''}` : `Optional`,
         key: `optional-${groupIndex}`,
-        credits: optionalCredits,
-        ...generateSemestersForType(group.optional),
+        credits: minimum !== undefined ? 3 * parseInt(minimum, 10) : undefined,
+        // ...generateSemestersForType(group.optional),
       });
 
+      let localIndex = subjectIndex;
       group.optional.forEach((subject, indexInGroup) => {
-        flatted.push(transformSubject(subject, ++subjectIndex, indexInGroup + 1));
+        if (minimum !== undefined) {
+          ++localIndex;
+          if (indexInGroup === 0) {
+            flatted.push(transformSubject(subject, `${subjectIndex + 1} - ${subjectIndex + minimum}`, indexInGroup + 1, group.optional.length));
+            subjectIndex += minimum;
+          } else {
+            flatted.push(transformSubject(subject, ``, indexInGroup + 1, 0));
+          }
+        } else {
+          flatted.push(transformSubject(subject, ++subjectIndex, indexInGroup + 1));
+        }
       });
     }
   });
@@ -126,12 +138,12 @@ export function processSubjectGroups(groups, locale = "vi") {
 
 function calculateCredits(subjects) {
   return subjects.reduce((total, subject) =>
-    total + (subject.attributes.curriculum_subject?.data?.attributes?.credits || 0),
+      total + (subject.attributes.curriculum_subject?.data?.attributes?.credits || 0),
     0
   );
 }
 
-function transformSubject(subject, globalIndex, indexInGroup) {
+function transformSubject(subject, globalIndex, indexInGroup, rowSpan = undefined) {
   const { curriculum_subject, ...attributes } = subject.attributes;
   return {
     ...curriculum_subject?.data?.attributes,
@@ -139,9 +151,10 @@ function transformSubject(subject, globalIndex, indexInGroup) {
     index: globalIndex,
     indexInGroup,
     type: "subject",
-    key: `subject-${globalIndex}`,
+    key: `subject-${subject.id}`,
     ...generateSemesters(subject),
     semester: convertSemester(subject.attributes.semester),
+    rowSpan,
   };
 }
 
@@ -202,4 +215,18 @@ export function checkLocaleSubjects(code) {
   ];
   const isEn = prefixes.some((prefix) => code.startsWith(prefix));
   return isEn ? "en" : "vi";
+}
+export function versionAndYear(code) {
+  // Kiểm tra xem code có đúng định dạng "Kxx" không
+  if (!/^K\d{2}$/.test(code)) {
+    return "Invalid Code";
+  }
+
+  // Lấy số khóa học (ví dụ: "K67" -> 67)
+  const yearNumber = parseInt(code.substring(1));
+
+  // Tính toán năm
+  const year = 2019 + (yearNumber - 61);
+
+  return `${code} - ${year}`;
 }
