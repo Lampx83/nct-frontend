@@ -8,14 +8,9 @@ import {
 import { useState, useEffect, useTransition } from "react";
 import StepContent from "@/components/codelab/StepContent";
 import "@/css/doc.css";
-import { GrCircleInformation } from "react-icons/gr";
 import { Modal, Select, Button, Spin } from "antd";
-import { FaCodeCompare } from "react-icons/fa6";
-import { FaDownload, FaQrcode } from "react-icons/fa";
 import axios from "@/utils/axios";
-import { PrinterFilled } from "@ant-design/icons";
-import { QRCode } from "antd";
-import { denormalizeSubjectCode } from "@/helpers/curriculumTable";
+import { denormalizeSubjectCode, versionAndYear } from "@/helpers/curriculumTable";
 
 import { useRef } from "react";
 import { initializeApp } from "firebase/app";
@@ -27,7 +22,7 @@ import {
   signOut,
   OAuthProvider,
 } from "firebase/auth";
-import Link  from "next/link"
+import { convertKNumber } from "@/constant/versionSyllabus";
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCAowCDyHC5b0HhhIBvxVqc0o3lLSMXnJM",
@@ -69,7 +64,7 @@ export default function Syllabus({ dataResponse }) {
     contents: [],
     listChapter: [],
   });
-  const [selectedYear, setSelectedYear] = useState("K67 - 2025");
+  const [selectedYear, setSelectedYear] = useState("");
   const [docError, setDocError] = useState(null);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [syllabusOptions, setSyllabusOptions] = useState([]);
@@ -78,13 +73,40 @@ export default function Syllabus({ dataResponse }) {
   const [qrCode, setQrCode] = useState(null);
   const isRoomInPath = pathname.includes("room");
   const isSyllabusInPath = pathname.includes("syllabus");
+  const [versionSyllabus, setVersionSyllabus] = useState([]);
+
   const [majorsCourse, setMajorsCourse] = useState([]);
   const [modalCourse, setModalCourse] = useState(false);
   const [modalCourseOK, setModalCourseOK] = useState(false);
   const [modalCourseCancel, setModalCourseCancel] = useState(false);
   const contentRef = useRef(null);
   const [years, setYears] = useState([]);
+  useEffect(() => {
+    // Lấy Kxx từ URL (/syllabus/K66/vi/CNTT1101 -> K66)
+    const match = pathname.match(/\/syllabus\/(K\d{2})\//);
+    if (match) {
+      const foundVersion = convertKNumber(match[1]); // Áp dụng convertKNumber
+      setSelectedYear(versionAndYear(foundVersion)); // Chuyển thành "K66 - 2024"
+    }
+}, [pathname]);
+const handleYearChange = (year) => {
+  setSelectedYear(year);
 
+  const yearSlug = year.split(" - ")[0]; // Lấy "K67" từ "K67 - 2025"
+
+  if (!/K\d{2}/.test(pathname)) {
+    console.error("URL không chứa khóa học hợp lệ:", pathname);
+    return;
+  }
+  const newPathname = pathname.replace(/K\d{2}/, yearSlug); // Thay thế phần khóa học cũ
+
+  if (newPathname !== pathname) {
+    // router.push(newPathname);
+    window.location.href = newPathname
+  } else {
+    console.warn("URL không thay đổi:", newPathname);
+  }
+};
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -103,6 +125,23 @@ export default function Syllabus({ dataResponse }) {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  useEffect(() => {
+    const fetchVersionSyllabus = async () => {
+      if (!params?.slug || params.slug.length < 3) {
+        console.error("Invalid params.slug:", params?.slug);
+        return;
+      }
+
+      try {
+        const res = await axios.get(`https://courses.neu.edu.vn/codelab/api/course/${params.slug.join("/")}`);
+        setVersionSyllabus(res.data);
+      } catch (error) {
+        console.error("Error fetching syllabus:", error);
+      }
+    };
+
+    fetchVersionSyllabus();
+  }, [params.slug]); 
   useEffect(() => {
     const fetchMajors = async () => {
       try {
@@ -445,56 +484,14 @@ export default function Syllabus({ dataResponse }) {
           <div className="d-flex align-items-center gap-2">
             <span className="version-text">Version:</span>
             <Select
-              options={years.map((year) => ({ label: year, value: year }))}
+              options={versionSyllabus
+                .sort((a, b) => parseInt(a.substring(1)) - parseInt(b.substring(1))) // Sắp xếp tăng dần theo số
+                .map((year) => ({ label: versionAndYear(year), value: versionAndYear(year) }))
+              }
               value={selectedYear}
-              onChange={(year) => {
-                //setSelectedYear(year);
-                // fetchDoc(year);
-                const yearSlug = year.split(" - ")[0]; // Tách "K67" từ "K67 - 2025"
-                const newPathname = pathname.replace(/K\d{2}/, yearSlug); // Thay thế phần năm cũ
-                router.push(newPathname); // Điều hướng đến URL mới
-              }}
+              onChange={handleYearChange}
             />
           </div>
-          <Button
-            type="primary"
-            icon={<GrCircleInformation />}
-            onClick={() => showModalCourse()}
-          >
-            <span className="d-none d-md-inline">Thông tin</span>
-          </Button>
-
-          <Button
-            type="primary"
-            icon={<FaCodeCompare />}
-            onClick={() => handleCompareClick()}
-          >
-            <span className="d-none d-md-inline">So sánh</span>
-          </Button>
-
-          <Button
-            type="primary"
-            icon={<FaDownload />}
-            onClick={() => handleDownloadWordFile()}
-          >
-            <span className="d-none d-md-inline">Tải về</span>
-          </Button>
-
-          <Button
-            type="primary"
-            icon={<PrinterFilled />}
-            onClick={() => reactToPrint()}
-          >
-            <span className="d-none d-md-inline">In</span>
-          </Button>
-
-          <Button
-            type="primary"
-            icon={<FaQrcode />}
-            onClick={() => showModal()}
-          >
-            <span className="d-none d-md-inline">QR Code</span>
-          </Button>
 
         </div>
       )}

@@ -1,7 +1,4 @@
-@font-face {
-  font-family: "utm_trajan";
-  src: url(/UTM-Trajan-Pro-Bold.ttf);
-}
+
 /* Thêm quy tắc này để ngăn chặn khoảng trắng thừa */
 body {
   overflow-x: hidden; /* Ẩn thanh cuộn ngang */

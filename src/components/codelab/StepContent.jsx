@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import StepHeader from "./StepHeader";
 import StepFooter from "./StepFooter";
 import StepBody from "./StepBody";
@@ -24,7 +24,7 @@ const StepContent = ({
   if (!step) return;
   let contentClass = "";
   if (step.level === 0) {
-    contentClass = "slide-title mt-4";
+    contentClass = "slide-title";
   }
 
   const childSteps = steps.filter((s) => s.parentIndex === step.index);
@@ -36,22 +36,25 @@ const StepContent = ({
     else contentClass = contentClass + " break-after-right";
   }
 
-  return (
-    <div className={`step-content ${contentClass}`}
+  useEffect(() => {
+    if (document.querySelector(`#step-content-${currentStep}`))
+      document.querySelector(`#step-content-${currentStep}`).scrollTop = 0;
+  }, [currentStep]);
 
-      style={{
-        height: "calc(100vh - 66px)",
+  return (
+    <div 
+      className={`step-content ${contentClass}`}
+      style={display === "slide" ? {
+      
         overflowY: "auto",
         overflowX: "hidden",
-        marginTop: 66,
-      }}
-
+    
+      } : {}}
+      id={`step-content-${currentStep}`}
     >
       <StepHeader step={step} display={display} user={user} room={room} />
       {(display === "slide" || (display && showContent)) && (
-        <div className="step-body"
-
-        >
+        <div className="step-body">
           {showContent ? (
             <StepBody
               content={content.content}
