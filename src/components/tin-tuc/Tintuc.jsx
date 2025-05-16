@@ -13,12 +13,12 @@ const Tintuc = ({ newsData }) => {
     return (
         <div>
             <div style={{ textAlign: "center" }}>
-                    <img
-                        src="/images/newsbanner.jpg" 
-                        alt="Banner Tin tức"
-                        style={{ width: "100%", maxHeight: "500px", objectFit: "cover"}}
-                    />
-                </div>
+                <img
+                    src="/images/newsbanner.jpg"
+                    alt="Banner Tin tức"
+                    style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
+                />
+            </div>
             <div className="container" style={{ marginTop: "50px" }}>
                 <h2>Tin tức</h2>
                 <Row gutter={[16, 16]}>
@@ -54,7 +54,11 @@ const Tintuc = ({ newsData }) => {
                                             alt="Editor Icon"
                                             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
                                         />
-                                        <Text type="secondary">Editor NCT</Text>
+                                        <Text type="secondary">
+                                            <span className="ms-2">{news.attributes.createdBy.data.attributes.firstname}</span>
+                                            <span className="ms-1">{news.attributes.createdBy.data.attributes.lastname}</span>
+
+                                        </Text>
                                     </div>
                                     <Text type="secondary">
                                         {moment(news.attributes.eventDate || news.attributes.createdAt).format("DD/MM/YYYY")}

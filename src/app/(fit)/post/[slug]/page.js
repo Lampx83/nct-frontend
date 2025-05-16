@@ -3,7 +3,7 @@ import NewsDetails from "@/components/tin-tuc/NewsDetails";
 
 async function getBlogData(slug) {
   try {
-    const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/blogs", {
+    const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/blogs?populate=*", {
       cache: "no-store", // Đảm bảo dữ liệu luôn cập nhật
     });
 
