@@ -71,18 +71,21 @@ const Navbar = () => {
             className="m-0 text-white"
             style={{
               textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
-              transition: "color 0.3s ease", fontSize: "1rem"
+              transition: "color 0.3s ease", fontSize: "0.8rem",
+              fontFamily: "utm_trajan",
+              fontWeight: "bold",
             }}
           >
             ĐẠI HỌC KINH TẾ QUỐC DÂN
           </h5>
           <h1
-            className="m-0 text-white"
+            className="m-0 text-white mt-1"
             style={{
               textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
               transition: "color 0.3s ease",
-              fontSize: "1.5rem",
-              fontWeight: "bold"
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+              fontFamily: "utm_trajan",
             }}
           >
             TRƯỜNG CÔNG NGHỆ
@@ -115,11 +118,15 @@ const Navbar = () => {
           {menuItems.map((item) => (
             <li key={item.id} className="nav-item position-relative">
               <a 
-                className="nav-link text-white" 
+                className="nav-link text-white fw-bolder" 
                 href={item.path}
                 style={{
                   borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none", // Thêm đường kẻ phân cách giữa các menu items
                   padding: !isNavCollapsed ? "1rem 0" : "10px", // Tăng padding cho menu items khi mở
+                  fontFamily: "utm_trajan",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
                 }}
               >
                 {item.title}
