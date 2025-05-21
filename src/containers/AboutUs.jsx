@@ -39,7 +39,7 @@ const AboutUs = ({ aboutUs }) => {
                 </h4>
                 <h3 className="text-dark">LỜI CHÀO MỪNG</h3>
                 <div className="row">
-                    <div className="col-sm-9 py-5">
+                    <div className="col-sm-9 py-5 mx-auto">
                         <div dangerouslySetInnerHTML={{ __html: aboutUs.attributes.content }}></div>
                     </div>
                     <div className="col-sm-3 py-5">

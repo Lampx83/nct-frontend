@@ -15,6 +15,14 @@ figure.table {
       figure.image {
           text-align: center;
       }
+           .content-wrapper {
+          margin: 0 auto;
+        }
+        .content-wrapper p {
+          text-align: justify;
+          font-family: "Roboto", sans-serif;
+          line-height: 1.6;
+        }
 
       figure.image img {
           width: 50%;
@@ -25,11 +33,6 @@ figure.table {
       figure.image_resized {
     margin: 0 auto; 
      }
-
-      p{
-        font-family: "Roboto", sans-serif;
-        line-height: 1.6;
-        }
       figure.image figcaption {
        background-color: rgba(0, 0, 0, 0.05); /* Màu nền nhẹ */
         font-style: italic; 
@@ -83,7 +86,9 @@ const NewsDetails = ({ newsData }) => {
         </div>
       </div>
       <div className="container p-3">
-        <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
+        <div className="content-wrapper">
+          <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
+        </div>
       </div>
     </div>
 
