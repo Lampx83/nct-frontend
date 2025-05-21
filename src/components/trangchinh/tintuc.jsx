@@ -39,8 +39,17 @@ export function News() {
             title: blog.attributes.title,
             image: extractFirstImage(blog.attributes.content) || "https://picsum.photos/400/500",
             url: `/post/${blog.attributes.slug}`,
+            eventDate: blog.attributes.eventDate ,
+            pin: blog.attributes.pin || false,
           }))
         );
+
+        // Sắp xếp: pin trước, eventDate mới hơn lên trước
+        mappedNews.sort((a, b) => {
+          if (a.pin !== b.pin) return b.pin - a.pin; // true -> false
+          return new Date(b.eventDate) - new Date(a.eventDate); // mới -> cũ
+        });
+
 
         setAllNews(mappedNews);
         setNewsItems(mappedNews.slice(0, 5));
@@ -84,7 +93,7 @@ export function News() {
         <div className="topics-dropdown">
           <div className="dropdown">
             <button
-              className="btn  btn-primary text-light dropdown-toggle topics-select"
+              className="btn btn-primary text-light dropdown-toggle topics-select"
               type="button"
               id="topicsDropdown"
               data-bs-toggle="dropdown"
@@ -121,8 +130,8 @@ export function News() {
                 />
               </div>
               <div className="main-news-text">
-                <span className="category" style={{ fontFamily: "Barlow, sans-serif" }}>{newsItems[0].category}</span>
-                <h2  style={{ fontFamily: "Barlow, sans-serif" }}>{newsItems[0].title}</h2>
+                <span className="category">{newsItems[0].category}</span>
+                <h2>{newsItems[0].title}</h2>
               </div>
             </Link>
           </div>
@@ -136,7 +145,7 @@ export function News() {
                     <img src={item.image} alt={item.title} className="grid-image" />
                   </div>
                   <div className="grid-text">
-                    <span className="category" style={{ fontFamily: "Barlow, sans-serif" }}>{item.category}</span>
+                    <span className="category">{item.category}</span>
                     <h3>{item.title}</h3>
                   </div>
                 </Link>
@@ -146,12 +155,7 @@ export function News() {
           {hasRightColumnItems && (
             <div className="text-end mt-auto">
               <Link href="/tin-tuc">
-                <button
-                  className="btn btn-primary w-100"
-                  style={{ fontFamily: "Barlow, sans-serif" }}
-                >
-                  Tin tức khác <span className="ms-1">→</span>
-                </button>
+                <button className="btn btn-primary w-100">Tin tức khác →</button>
               </Link>
             </div>
           )}
@@ -182,11 +186,6 @@ export function News() {
           cursor: pointer;
         }
 
-        .dropdown-menu {
-          // max-height: 200px;
-          // overflow-y: auto;
-        }
-
         .main-news-image {
           width: 100%;
           height: 500px;
@@ -209,17 +208,13 @@ export function News() {
           transition: transform 0.5s ease-in-out;
         }
 
-        .img-container:hover .grid-image {
-          transform: scale(1.1);
-        }
-
+        .img-container:hover .grid-image,
         .img-container:hover .main-news-image {
           transform: scale(1.1);
         }
 
         .main-news-text {
-          padding: 15px 0;
-          padding-bottom: 0;
+          padding: 15px 0 0 0;
           color: #00205b;
         }
 
@@ -229,12 +224,14 @@ export function News() {
           text-transform: uppercase;
           display: block;
           margin-bottom: 5px;
+          font-family: "Barlow", sans-serif;
         }
 
         .main-news-text h2 {
           font-size: 20px;
           margin: 0;
           line-height: 1.4;
+          font-family: "Barlow", sans-serif;
         }
 
         .right-column {
@@ -260,6 +257,7 @@ export function News() {
           text-transform: uppercase;
           display: block;
           margin-bottom: 5px;
+          font-family: "Barlow", sans-serif;
         }
 
         .grid-text h3 {
