@@ -6,8 +6,19 @@ const LabsInfo = ({ lab }) => {
 
   const name = lab.attributes.name;
   const description = lab.attributes.description;
+  const styles = `
+  figure.table table {
+  width: 100% !important;
+  background-color: transparent !important;
+  border: 1px solid #000 !important;
+  border-collapse: collapse !important;
+}
+
+`;
 
   return (
+    <div>
+       <style>{styles}</style>
     <div className="container mt-5 pt-3" style={{ textAlign: "justify" }}>
       <h1 className="text-center mt-5">
         <b>{name}</b>
@@ -52,6 +63,7 @@ const LabsInfo = ({ lab }) => {
           }
         }
       `}</style>
+    </div>
     </div>
   );
 };
