@@ -109,7 +109,6 @@ const Tuyensinh = ({ newsData }) => {
         <div className="col-sm-9" >
 
           <div className=" mt-5">
-            <h2 className="mt-3">Tuyển sinh Đại học</h2>
             <div className="text-center px-4">
               <Image
                 src="/images/NCT_Banner_sinhvien.jpg"
@@ -122,8 +121,8 @@ const Tuyensinh = ({ newsData }) => {
             </div>
 
 
-            <div className="container mt-3">
-              <h2>Tuyển sinh Đại học</h2>
+            <div className="container mt-4">
+              <h2>Tin tuyển sinh</h2>
               <div className="d-flex flex-column gap-4">
                 {newsData?.map((news, index) => (
                   <div key={index} className="card shadow-sm border-0 ">

@@ -72,7 +72,7 @@ const Navbar = () => {
             style={{
               textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
               transition: "color 0.3s ease", fontSize: "0.8rem",
-              fontFamily: "utm_trajan",
+              fontFamily: " Barlow, sans-serif",
               fontWeight: "bold",
             }}
           >
@@ -85,7 +85,7 @@ const Navbar = () => {
               transition: "color 0.3s ease",
               fontSize: "1.1rem",
               fontWeight: "bold",
-              fontFamily: "utm_trajan",
+              fontFamily: "Barlow, sans-serif",
             }}
           >
             TRƯỜNG CÔNG NGHỆ
@@ -123,8 +123,8 @@ const Navbar = () => {
                 style={{
                   borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none", // Thêm đường kẻ phân cách giữa các menu items
                   padding: !isNavCollapsed ? "1rem 0" : "10px", // Tăng padding cho menu items khi mở
-                  fontFamily: "utm_trajan",
-                  fontSize: "0.8rem",
+                  fontFamily: "Barlow, sans-serif",
+                  fontSize: "1.0rem",
                   fontWeight: "bold",
                   textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
                 }}
