@@ -13,13 +13,26 @@ async function getBlogs() {
       allNews: data.data, 
     };
 }
+async function getImage() {
+    const response = await fetch(
+      "https://nct-frontend-liard.vercel.app/admin/api/enrollment-page?populate=*",
+      {
+        cache: "no-store"
+      }
+    );
+    const data = await response.json();
+
+    return  data.data.attributes.thumbnail;
+}
+
 
 export default async function NewsPage() {
   const { newsData, allNews } = await getBlogs();
+  const thumbnail = await getImage();
 
   return (
     <div>
-      <Tuyensinh newsData={newsData} allNews={allNews} />
+      <Tuyensinh newsData={newsData} allNews={allNews} thumbnail={thumbnail} />
     </div>
   );
 }
