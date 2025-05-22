@@ -1,7 +1,10 @@
 import Tuyensinh from "@/containers/tuyensinh";
 async function getBlogs() {
     const response = await fetch(
-      `https://nct-frontend-liard.vercel.app/admin/api/blogs?populate=*&sort=createdAt:desc&filters[blog_category][id][$eq]=6`
+      `https://nct-frontend-liard.vercel.app/admin/api/blogs?populate=*&sort=createdAt:desc&filters[blog_category][id][$eq]=6`,
+      {
+        cache: "no-store"
+      }
     );
     const data = await response.json();
 

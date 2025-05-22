@@ -59,6 +59,7 @@ const items1 = [
 
 const Tuyensinh = ({ newsData }) => {
    const [activeKey, setActiveKey] = useState(['1']);
+   console.log(newsData);
 
   useEffect(() => {
     const handleResize = () => {
