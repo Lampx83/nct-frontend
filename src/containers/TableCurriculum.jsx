@@ -56,9 +56,9 @@ const TableCurriculum = forwardRef(
       curriculum,
       loading = false,
       isEmbed = false,
-      primaryColor = "#a31b1b",
-      secondaryColor = "#a31b1b",
-      tertiaryColor = "#a31b1b",
+      primaryColor = " #780614",
+      secondaryColor = " #780614",
+      tertiaryColor = " #780614",
     },
     ref
   ) => {
