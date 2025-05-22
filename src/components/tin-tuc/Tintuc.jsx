@@ -2,19 +2,18 @@
 import Link from "next/link";
 import moment from "moment";
 import { Card, Row, Col, Typography } from "antd";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 const { Title, Paragraph, Text } = Typography;
 const API_URL = "https://nct-frontend-liard.vercel.app/admin";
-const Tintuc = ({ newsData }) => {
-    const router = useRouter();
-    console.log(newsData)
+const Tintuc = ({ newsData, thumbnail }) => {
+    console.log(newsData);
+    console.log(thumbnail);
+
     return (
         <div>
             <div style={{ textAlign: "center" }}>
                 <img
-                    src="/images/newsbanner.jpg"
+                    src={`${API_URL}${thumbnail.data.attributes.formats.large.url}`}
                     alt="Banner Tin tức"
                     style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
                 />
