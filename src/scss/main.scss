@@ -45,3 +45,20 @@ $enable-negative-margins: true;
 .theme-svg .primary-color {
     fill: $primary;
 }
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--bs-heading-color) !important;
+    color: #fff !important;
+}
+
+.accordion-button.collapsed {
+    background-color: var(--bs-heading-color) !important;
+    color: white !important;
+}
+.accordion-button::after {
+    filter: brightness(0) invert(1);
+}
+
+.accordion-body {
+  background-color: #ffffff;
+}
