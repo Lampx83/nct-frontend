@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import React, { useState, useEffect, useTransition } from 'react';
 import 'antd/dist/reset.css';
-import { Collapse} from 'antd';
+import { Collapse } from 'antd';
 
 const API_URL = "https://nct-frontend-liard.vercel.app/admin";
 const items1 = [
@@ -57,9 +57,9 @@ const items1 = [
 
 ];
 
-const Tuyensinh = ({ newsData }) => {
-   const [activeKey, setActiveKey] = useState(['1']);
-   console.log(newsData);
+const Tuyensinh = ({ newsData, thumbnail }) => {
+  const [activeKey, setActiveKey] = useState(['1']);
+  console.log(newsData)
 
   useEffect(() => {
     const handleResize = () => {
@@ -72,14 +72,14 @@ const Tuyensinh = ({ newsData }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-   const items = [
+  const items = [
     {
       key: "1",
       label: (
-      <span style={{ fontSize: "18px", fontWeight: "bold", fontFamily: "Roboto, sans-serif", }}>
-        Các chương trình đào tạo
-      </span>
-    ),
+        <span style={{ fontSize: "18px", fontWeight: "bold", fontFamily: "Roboto, sans-serif", }}>
+          Các chương trình đào tạo
+        </span>
+      ),
       children: (
         <div style={{ padding: "8px 16px" }}>
           {items1.map((item) => (
@@ -97,9 +97,9 @@ const Tuyensinh = ({ newsData }) => {
     <div className="container mt-5">
       <div className="row">
         <div className="col-sm-3"  >
-          <div className="mt-5"   style={{ width: "fit-content", margin: "auto" }}>
-            <Collapse items={items}  defaultActiveKey={activeKey}
-             expandIconPosition="end"
+          <div className="mt-5" style={{ width: "fit-content", margin: "auto" }}>
+            <Collapse items={items} defaultActiveKey={activeKey}
+              expandIconPosition="end"
               style={{
                 fontFamily: "Roboto, sans-serif",
                 color: "rgb(119, 119, 119)",
@@ -110,15 +110,13 @@ const Tuyensinh = ({ newsData }) => {
         <div className="col-sm-9" >
 
           <div className=" mt-5">
-            <div className="text-center px-4">
-              <Image
-                src="/images/NCT_Banner_sinhvien.jpg"
-                alt="Banner Tin tức"
-                width={1200}
-                height={500}
-                className="img-fluid"
-                style={{ objectFit: "cover", maxHeight: "500px" }}
-              />
+             <div style={{ textAlign: "center" }}>
+                <img
+                    src={`${API_URL}${thumbnail.data.attributes.formats.large.url}`}
+                    alt="Banner Tin tức"
+                    style={{ width: "100%", maxHeight: "300px", objectFit: "cover" }}
+                />
+            </div>
             </div>
 
 
@@ -159,7 +157,13 @@ const Tuyensinh = ({ newsData }) => {
                               height={40}
                               className="rounded-circle"
                             />
-                            <span className="ms-2 text-muted">Editor NCT</span>
+                            <span className="ms-2 text-muted">
+                              <div type="secondary">
+                                <span className="ms-2">{news.attributes.createdBy.data.attributes.firstname}</span>
+                                <span className="ms-1">{news.attributes.createdBy.data.attributes.lastname}</span>
+
+                              </div>
+                            </span>
                           </div>
                           <span className="text-muted">
                             {moment(news.attributes.eventDate || news.attributes.createdAt).format("DD/MM/YYYY")}
@@ -174,7 +178,6 @@ const Tuyensinh = ({ newsData }) => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

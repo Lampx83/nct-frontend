@@ -167,7 +167,9 @@ export default function CurriculumDetail({ major }) {
                 >
                   {currVersion?.name?.replace(/K\d{2}/, '')?.trim() || major.title} - {major.admissionCode}
                 </h1>
-                <div className="my-4 description" dangerouslySetInnerHTML={{ __html: major?.description || '' }}></div>
+                <div className="my-4 description"
+                  style={{ textAlign: 'justify' }}
+                dangerouslySetInnerHTML={{ __html: major?.description || '' }}></div>
                 <hr style={{ borderColor: 'var(--text-primary-blue)' }} />
                 <div className="d-flex justify-content-end align-items-center gap-2 mb-4">
                   <Select
