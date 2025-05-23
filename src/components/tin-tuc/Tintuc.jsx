@@ -11,14 +11,15 @@ const Tintuc = ({ newsData, thumbnail }) => {
 
     return (
         <div>
-            <div style={{ textAlign: "center" }}>
+            <div className=" d-none d-lg-block" style={{ textAlign: "center" }}>
                 <img
                     src={`${API_URL}${thumbnail.data.attributes.formats.large.url}`}
                     alt="Banner Tin tức"
                     style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
                 />
             </div>
-            <div className="container" style={{ marginTop: "50px" }}>
+            <div className="container pt-5">
+                <div className="p-4  d-block d-lg-none"></div>
                 <h2>Tin tức</h2>
                 <Row gutter={[16, 16]}>
                     {newsData?.map((news, index) => (

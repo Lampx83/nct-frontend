@@ -2,134 +2,125 @@
 
 import React, { useState, useRef, useTransition, useEffect } from 'react';
 import { SettingOutlined } from '@ant-design/icons';
-import { Menu, Button, Modal, Select, QRCode as QRCodeComponent, Divider, Input, Space, message, Spin } from 'antd';
-import { FaCopy, FaShare } from 'react-icons/fa';
+import { Select, Spin, Collapse, message } from 'antd';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import TableCurriculum from '@/containers/TableCurriculum';
 import 'antd/dist/reset.css';
-import { Collapse } from 'antd';
-
-
-const items1 = [
-  {
-    key: 'an-toan-thong-tin-7480202',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/an-toan-thong-tin-7480202">An toàn thông tin</Link>,
-  },
-  {
-    key: 'cong-nghe-thong-tin-7480201',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/cong-nghe-thong-tin-7480201">Công nghệ thông tin</Link>,
-  },
-  {
-    key: 'he-thong-thong-tin-7480104',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/he-thong-thong-tin-7480104">Hệ thống thông tin</Link>,
-  },
-  {
-    key: 'he-thong-thong-tin-quan-ly-7340405',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/he-thong-thong-tin-quan-ly-7340405">Hệ thống thông tin quản lí</Link>,
-  },
-  {
-    key: 'khoa-hoc-may-tinh-7480101',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/khoa-hoc-may-tinh-7480101">Khoa học máy tính</Link>,
-  },
-  {
-    key: 'thong-ke-kinh-te-7310107',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/thong-ke-kinh-te-7310107">Thống kê kinh tế</Link>,
-  },
-  {
-    key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro</Link>,
-  },
-  {
-    key: 'phan-tich-du-lieu-kinh-te-EP03',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế</Link>,
-  },
-  {
-    key: 'khoa-hoc-du-lieu-EP15',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu</Link>,
-  },
-  {
-    key: 'tri-tue-nhan-tao-EP16',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo</Link>,
-  },
-  {
-    key: 'ky-thuat-phan-mem-EP17',
-    icon: <SettingOutlined />,
-    label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
-  },
-
-
-];
-
 
 export default function CurriculumDetail({ major }) {
   const searchParams = useSearchParams();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPending, startPending] = useTransition();
-  const tableRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPending, startPending] = useTransition();
   const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(
     searchParams.get('year') || major?.versions[0]?.year || 'N/A'
   );
+  const [activeKey, setActiveKey] = useState(['1']);
   const [messageApi, contextHolder] = message.useMessage();
-     const [activeKey, setActiveKey] = useState(['1']);
-  
+  const tableRef = useRef(null);
+  const prevPathname = useRef(pathname);
 
+  // Tắt pageLoading khi path thay đổi
+  useEffect(() => {
+    if (prevPathname.current !== pathname) {
+      setPageLoading(false);
+      prevPathname.current = pathname;
+    }
+  }, [pathname]);
+
+  // Tắt loading lần đầu
   useEffect(() => {
     setLoading(false);
   }, []);
 
+  // Xử lý chọn chuyên ngành khác
+  const handleMenuClick = (url) => {
+    setPageLoading(true);
+    router.push(url);
+  };
+
+  // Xử lý thay đổi năm
   const handleYearChange = (value) => {
-    setLoading(true); // Bắt đầu loading
+    setLoading(true);
     setSelectedYear(value);
     startPending(() => {
       router.push(`?year=${value}`);
-      setTimeout(() => setLoading(false), 500); // Giả lập thời gian tải dữ liệu
+      setTimeout(() => setLoading(false), 500);
     });
   };
 
-  const handleMenuSelect = (key) => {
-    setLoading(true); // Bắt đầu loading khi chọn menu
-    setTimeout(() => setLoading(false), 700); // Giả lập thời gian tải dữ liệu
-  };
+  const currVersion = major?.versions?.find((v) => v.year === selectedYear);
 
-  const currVersion = major?.versions?.find((version) => version.year === selectedYear);
+  // Collapse menu tự mở theo desktop/mobile
   useEffect(() => {
     const handleResize = () => {
-      const isDesktop = window.width >= 992;
+      const isDesktop = window.innerWidth >= 992;
       setActiveKey(isDesktop ? ['1'] : []);
     };
 
-    handleResize(); // Thiết lập giá trị ban đầu
-
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Danh sách các ngành
+  const programs = [
+    { key: 'an-toan-thong-tin-7480202', title: 'An toàn thông tin' },
+    { key: 'cong-nghe-thong-tin-7480201', title: 'Công nghệ thông tin' },
+    { key: 'he-thong-thong-tin-7480104', title: 'Hệ thống thông tin' },
+    { key: 'he-thong-thong-tin-quan-ly-7340405', title: 'Hệ thống thông tin quản lí' },
+    { key: 'khoa-hoc-may-tinh-7480101', title: 'Khoa học máy tính' },
+    { key: 'thong-ke-kinh-te-7310107', title: 'Thống kê kinh tế' },
+    { key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02', title: 'Định phí bảo hiểm & Quản trị rủi ro' },
+    { key: 'phan-tich-du-lieu-kinh-te-EP03', title: 'Phân tích dữ liệu kinh tế' },
+    { key: 'khoa-hoc-du-lieu-EP15', title: 'Khoa học dữ liệu' },
+    { key: 'tri-tue-nhan-tao-EP16', title: 'Trí tuệ nhân tạo' },
+    { key: 'ky-thuat-phan-mem-EP17', title: 'Kỹ thuật phần mềm' },
+  ];
+
+  const items1 = programs.map(({ key, title }) => {
+    const url = `/tuyen-sinh/${key}`;
+    const isActive = pathname === url;
+
+    return {
+      key,
+      icon: <SettingOutlined />,
+      label: (
+        <a
+          href={url}
+          onClick={(e) => {
+            e.preventDefault();
+            handleMenuClick(url);
+          }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            fontWeight: isActive ? 'bold' : 'normal',
+          }}
+        >
+          {title}
+        </a>
+      ),
+    };
+  });
+
   const items = [
     {
-      key: "1",
+      key: '1',
       label: (
-        <span style={{ fontSize: "18px", fontWeight: "bold", fontFamily: "Roboto, sans-serif", }}>
+        <span style={{ fontSize: '18px', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
           Các chương trình đào tạo
         </span>
       ),
       children: (
-        <div style={{ padding: "8px 16px" }}>
+        <div style={{ padding: '8px 16px' }}>
           {items1.map((item) => (
-            <div key={item.key}>
-              <p >{item.label}</p>
+            <div key={item.key} style={{ marginBottom: 8 }}>
+              <p style={{ margin: 0 }}>{item.label}</p>
               <hr />
             </div>
           ))}
@@ -138,23 +129,34 @@ export default function CurriculumDetail({ major }) {
     },
   ];
 
+  if (pageLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100 w-100">
+        <Spin size="large" tip="Đang tải trang..." />
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-5">
+      {contextHolder}
       <div className="row">
-        <div className="col-sm-3"  >
-          <div className="mt-5" style={{ width: "fit-content", margin: "auto" }}>
-            <Collapse items={items} defaultActiveKey={activeKey}
+        <div className="col-sm-3">
+          <div className="mt-5" style={{ width: 'fit-content', margin: 'auto' }}>
+            <Collapse
+              items={items}
+              defaultActiveKey={activeKey}
               expandIconPosition="end"
               style={{
-                fontFamily: "Roboto, sans-serif",
-                color: "rgb(119, 119, 119)",
-                letterSpacing: "0.6px",
-              }} />
+                fontFamily: 'Roboto, sans-serif',
+                color: 'rgb(119, 119, 119)',
+                letterSpacing: '0.6px',
+              }}
+            />
           </div>
         </div>
-        <div className="col-sm-9" >
+        <div className="col-sm-9">
           <div className="container mt-5">
-            {contextHolder}
             {loading ? (
               <div className="d-flex justify-content-center align-items-center vh-100 w-100">
                 <Spin size="large" />
@@ -167,9 +169,11 @@ export default function CurriculumDetail({ major }) {
                 >
                   {currVersion?.name?.replace(/K\d{2}/, '')?.trim() || major.title} - {major.admissionCode}
                 </h1>
-                <div className="my-4 description"
+                <div
+                  className="my-4 description"
                   style={{ textAlign: 'justify' }}
-                dangerouslySetInnerHTML={{ __html: major?.description || '' }}></div>
+                  dangerouslySetInnerHTML={{ __html: major?.description || '' }}
+                ></div>
                 <hr style={{ borderColor: 'var(--text-primary-blue)' }} />
                 <div className="d-flex justify-content-end align-items-center gap-2 mb-4">
                   <Select
@@ -181,44 +185,11 @@ export default function CurriculumDetail({ major }) {
                     }))}
                     loading={isPending}
                   />
-                  {/* <Button
-                    type="primary"
-                    style={{ background: '#a31b1b' }}
-                    icon={<FaShare />}
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    Chia sẻ
-                  </Button>
-                  <Modal
-                    title="Chia sẻ"
-                    open={isModalOpen}
-                    onOk={() => setIsModalOpen(false)}
-                    onCancel={() => setIsModalOpen(false)}
-                    footer={null}
-                    style={{ minWidth: '40%' }}
-                  >
-                    <div className="d-flex align-items-center flex-column flex-md-row">
-                      <QRCodeComponent
-                        value={`https://courses.neu.edu.vn${pathname}?${searchParams.toString()}`}
-                        size={180}
-                        style={{ minWidth: '180px' }}
-                      />
-                      <Divider style={{ borderColor: 'gray' }} className="my-3" />
-                      <div className="w-100 d-flex flex-column gap-2 align-items-center">
-                        <Space.Compact style={{ width: '100%' }}>
-                          <Input defaultValue={`https://courses.neu.edu.vn${pathname}`} />
-                          <Button
-                            type="primary"
-                            onClick={() => navigator.clipboard.writeText(`https://courses.neu.edu.vn${pathname}`)}
-                          >
-                            <FaCopy />
-                          </Button>
-                        </Space.Compact>
-                      </div>
-                    </div>
-                  </Modal> */}
                 </div>
-                <TableCurriculum ref={tableRef} curriculum={currVersion?.curriculum || major.versions[0].curriculum} />
+                <TableCurriculum
+                  ref={tableRef}
+                  curriculum={currVersion?.curriculum || major.versions[0].curriculum}
+                />
               </>
             )}
           </div>
