@@ -30,8 +30,8 @@ const LabsInfo = ({ lab }) => {
 
         <div className="row mt-3 pt-2 mb-2">
           <div className="col-12">
-            <div style={{ fontSize: "18px" }}>
-              <div className="custom-table" dangerouslySetInnerHTML={{ __html: description }} />
+            <div className="text-dark" style={{ fontSize: "18px", fontFamily: "Roboto, sans-serif" }}>
+              <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: description }} />
             </div>
           </div>
         </div>
@@ -45,7 +45,7 @@ const LabsInfo = ({ lab }) => {
             </h2>
             <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
               <div className="accordion-body">
-                <div className="custom-table" dangerouslySetInnerHTML={{ __html: aim }} />
+                <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: aim }} />
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@ const LabsInfo = ({ lab }) => {
             </h2>
             <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div className="accordion-body">
-                <div className="custom-table" dangerouslySetInnerHTML={{ __html: researchAreas }} />
+                <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: researchAreas }} />
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ const LabsInfo = ({ lab }) => {
             </h2>
             <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
               <div className="accordion-body">
-                <div className="custom-table" dangerouslySetInnerHTML={{ __html: tier }} />
+                <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: tier }} />
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@ const LabsInfo = ({ lab }) => {
             </h2>
             <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
               <div className="accordion-body">
-                <div className="custom-table" dangerouslySetInnerHTML={{ __html: activities }} />
+                <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: activities }} />
               </div>
             </div>
           </div>
