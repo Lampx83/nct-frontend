@@ -6,7 +6,7 @@ import "../css/lectureList.css";
 
 const LecturerList = () => {
   const { data, error, loading } = useFetch(
-    `https://nct-frontend-liard.vercel.app/admin/api/lecturers?populate=*&pagination[pageSize]=100`
+    `https://nct.neu.edu.vn/admin/api/lecturers?populate=*&pagination[pageSize]=100`
   );
 
   const itemsPerPage = 12;
@@ -67,13 +67,13 @@ const LecturerList = () => {
                   <div className="event-image-container">
                     <img
                       className="event-image"
-                      src={`https://nct-frontend-liard.vercel.app/admin${lecturer.attributes.avatarNew?.data?.attributes?.url || "/default-avatar.jpg"}`}
+                      src={`https://nct.neu.edu.vn/admin${lecturer.attributes.avatarNew?.data?.attributes?.url || "/default-avatar.jpg"}`}
                       alt={lecturer.attributes.displayName}
                       style={{ cursor: "pointer", width: "100%", aspectRatio: "3 / 4" }}
                     />
                   </div>
                 </Link>
-                <Link href={`/lecturer/${lecturer.attributes.slug}`} className="lecturer-name-link">
+                <Link href={`/giang-vien/${lecturer.attributes.slug}`} className="lecturer-name-link">
                   <div className="card-body">
                     <h2 className="text-truncate name-lecturer fw-bolder fs-5">{lecturer.attributes.displayName}</h2>
                     <h3 className="text-dark position fs-6 px-3">{lecturer.attributes.position || "Chưa cập nhật"}</h3>

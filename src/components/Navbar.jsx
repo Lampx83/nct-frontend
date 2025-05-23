@@ -61,9 +61,10 @@ const Navbar = () => {
     >
       <a href="/" className="navbar-brand d-flex align-items-center px-1 px-xxl-5">
         <img
-          src="https://nct.neu.edu.vn/wp-content/uploads/2024/05/NEU-NCT-02-01.png"
+          src="https://nct.neu.edu.vn/admin/uploads/images_03ce779a20.png"
           alt="Logo"
-          height="80px"
+          height ="50px"
+
           className="d-md-block ms-1 ms-md-0"
         />
         <div className="d-flex flex-column ms-2 d-none d-md-block d-xxl-block">
