@@ -11,7 +11,7 @@ const AboutUs = ({ aboutUs }) => {
     return (
         <>
             {/* Banner */}
-            <div style={{ position: "relative", textAlign: "center" }}>
+            <div className=" d-none d-lg-block" style={{ position: "relative", textAlign: "center" }}>
                 <div
                     style={{
                         position: "absolute",
@@ -32,7 +32,7 @@ const AboutUs = ({ aboutUs }) => {
                     }}
                 />
             </div>
-
+                    <div className="p-4  d-block d-lg-none"></div>
             <div className="container py-5">
                 <h4 style={{ fontWeight: "620", textTransform: "uppercase" }}>
                     TRƯỜNG CÔNG NGHỆ – ĐẠI HỌC KINH TẾ QUỐC DÂN
