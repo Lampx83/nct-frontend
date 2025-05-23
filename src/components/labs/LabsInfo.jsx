@@ -1,7 +1,14 @@
 "use client";
 import React from "react";
+import Link from "next/link";
+import moment from "moment";
+import { Card, Row, Col, Typography } from "antd";
 
-const LabsInfo = ({ lab }) => {
+const { Title, Paragraph, Text } = Typography;
+const API_URL = "https://nct-frontend-liard.vercel.app/admin";
+
+const LabsInfo = ({ lab,dataActive }) => {
+  console.log(dataActive);
   if (!lab) return <div className="mt-5 pt-5">Not found</div>;
 
   const name = lab.attributes.name;
@@ -79,12 +86,58 @@ const LabsInfo = ({ lab }) => {
           <div className="accordion-item">
             <h2 className="accordion-header" id="headingFour">
               <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                Hoạt Động Nghiên Cứu
+                Hoạt Động 
               </button>
             </h2>
             <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
               <div className="accordion-body">
-                <div className="custom-table" dangerouslySetInnerHTML={{ __html: activities }} />
+                <Row gutter={[16, 16]}>
+                    {dataActive?.map((news, index) => (
+                        <Col key={index} xs={24} sm={12} md={8}>
+                            <Card
+                                hoverable
+                                className="h-100"
+                                cover={
+                                    <Link href={`/post/${news.attributes.slug}`}>
+                                        <img
+                                            src={`${API_URL}${news.attributes.thumbnail.data.attributes.url}`}
+                                            alt={news.attributes.title}
+                                            style={{ height: "180px", objectFit: "cover", borderRadius: "8px 8px 0 0", width: "100%" }}
+                                        />
+                                    </Link>
+                                }
+                            >
+                                <Link href={`/post/${news.attributes.slug}`}>
+                                    <Title level={5}>{news.attributes.title}</Title>
+                                </Link>
+                                {news.attributes.description && (
+                                    <Paragraph>
+                                        {news.attributes.description.length > 100
+                                            ? news.attributes.description.substring(0, 95) + " [...]"
+                                            : news.attributes.description}
+                                    </Paragraph>
+                                )}
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <img
+                                            src="/images/LogoNCT.png"
+                                            alt="Editor Icon"
+                                            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                                        />
+                                        <Text type="secondary">
+                                            <span className="ms-2">{news.attributes.createdBy.data.attributes.firstname}</span>
+                                            <span className="ms-1">{news.attributes.createdBy.data.attributes.lastname}</span>
+
+                                        </Text>
+                                    </div>
+                                    <Text type="secondary">
+                                        {moment(news.attributes.eventDate || news.attributes.createdAt).format("DD/MM/YYYY")}
+                                    </Text>
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
               </div>
             </div>
           </div>
