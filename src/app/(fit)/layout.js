@@ -58,7 +58,7 @@ export default async function RootLayout({ children, params }) {
         />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/js/wow.min.js" />
-      
+
       </head>
       <body>
         <Suspense fallback={<Loading />}>
@@ -79,9 +79,13 @@ export default async function RootLayout({ children, params }) {
               }}
             >
               <RouteChangeTracker />
-              <Navbar />
-                <div style={{ minHeight: "50vh" }}>{children}</div>
-              <Footer />
+              <div className="d-flex flex-column min-vh-100">
+                <Navbar />
+                <main className="flex-fill">
+                  {children}
+                </main>
+                <Footer />
+              </div>
             </ConfigProvider>
           </AntdRegistry>
         </Suspense>
