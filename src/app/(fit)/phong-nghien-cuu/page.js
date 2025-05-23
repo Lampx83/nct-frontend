@@ -3,14 +3,14 @@ import LabsDescription from "@/components/labs/LabsIntro";
 import LabList from "@/components/labs/LabsList";
 async function getDescription() {
     const res = await axios.get(
-      `https://https://nct.neu.edu.vn/admin/admin/api/labs-page`
+      `https://nct.neu.edu.vn/admin/api/labs-page`
     );
     return res.data.data.attributes.description;
   }
 
 async function getLabs() {
     const res = await axios.get(
-      `https://https://nct.neu.edu.vn/admin/admin/api/labs?populate=*`
+      `https://nct.neu.edu.vn/admin/api/labs?populate=*`
     );
     return res.data.data;
 }
