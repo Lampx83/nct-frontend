@@ -283,6 +283,11 @@ export function Events() {
           color: #000;
           margin: 0 0 10px 0;
           font-weight: 600;
+          display: -webkit-box;
+          -webkit-line-clamp: 3; /* Số dòng muốn hiển thị */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .event-description {
@@ -290,6 +295,11 @@ export function Events() {
           color: #666;
           margin: 0 0 10px 0;
           line-height: 1.5;
+          display: -webkit-box;
+          -webkit-line-clamp: 3; /* Số dòng muốn hiển thị */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .more-events a {
