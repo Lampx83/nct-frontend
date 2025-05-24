@@ -34,6 +34,10 @@ const items1 = [
     label: <Link href="/tuyen-sinh/thong-ke-kinh-te-7310107">Thống kê kinh tế</Link>,
   },
   {
+    key: 'toan-kinh-te-7310108',
+    label: <Link href="/tuyen-sinh/toan-kinh-te-7310108">Toán kinh tế</Link>,
+  },
+  {
     key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02',
     label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro</Link>,
   },
@@ -53,6 +57,7 @@ const items1 = [
     key: 'ky-thuat-phan-mem-EP17',
     label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
   },
+
 
 
 ];
@@ -97,7 +102,7 @@ const Tuyensinh = ({ newsData, thumbnail }) => {
     <div className="container mt-5">
       <div className="row">
         <div className="col-sm-3"  >
-          <div className="mt-5" style={{ width: "fit-content", margin: "auto" }}>
+          <div className="mt-5 p-3">
             <Collapse items={items} defaultActiveKey={activeKey}
               expandIconPosition="end"
               style={{
