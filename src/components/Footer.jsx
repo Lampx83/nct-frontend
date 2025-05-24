@@ -19,7 +19,9 @@ function Footer() {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/navigation/render/2?type=TREE`);
+        const response = await fetch(`${baseUrl}/api/navigation/render/2?type=TREE`,
+          {cache: "no-cache"}
+        );
         const data = await response.json();
         setFooterData(data);
       } catch (error) {
@@ -97,7 +99,7 @@ function Footer() {
               <div className="row align-items-center">
                 {/* Cột thông tin liên hệ */}
                 <div className="col-8">
-                  <h5 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h5>
+                  <h5 className="text-light fw-bold mb-4 barlow-font">{schoolName}</h5>
                   {addressItems.map((item) => (
                     <p key={item.id} className="mb-2">
                       {item.title}
@@ -122,7 +124,7 @@ function Footer() {
 
             {/* Thông tin liên hệ cho màn hình lg trở lên */}
             <div className="d-none d-lg-block col-lg-7">
-              <h4 className="text-light fw-bold mb-4 utm-trajan">{schoolName}</h4>
+              <h4 className="text-light fw-bold mb-4 barlow-font">{schoolName}</h4>
               {addressItems.map((item) => (
                 <p key={item.id} className="mb-2">
                   {item.title}
