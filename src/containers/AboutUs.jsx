@@ -11,7 +11,7 @@ const AboutUs = ({ aboutUs }) => {
     return (
         <>
             {/* Banner */}
-            <div className=" d-none d-lg-block" style={{ position: "relative", textAlign: "center" }}>
+            <div style={{ position: "relative", textAlign: "center" }}>
                 <div
                     style={{
                         position: "absolute",
@@ -32,17 +32,17 @@ const AboutUs = ({ aboutUs }) => {
                     }}
                 />
             </div>
-                    <div className="p-4  d-block d-lg-none"></div>
+
             <div className="container py-5">
                 <h4 style={{ fontWeight: "620", textTransform: "uppercase" }}>
                     TRƯỜNG CÔNG NGHỆ – ĐẠI HỌC KINH TẾ QUỐC DÂN
                 </h4>
                 <h3 className="text-dark">LỜI CHÀO MỪNG</h3>
                 <div className="row">
-                    <div className="col-sm-9 py-5 mx-auto">
+                    <div className="col-sm-9 pt-4 mx-auto">
                         <div dangerouslySetInnerHTML={{ __html: aboutUs.attributes.content }}></div>
                     </div>
-                    <div className="col-sm-3 py-5">
+                    <div className="col-sm-3 pt-4">
                         <img src={`${config.API_URL}${aboutUs.attributes.thumbnail.data.attributes.url}`} />
                     </div>
                 </div>
