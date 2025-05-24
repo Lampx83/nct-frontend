@@ -1,0 +1,55 @@
+figure.table {
+    height: auto !important;
+    width: 100% !important;
+    /* hoặc giữ 98.99% nếu bạn muốn */
+}
+
+figure.image {
+    text-align: center;
+}
+
+.content-wrapper {
+    margin: 0 auto;
+}
+
+.content-wrapper p {
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    line-height: 1.6;
+}
+
+figure.image img {
+    width: 50%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+@media (max-width: 768px) {
+  figure.image img {
+    width: 100%;
+  }
+  figure.image figcaption {
+    width: 100% !important;
+  }
+
+}
+
+figure.image_resized {
+    margin: 0 auto;
+}
+
+figure.image figcaption {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Màu nền nhẹ */
+    font-style: italic;
+    text-align: center;
+    padding: 8px 12px;
+    /* Tạo khoảng cách */
+    width: 50%;
+    margin: auto;
+    /* Căn giữa figcaption */
+}
+
+figure.image figcaption span {
+    background-color: transparent !important;
+}
