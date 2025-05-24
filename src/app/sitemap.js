@@ -42,7 +42,7 @@ async function getSubjects() {
   });
 }
 async function getPosts(){
-  const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/blogs", {
+  const response = await fetch("https://nct.neu.edu.vn/admin/api/blogs", {
     cache: "no-store", // Đảm bảo dữ liệu luôn cập nhật
   });
 
