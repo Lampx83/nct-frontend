@@ -1,4 +1,5 @@
 "use client";
+import config from "@/utils/config";
 
 import { useEffect, useState } from "react";
 
@@ -11,7 +12,7 @@ const StatsSection = () => {
     const fetchStatsData = async () => {
       try {
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[stats][populate]=*"
+          `${config.API_URL}/api/index-page?populate[stats][populate]=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch stats data");
