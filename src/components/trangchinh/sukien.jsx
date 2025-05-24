@@ -50,7 +50,7 @@ export function Events() {
               title: blog.attributes.title,
               time: "N/A",
               description: blog.attributes.description || "No description available",
-              image: extractFirstImage(blog.attributes.content) || "https://picsum.photos/300/200",
+              image: "https://nct.neu.edu.vn/admin/uploads/z6628226458849_788d856e3d4736922c91c046da7fb384_57b2e4305f.jpg" || "https://picsum.photos/300/200",
               status: mapSlugToStatus(category.attributes.slug),
               url: `/post/${blog.attributes.slug}`,
             };
