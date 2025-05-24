@@ -200,6 +200,6 @@ export function checkLocaleSubjects(code) {
     "EBDB",
     "ESOM"
   ];
-  const isEn = prefixes.some((prefix) => code.startsWith(prefix));
+  const isEn = prefixes.some((prefix) => code?.startsWith(prefix));
   return isEn ? "en" : "vi";
 }
