@@ -6,8 +6,13 @@ import { Select, Spin, Collapse, message } from 'antd';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import TableCurriculum from '@/containers/TableCurriculum';
 import 'antd/dist/reset.css';
+import moment from "moment";
+import Link from "next/link";
+import config from '@/utils/config';
 
-export default function CurriculumDetail({ major }) {
+const API_URL = config.API_URL;
+
+export default function CurriculumDetail({ major, newsData }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -195,6 +200,61 @@ export default function CurriculumDetail({ major }) {
           </div>
         </div>
       </div>
+      <div className="container mt-4 d-block d-lg-none">
+            <h2 className=" d-none d-lg-block">Tin tuyển sinh</h2>
+            <div className="d-flex flex-column gap-4">
+              {newsData?.map((news, index) => (
+                <div key={index} className="card shadow-sm border-0 ">
+                  <div className="row g-0 align-items-center p-3">
+                    <div className="col-md-5">
+                      <Link href={`/post/${news.attributes.slug}`}>
+                        <img
+                          src={`${API_URL}${news.attributes.thumbnail.data.attributes.url}`}
+                          alt={news.attributes.title}
+                          className="img-fluid rounded"
+                          style={{ objectFit: "cover", height: "250px", maxHeight: "250px", width: "100%" }}
+                        />
+                      </Link>
+                    </div>
+
+                    <div className="col-md-7 p-3">
+                      <Link href={`/post/${news.attributes.slug}`} className="text-decoration-none">
+                        <h5 className="mb-2">{news.attributes.title}</h5>
+                      </Link>
+                      {news.attributes.description && (
+                        <p className="text-muted mb-2">
+                          {news.attributes.description.length > 100
+                            ? news.attributes.description.substring(0, 80) + " [...]"
+                            : news.attributes.description}
+                        </p>
+                      )}
+                      <div className="d-flex justify-content-between align-items-center mt-2">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src="/images/LogoNCT.png"
+                            alt="Editor Icon"
+                            width={40}
+                            height={40}
+                            className="rounded-circle"
+                          />
+                          <span className="ms-2 text-muted">
+                            <div type="secondary">
+                              <span className="ms-2">{news.attributes.createdBy.data.attributes.firstname}</span>
+                              <span className="ms-1">{news.attributes.createdBy.data.attributes.lastname}</span>
+
+                            </div>
+                          </span>
+                        </div>
+                        <span className="text-muted">
+                          {moment(news.attributes.eventDate || news.attributes.createdAt).format("DD/MM/YYYY")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
     </div>
   );
 }

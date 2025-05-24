@@ -46,6 +46,18 @@ export const generateMetadata = async ({ params }) => {
     },
   };
 };
+async function getBlogs() {
+    const response = await fetch(
+      `https://nct.neu.edu.vn/admin/api/blogs?populate=*&sort=createdAt:desc&filters[blog_category][id][$eq]=6`,
+      {
+        cache: "no-store"
+      }
+    );
+    
+    const data = await response.json();
+
+    return data.data;
+}
 
 function generateCourseStructuredData(major) {
   return {
@@ -67,6 +79,7 @@ function generateCourseStructuredData(major) {
 
 export default async function Page({ params }) {
   try {
+      const newsData= await getBlogs();
     const { slug : majorCode } = await params;
     // setInterceptorLocale(locale);
     const res = await axios.get(`https://courses.neu.edu.vn/backend/api/curriculum-majors`, {
@@ -137,7 +150,7 @@ export default async function Page({ params }) {
             __html: JSON.stringify(generateCourseStructuredData(major)),
           }}
         />
-        <CurriculumDetail major={major} />
+        <CurriculumDetail major={major}  newsData={newsData} />
       </>
     );
   } catch (error) {
