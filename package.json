@@ -7,7 +7,8 @@
     "sudodev": "sudo next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start:prod": "next start -p 8003"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.38",
