@@ -1,7 +1,7 @@
 import Tuyensinh from "@/containers/tuyensinh";
 async function getBlogs() {
     const response = await fetch(
-      `https://nct-frontend-liard.vercel.app/admin/api/blogs?populate=*&sort=createdAt:desc&filters[blog_category][id][$eq]=6`,
+      `https://nct.neu.edu.vn/admin/api/blogs?populate=*&sort=createdAt:desc&filters[blog_category][id][$eq]=6`,
       {
         cache: "no-store"
       }
@@ -15,7 +15,7 @@ async function getBlogs() {
 }
 async function getImage() {
     const response = await fetch(
-      "https://nct-frontend-liard.vercel.app/admin/api/enrollment-page?populate=*",
+      "https://nct.neu.edu.vn/admin/api/enrollment-page?populate=*",
       {
         cache: "no-store"
       }
