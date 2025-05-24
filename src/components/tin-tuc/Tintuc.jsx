@@ -19,7 +19,7 @@ const Tintuc = ({ newsData, thumbnail }) => {
                 />
             </div>
             <div className="container pt-5">
-                <div className="p-4  d-block d-lg-none"></div>
+                <div className="p-4 d-block d-lg-none"></div>
                 <h2>Tin tức</h2>
                 <Row gutter={[16, 16]}>
                     {newsData?.map((news, index) => (
