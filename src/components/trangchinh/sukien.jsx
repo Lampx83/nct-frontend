@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import config from "@/utils/config";
 
 // Import styles for Swiper
 import "swiper/css";
@@ -12,7 +11,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 
 export function Events() {
-  const basURL = config.API_URL;
+  const basURL = "https://nct.neu.edu.vn/admin";
   const [selectedFilter, setSelectedFilter] = useState("Sắp Diễn Ra");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +22,8 @@ export function Events() {
       try {
         setLoading(true);
         const response = await fetch(
-          `${basURL}/api/blog-categories?populate=*`
+          `${basURL}/api/blog-categories?populate[blogs][populate]=*
+`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch events");
@@ -37,6 +37,7 @@ export function Events() {
 
         const mappedEvents = validCategories.flatMap((category) =>
           category.attributes.blogs.data.map((blog) => {
+             console.log("Blog:", blog);
             const date = new Date(blog.attributes.publishedAt);
             const formattedDate = date.toLocaleDateString("vi-VN", {
               day: "2-digit",
@@ -50,13 +51,13 @@ export function Events() {
               title: blog.attributes.title,
               time: "N/A",
               description: blog.attributes.description || "No description available",
-              image: "https://nct.neu.edu.vn/admin/uploads/z6628226458849_788d856e3d4736922c91c046da7fb384_57b2e4305f.jpg" || "https://picsum.photos/300/200",
+              image: (`${basURL}${blog.attributes.thumbnail.data.attributes.url}`) || "https://picsum.photos/300/200" ,
               status: mapSlugToStatus(category.attributes.slug),
               url: `/post/${blog.attributes.slug}`,
             };
           })
         );
-
+        console.log(events);
         setEvents(mappedEvents);
 
         // Kiểm tra xem có sự kiện "Sắp Diễn Ra" hay không
