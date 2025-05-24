@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname
 import LogoSVG from "@/components/LogoSVG";
+import "../css/Navbar.css"
 // import API_URL from "@/utils/config"; // Import API_URL từ config.js
 
 const Navbar = () => {
@@ -64,7 +65,7 @@ const Navbar = () => {
         <img
           src="https://nct.neu.edu.vn/admin/uploads/images_03ce779a20.png"
           alt="Logo"
-          height ="50px"
+          height="50px"
 
           className="d-md-block ms-1 ms-md-0"
         />
@@ -104,8 +105,8 @@ const Navbar = () => {
       >
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div 
-        className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`} 
+      <div
+        className={`${isNavCollapsed ? "collapse" : ""} navbar-collapse`}
         id="navbarCollapse"
         style={{
           backgroundColor: !isNavCollapsed ? "var(--bs-heading-color)" : "transparent",
@@ -118,22 +119,28 @@ const Navbar = () => {
       >
         <ul className="navbar-nav ms-auto p-4 p-lg-0">
           {menuItems.map((item) => (
-            <li key={item.id} className="nav-item position-relative">
-              <a 
-                className="nav-link text-white fw-bolder" 
-                href={item.path}
-                style={{
-                  borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none", // Thêm đường kẻ phân cách giữa các menu items
-                  padding: !isNavCollapsed ? "1rem 0" : "10px", // Tăng padding cho menu items khi mở
-                  fontFamily: "Barlow, sans-serif",
-                  fontSize: "1.0rem",
-                  fontWeight: "bold",
-                  textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
-                }}
-              >
-                {item.title}
-              </a>
-            </li>
+            <a
+            key={item.id}
+              className="nav-link text-white fw-bolder hover-grow"
+              href={item.path}
+              style={{
+                borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none",
+                padding: !isNavCollapsed ? "1rem 0" : "10px",
+                fontFamily: "Barlow, sans-serif",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
+                cursor: "pointer",
+                display: "inline-block",     
+                lineHeight: "1",
+                overflow: "hidden",
+                transition: "transform 0.2s ease-in-out"
+              }}
+
+            >
+              {item.title}
+            </a>
+
           ))}
         </ul>
       </div>
