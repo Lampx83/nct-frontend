@@ -87,7 +87,7 @@ const NewsDetails = ({ newsData }) => {
       </div>
       <div className="container p-3">
         <div className="content-wrapper">
-          <div dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
+          <div className="text-dark" dangerouslySetInnerHTML={{ __html: newsData?.content || "Không có nội dung" }}></div>
         </div>
       </div>
     </div>

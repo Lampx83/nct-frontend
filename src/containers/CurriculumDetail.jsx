@@ -200,7 +200,7 @@ export default function CurriculumDetail({ major, newsData }) {
           </div>
         </div>
       </div>
-      <div className="container mt-4 d-block d-lg-none">
+      <div className="container mt-4">
             <h2 className=" d-none d-lg-block">Tin tuyển sinh</h2>
             <div className="d-flex flex-column gap-4">
               {newsData?.map((news, index) => (
