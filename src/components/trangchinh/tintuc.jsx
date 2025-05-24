@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import config from "@/utils/config";
 
 export function News() {
+  const baseUrl = config.API_URL; // Base URL của API
   const [selectedTopic, setSelectedTopic] = useState("Tất Cả");
   const [newsItems, setNewsItems] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -18,7 +20,7 @@ export function News() {
       try {
         setLoading(true);
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/blog-categories?populate=*"
+          `${baseUrl}/api/blog-categories?populate=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch news");

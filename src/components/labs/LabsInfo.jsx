@@ -3,9 +3,11 @@ import React from "react";
 import Link from "next/link";
 import moment from "moment";
 import { Card, Row, Col, Typography } from "antd";
+import config from "@/utils/config";
 
 const { Title, Paragraph, Text } = Typography;
-const API_URL = "https://nct-frontend-liard.vercel.app/admin";
+const API_URL = config.API_URL;
+
 
 const LabsInfo = ({ lab,dataActive }) => {
   console.log(dataActive);

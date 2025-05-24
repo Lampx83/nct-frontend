@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import config from "@/utils/config";
+
 
 const ClientsSection = () => {
+  const baseUrl = config.API_URL; // Base URL của API
   const [clientsData, setClientsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +14,7 @@ const ClientsSection = () => {
     const fetchClientsData = async () => {
       try {
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[departments][populate]=*"
+          `${baseUrl}/api/index-page?populate[departments][populate]=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch departments data");
@@ -43,7 +46,7 @@ const ClientsSection = () => {
 
   if (error) return <div>Error: {error}</div>;
 
-  const baseUrl = "https://nct-frontend-liard.vercel.app/admin";
+  // const baseUrl = "https://nct-frontend-liard.vercel.app/admin";
 
   return (
     <section id="clients" className="clients section">

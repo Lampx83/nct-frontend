@@ -1,5 +1,6 @@
 "use client";
 import '../../css/introHome.css';
+import config from "@/utils/config";
 
 import { useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ export function Intro() {
     const fetchIntroData = async () => {
       try {
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[imagesIntroduction][populate]=*"
+          `${config.API_URL}/api/index-page?populate[imagesIntroduction][populate]=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -39,7 +40,7 @@ export function Intro() {
 
   const imagesIntroduction = introData?.data?.attributes?.imagesIntroduction || [];
   const introductionHtml = introData?.data?.attributes?.introduction || "";
-  const baseUrl = "https://nct-frontend-liard.vercel.app/admin"; // Base URL của API
+  const baseUrl = config.API_URL; // Base URL của API
 
   // Hàm xử lý HTML từ API
   const renderIntroduction = () => {
