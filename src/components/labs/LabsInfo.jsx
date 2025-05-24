@@ -6,13 +6,14 @@ import { Card, Row, Col, Typography } from "antd";
 import config from "@/utils/config";
 
 const { Title, Paragraph, Text } = Typography;
-const API_URL = config.API_URL;
 
+const API_URL = config.API_URL;
 
 const LabsInfo = ({ lab,dataActive }) => {
   console.log(dataActive);
   if (!lab) return <div className="mt-5 pt-5">Not found</div>;
-
+  console.log(lab);
+  console.log(dataActive);
   const name = lab.attributes.name;
   const description = lab.attributes.description;
   const aim = lab.attributes.aim;
