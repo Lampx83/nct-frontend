@@ -5,12 +5,13 @@ import moment from "moment";
 import { Card, Row, Col, Typography } from "antd";
 
 const { Title, Paragraph, Text } = Typography;
-const API_URL = "https://nct-frontend-liard.vercel.app/admin";
+const API_URL = "https://nct.neu.edu.vn/admin";
 
 const LabsInfo = ({ lab,dataActive }) => {
   console.log(dataActive);
   if (!lab) return <div className="mt-5 pt-5">Not found</div>;
-
+  console.log(lab);
+  console.log(dataActive);
   const name = lab.attributes.name;
   const description = lab.attributes.description;
   const aim = lab.attributes.aim;

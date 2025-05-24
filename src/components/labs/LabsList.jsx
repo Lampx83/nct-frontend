@@ -8,7 +8,7 @@ export default function LabsList({ labs }) {
       {labs.map((lab) => (
         <div key={lab.id} className="col">
           <Link
-            href={`/phong-nghien-cuu/${lab.id}`}
+            href={`/phong-nghien-cuu/${lab.attributes.slug}`}
             className="text-decoration-none text-dark"
           >
             <div className="border rounded shadow-sm bg-white p-3 h-100 text-center d-flex flex-column align-items-center justify-content-center">

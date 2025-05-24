@@ -20,7 +20,7 @@ async function getDataActive(slug) {
 }
 
 
-export default async function Page({ params }) {
+export default async function Page({params}) {
   console.log(params);
   const resData = await getData(params.slug);
   const dataActive = await getDataActive(params.slug);
