@@ -2,9 +2,10 @@
 import Link from "next/link";
 import moment from "moment";
 import { Card, Row, Col, Typography } from "antd";
+import { useContext } from "react";
 
 const { Title, Paragraph, Text } = Typography;
-const API_URL = "https://nct-frontend-liard.vercel.app/admin";
+const API_URL = "https://nct.neu.edu.vn/admin";
 const Tintuc = ({ newsData, thumbnail }) => {
     console.log(newsData);
     console.log(thumbnail);
