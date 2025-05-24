@@ -95,7 +95,7 @@ const LabsInfo = ({ lab, dataActive }) => {
             <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
               <div className="accordion-body">
                 {dataActive?.length === 0 ? (
-                  <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: activities }} />
+                <div className="custom-table text-dark" dangerouslySetInnerHTML={{ __html: activities }} />
                 ) : (
                   <Row gutter={[16, 16]}>
                     {dataActive?.map((news, index) => (
