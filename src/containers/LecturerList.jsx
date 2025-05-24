@@ -3,10 +3,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import useFetch from "../utils/fetch";
 import "../css/lectureList.css";
+import config from "../utils/config";
+
+
 
 const LecturerList = () => {
   const { data, error, loading } = useFetch(
-    `https://nct.neu.edu.vn/admin/api/lecturers?populate=*&pagination[pageSize]=100`
+    `${config.API_URL}/api/lecturers?populate=*&pagination[pageSize]=100`
   );
 
   const itemsPerPage = 12;
@@ -67,7 +70,7 @@ const LecturerList = () => {
                   <div className="event-image-container">
                     <img
                       className="event-image"
-                      src={`https://nct.neu.edu.vn/admin${lecturer.attributes.avatarNew?.data?.attributes?.url || "/default-avatar.jpg"}`}
+                      src={`${config.API_URL}${lecturer.attributes.avatarNew?.data?.attributes?.url || "/default-avatar.jpg"}`}
                       alt={lecturer.attributes.displayName}
                       style={{ cursor: "pointer", width: "100%", aspectRatio: "3 / 4" }}
                     />

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import config from "@/utils/config";
+
 
 const ClientsSection = () => {
+  const baseUrl = config.API_URL; // Base URL của API
   const [clientsData, setClientsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +14,7 @@ const ClientsSection = () => {
     const fetchClientsData = async () => {
       try {
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[departments][populate]=*"
+          `${baseUrl}/api/index-page?populate[departments][populate]=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch departments data");
@@ -43,7 +46,7 @@ const ClientsSection = () => {
 
   if (error) return <div>Error: {error}</div>;
 
-  const baseUrl = "https://nct-frontend-liard.vercel.app/admin";
+  // const baseUrl = "https://nct-frontend-liard.vercel.app/admin";
 
   return (
     <section id="clients" className="clients section">
@@ -101,7 +104,7 @@ const ClientsSection = () => {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 10px;
+          gap:  0px;
         }
         .clients .client-logo {
           background-color: #fff;
@@ -128,14 +131,14 @@ const ClientsSection = () => {
         .clients .client-logo h5 {
           margin: 0;
           padding: 10px 15px;
-          font-size: 20px;
+          font-size: 18spx;
           color: #333;
           text-align: center;
           line-height: 1.3;
           max-width: 90%;
           word-wrap: break-word;
           transition: color 0.3s ease;
-          white-space: nowrap; /* Ngăn tiêu đề xuống dòng */
+        
           cursor: pointer;
           text-decoration: none;
         }

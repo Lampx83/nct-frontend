@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import config from "@/utils/config";
+
+const baseUrl = config.API_URL; // Base URL của API
 
 function Footer() {
   const [footerData, setFooterData] = useState([]);
@@ -16,7 +19,7 @@ function Footer() {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/navigation/render/2?type=TREE");
+        const response = await fetch(`${baseUrl}/api/navigation/render/2?type=TREE`);
         const data = await response.json();
         setFooterData(data);
       } catch (error) {
@@ -64,7 +67,8 @@ function Footer() {
             {/* Row cho Logo trên màn hình sm và md */}
             <div className="d-block d-lg-none col-sm-12">
               <img 
-                src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
+                // src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
+                src="https://nct.neu.edu.vn/admin/uploads/images_03ce779a20.png"
                 alt="Logo trường" 
                 style={{
                   width: "100%",
@@ -77,7 +81,8 @@ function Footer() {
             {/* Logo cho màn hình lg trở lên */}
             <div className="d-none d-lg-block col-lg-3">
               <img 
-                src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
+                // src="https://nct-frontend-liard.vercel.app/admin/uploads/NEU_NCT_02_01_0c9458551d.png" 
+                src="https://nct.neu.edu.vn/admin/uploads/images_03ce779a20.png"
                 alt="Logo trường" 
                 style={{
                   width: "100%",
@@ -102,7 +107,7 @@ function Footer() {
                 {/* QR Code */}
                 <div className="col-4">
                   <img 
-                    src="/images/NCT-QRCode.svg" 
+                    src="https://nct.neu.edu.vn/admin/uploads/QR_Footer_a6f4b56e68.jpg" 
                     alt="QR Code"
                     className="qr-code"
                     style={{

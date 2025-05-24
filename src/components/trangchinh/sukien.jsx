@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
+import config from "@/utils/config";
 
 // Import styles for Swiper
 import "swiper/css";
@@ -11,6 +12,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 
 export function Events() {
+  const basURL = config.API_URL;
   const [selectedFilter, setSelectedFilter] = useState("Sắp Diễn Ra");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ export function Events() {
       try {
         setLoading(true);
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/blog-categories?populate=*"
+          `${basURL}/api/blog-categories?populate=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch events");

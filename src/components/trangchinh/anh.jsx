@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import config from "@/utils/config";
 
 // Dynamically import GLightbox and Isotope only on the client-side
 const GLightbox = dynamic(() => import("glightbox").then((mod) => mod.default), { ssr: false });
 const Isotope = dynamic(() => import("isotope-layout"), { ssr: false });
 
 export function Portfolio() {
+  const baseUrl = config.API_URL; // Base URL của API
   const [iso, setIso] = useState(null); // Isotope instance
   const [filterKey, setFilterKey] = useState("*"); // Mặc định là "Tất Cả"
   const [lightbox, setLightbox] = useState(null); // GLightbox instance
@@ -37,7 +39,7 @@ export function Portfolio() {
       try {
         setLoading(true);
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/index-page?populate[imagesLibrary][populate]=*"
+          `${baseUrl}/api/index-page?populate[imagesLibrary][populate]=*`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch portfolio data");
@@ -50,7 +52,7 @@ export function Portfolio() {
             id: `${item.id}-${image.id}`, // Đảm bảo ID là duy nhất
             category: item.category.toLowerCase().replace(/\s+/g, "-"),
             title: image.attributes.name.replace(/\.[^/.]+$/, ""),
-            url: `https://nct-frontend-liard.vercel.app/admin${image.attributes.url}`,
+            url: `${baseUrl}${image.attributes.url}`,
           }))
         );
         

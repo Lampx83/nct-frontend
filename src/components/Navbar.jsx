@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname
 import LogoSVG from "@/components/LogoSVG";
+// import API_URL from "@/utils/config"; // Import API_URL từ config.js
 
 const Navbar = () => {
   const pathname = usePathname(); // Lấy đường dẫn hiện tại
@@ -15,7 +16,7 @@ const Navbar = () => {
     const fetchMenuItems = async () => {
       try {
         const response = await fetch(
-          "https://nct-frontend-liard.vercel.app/admin/api/navigation/render/1?type=TREE"
+          "https://nct.neu.edu.vn/admin/api/navigation/render/1?type=TREE"
         );
         const data = await response.json();
         setMenuItems(data);
