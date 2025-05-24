@@ -78,7 +78,7 @@ const LecturerList = () => {
                 </Link>
                 <Link href={`/giang-vien/${lecturer.attributes.slug}`} className="lecturer-name-link">
                   <div className="card-body">
-                    <h2 className="text-truncate name-lecturer fw-bolder fs-5">{lecturer.attributes.displayName}</h2>
+                    <h3 className="text-truncate name-lecturer fw-bolder">{lecturer.attributes.displayName}</h3>
                     <h3 className="text-dark position fs-6 px-3">{lecturer.attributes.position || "Chưa cập nhật"}</h3>
                   </div>
                 </Link>

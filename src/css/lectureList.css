@@ -22,6 +22,7 @@
 .name-lecturer:hover {
   color: #007bff;
   text-decoration: none;
+
 }
 .lecturer-list .card-body {
   padding: 20px 0px !important;
@@ -44,6 +45,9 @@
   .lecturer-list .position {
     font-size:  1.2rem;
   }
+  .name-lecturer {
+    font-size: 1.0rem; /* dành cho iPad */
+  }
 }
 
 @media (min-width: 992px) {
@@ -55,6 +59,11 @@
     font-size:  1.1rem;
   }
 }
+.name-lecturer {
+  font-size: 1.3rem; /* mặc định */
+}
+
+
 
 @media (min-width: 1200px) {
   .lecturer-list h2 {
@@ -64,13 +73,18 @@
   .lecturer-list .position {
     font-size:  1rem;
   }
+  .name-lecturer {
+    font-size: 1.2rem; /* dành cho iPad */
+  }
 }
 
 @media (min-width: 1400px) {
   .lecturer-list h2 {
     font-size: 0.92rem;
   }
-  
+  .name-lecturer {
+    font-size: 1.3rem; /* dành cho iPad */
+  }
   .lecturer-list .position {
     font-size:  0.92rem;
   }
