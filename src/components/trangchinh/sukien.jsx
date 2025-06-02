@@ -371,14 +371,14 @@ export function Events() {
             font-size: 18px;
           }
 
-          .events-filter-button {
-            flex-direction: column;
-            gap: 10px;
-          }
+          // .events-filter-button {
+          //   // flex-direction: column;
+          //   // gap: 10px;
+          // }
 
-          .events-filter-button button {
-            width: 100%;
-          }
+          // .events-filter-button button {
+          //   width: 100%;
+          // }
 
           .events-swiper {
             width: 100%;

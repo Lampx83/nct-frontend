@@ -43,13 +43,14 @@
   line-height: 87px;
   margin: 0 0 20px 0;
   color: white;
+  text-align: center;
 }
 
 .overlay-text span {
   display: block;
 }
 
-.overlay-text h1 {
+/* .overlay-text h1 {
   background: #990000;
   color: white;
   font-size: 17px;
@@ -57,6 +58,18 @@
   padding: 4px 13px;
   text-transform: uppercase;
   font-family: "Barlow", sans-serif;
+} */
+
+.overlay-text h1 {
+  background: #990000;
+  color: #fff;
+  font-size: 17px;
+  line-height: 22px;
+  text-align: center;
+  display: table;
+  margin: 0px auto;
+  text-transform: uppercase;
+  padding: 4px 13px;
 }
 
 @media (max-width: 768px) {
