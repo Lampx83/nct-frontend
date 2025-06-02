@@ -13,6 +13,7 @@ import Script from "next/script";
 import { GA_MEASUREMENT_ID } from "@/utils/analytics";
 import RouteChangeTracker from "@/components/RouteChangeTracker";
 import { ConfigProvider, Spin } from "antd";
+import ChatIconButton from "@/components/ChatIconButton";
 
 export const metadata = {
   title: {
@@ -89,6 +90,7 @@ export default async function RootLayout({ children, params }) {
             </ConfigProvider>
           </AntdRegistry>
         </Suspense>
+        <ChatIconButton />
       </body>
     </html>
   );
