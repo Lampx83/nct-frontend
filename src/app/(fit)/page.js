@@ -38,12 +38,12 @@ export async function generateMetadata() {
         openGraph: {
             title: seo?.metaTitle || defaultTitle,
             description: seo?.metaDescription || defaultDescription,
-            url: 'https://nct-frontend-liard.vercel.app',
+            url: 'https://nct.neu.edu.vn',
             siteName: 'Trường Công nghệ  - Đại học Kinh tế Quốc dân',
             type: 'website',
             locale: 'vi_VN',
             images: [{
-                url: 'https://nct-frontend-liard.vercel.app/admin/uploads/thumbnail_Logo_NCT_2c6aabc9dc.png',
+                url: 'https://nct.neu.edu.vn/admin/uploads/thumbnail_Logo_NCT_2c6aabc9dc.png',
                 width: 1200,
                 height: 630,
                 alt: 'Logo Trường Công nghệ '
@@ -53,14 +53,14 @@ export async function generateMetadata() {
             card: 'summary_large_image',
             title: seo?.metaTitle || defaultTitle,
             description: seo?.metaDescription || defaultDescription,
-            images: ['https://nct-frontend-liard.vercel.app/admin/uploads/thumbnail_Logo_NCT_2c6aabc9dc.png'],
+            images: ['https://nct.neu.edu.vn/admin/uploads/thumbnail_Logo_NCT_2c6aabc9dc.png'],
         },
         other: {
             'application/ld+json': JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'EducationalOrganization',
                 name: 'Trường Công nghệ - Đại học Kinh tế Quốc dân',
-                url: 'https://nct-frontend-liard.vercel.app',
+                url: 'https://nct.neu.edu.vn',
                 description: seo?.metaDescription || defaultDescription,
                 address: {
                     '@type': 'PostalAddress',
@@ -75,7 +75,7 @@ export async function generateMetadata() {
                         itemOffered: {
                             '@type': 'EducationalOccupationalProgram',
                             name: major.title,
-                            url: `https://nct-frontend-liard.vercel.app${major.url}`
+                            url: `https://nct.neu.edu.vn${major.url}`
                         }
                     }))
                 }
@@ -88,8 +88,6 @@ export async function generateMetadata() {
 
 
 }
-
-
 
 export default function HomePage() {
     return (
