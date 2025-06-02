@@ -133,7 +133,7 @@ export function News() {
               </div>
               <div className="main-news-text">
                 <span className="category">{newsItems[0].category}</span>
-                <h2>{newsItems[0].title}</h2>
+                <h2 className="h0-title">{newsItems[0].title}</h2>
               </div>
             </Link>
           </div>
@@ -269,15 +269,18 @@ export function News() {
         }
 
         @media (max-width: 768px) {
-          .news-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-          }
+          // .news-header {
+          //   flex-direction: column;
+          //   align-items: flex-start;
+          //   gap: 10px;
+          // }
 
           .main-news-image {
             height: 300px;
           }
+
+          .h0-title {
+            margin-top: 20px;}
 
           .grid-image {
             height: 100px;
