@@ -1,41 +1,36 @@
-// app/posts/[slug]/page.js
 import NewsDetails from "@/components/tin-tuc/NewsDetails";
 
-async function getBlogData(slug) {
-  try {
-    const response = await fetch("https://nct-frontend-liard.vercel.app/admin/api/blogs?populate=*", {
-      cache: "no-store", // Đảm bảo dữ liệu luôn cập nhật
-    });
+// Hàm lấy tất cả blog đã populate và sắp xếp theo ngày mới nhất
+async function getBlogs() {
+  const res = await fetch(
+    "https://nct.neu.edu.vn/admin/api/blogs?populate=*&sort=eventDate:desc",
+    { cache: "no-store" }
+  );
 
-    if (!response.ok) {
-      throw new Error(`Lỗi khi gọi API: ${response.statusText}`);
-    }
+  if (!res.ok) throw new Error("Lỗi khi gọi API");
 
-    const data = await response.json();
-
-    // Tìm bài viết có slug khớp
-    const filteredData = data.data.find(
-      (item) => item.attributes.slug.trim().toLowerCase() === slug.trim().toLowerCase()
-    );
-
-    if (!filteredData) {
-      return null;
-    }
-
-    return filteredData.attributes;
-  } catch (error) {
-    console.error("Lỗi khi gọi API:", error);
-    return null;
-  }
+  const data = await res.json();
+  return data.data;
 }
 
 export default async function PostPage({ params }) {
   const { slug } = params;
-  const newsData = await getBlogData(slug);
+  const allBlogs = await getBlogs();
+  const currentIndex = allBlogs.findIndex(
+    (item) => item.attributes.slug.trim().toLowerCase() === slug.trim().toLowerCase()
+  );
 
-  if (!newsData) {
-    return <p>Không tìm thấy bài viết!</p>;
-  }
+  if (currentIndex === -1) return <p>Không tìm thấy bài viết!</p>;
 
-  return <NewsDetails newsData={newsData} />;
+  const dataDetail = allBlogs[currentIndex].attributes;
+  const top2Newest = allBlogs
+    .filter((item) => item.attributes.slug !== slug)
+    .slice(0, 2);
+  const next3 = allBlogs.slice(currentIndex + 1, currentIndex + 4);
+  const combinedNews = [...top2Newest, ...next3].filter(
+    (item, index, self) => index === self.findIndex((i) => i.id === item.id)
+  );
+  const newsData = combinedNews.slice(0, 5);
+
+  return <NewsDetails dataDetail={dataDetail} newsData={newsData} />;
 }
