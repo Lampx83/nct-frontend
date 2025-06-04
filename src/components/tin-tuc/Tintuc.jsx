@@ -2,13 +2,15 @@
 import Link from "next/link";
 import moment from "moment";
 import { Card, Row, Col, Typography } from "antd";
-import { useContext } from "react";
+
+// Import styles for Swiper
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/navigation";
 
 const { Title, Paragraph, Text } = Typography;
 const API_URL = "https://nct.neu.edu.vn/admin";
 const Tintuc = ({ newsData, thumbnail }) => {
-    console.log(newsData);
-    console.log(thumbnail);
 
     return (
         <div>
@@ -31,8 +33,10 @@ const Tintuc = ({ newsData, thumbnail }) => {
                                 cover={
                                     <Link href={`/post/${news.attributes.slug}`}>
                                         <img
-                                            src={`${API_URL}${news.attributes.thumbnail.data.attributes.url}`}
-                                            alt={news.attributes.title}
+                                            src={
+                                                `${API_URL}${news.attributes.thumbnail?.data?.attributes?.url}` ||
+                                                `https://source.unsplash.com/random/400x300`
+                                            } alt={news.attributes.title}
                                             style={{ height: "180px", objectFit: "cover", borderRadius: "8px 8px 0 0", width: "100%" }}
                                         />
                                     </Link>
