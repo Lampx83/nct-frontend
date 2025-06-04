@@ -19,7 +19,7 @@ figure.image {
 }
 
 figure.image img {
-    width: 50%;
+    width: 70%;
     height: auto;
     display: block;
     margin: 0 auto;
@@ -45,7 +45,7 @@ figure.image figcaption {
     text-align: center;
     padding: 8px 12px;
     /* Tạo khoảng cách */
-    width: 50%;
+    width: 70%;
     margin: auto;
     /* Căn giữa figcaption */
 }
@@ -53,3 +53,11 @@ figure.image figcaption {
 figure.image figcaption span {
     background-color: transparent !important;
 }
+.content-wrapper {
+  max-height: 700px;    
+  overflow-y: auto;      
+  scrollbar-width: none; 
+}
+
+.content-wrapper::-webkit-scrollbar {
+  display: none;}
