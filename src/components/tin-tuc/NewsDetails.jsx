@@ -13,7 +13,7 @@ const NewsDetails = ({ newsData, dataDetail }) => {
   console.log(newsData);
 
   return (
-      <div className="container " style={{marginTop: "120px"}}>
+      <div style={{marginTop: "120px", width:"85%", marginLeft:"auto", marginRight:"auto"}}>
         <div className="row">
           <div className="col-lg-8 mx-auto " >
             <div
@@ -82,7 +82,7 @@ const NewsDetails = ({ newsData, dataDetail }) => {
                   <div className="row g-0 align-items-center pt-2 px-3">
                     <div className="col-8">
                       <Link href={`/post/${news.attributes.slug}`} className="text-decoration-none">
-                        <p className="mb-2 text-dark fw-bold">{news.attributes.title}</p>
+                        <p className="m-2 text-dark fw-bold" style={{textAlign:"justify"}}>{news.attributes.title}</p>
                       </Link>
                     </div>
 
