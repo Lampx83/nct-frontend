@@ -10,14 +10,14 @@ export default function ChatIconButton() {
 
   return (
     <div
-      className="position-fixed bottom-0 start-0 m-4"
+      className="position-fixed bottom-0 end-0 m-4"
       style={{ zIndex: 9999 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <button
         onClick={handleClick}
-        className="d-flex align-items-center border-0 bg-transparent p-0"
+        className="d-flex align-items-center border-0 bg-transparent p-0 flex-row-reverse"
         style={{ cursor: 'pointer' }}
         title="Chat với chúng tôi"
       >
@@ -32,7 +32,7 @@ export default function ChatIconButton() {
           }}
         >
           <img
-            src="https://nct.neu.edu.vn/admin/uploads/Chatbot_3032cc37e9.jpg"
+            src="https://nct.neu.edu.vn/admin/uploads/phi_hanh_gia_0df8f9cfcb.png"
             alt="Chat Icon"
             style={{
               width: '100%',
@@ -43,9 +43,9 @@ export default function ChatIconButton() {
           />
         </div>
 
-        {/* Tag hiện bên phải khi hover */}
+        {/* Tag hiện bên trái khi hover */}
         <div
-          className={`ms-2 ${hovered ? 'opacity-100 translate-start-0' : 'opacity-0 translate-start-50'}`}
+          className={`me-2 ${hovered ? 'opacity-100 translate-end-0' : 'opacity-0 translate-end-50'}`}
           style={{
             transition: 'opacity 0.3s ease, transform 0.3s ease',
             background: '#fff',
