@@ -19,8 +19,8 @@ export default function TrangChinh() {
         <SlideInWhenVisible direction="up"><Intro/></SlideInWhenVisible>
         <SlideInWhenVisible direction="left"><Khoa/></SlideInWhenVisible>
         {/* <Service/> */}
-        <SlideInWhenVisible direction="right"><StatsSection/></SlideInWhenVisible>
-        <SlideInWhenVisible direction="down"><News/></SlideInWhenVisible>
+        <SlideInWhenVisible direction="down"><StatsSection/></SlideInWhenVisible>
+        <SlideInWhenVisible direction="left"><News/></SlideInWhenVisible>
         <SlideInWhenVisible direction="up"><Events/></SlideInWhenVisible>
         {/* <FaqSection/> */}
         <SlideInWhenVisible direction="up"><Portfolio /></SlideInWhenVisible>
