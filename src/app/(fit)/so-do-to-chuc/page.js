@@ -1,130 +1,217 @@
-"use client";
+'use client';
+import React, { useEffect, useState, useRef } from 'react';
+import { ReactFlowProvider } from 'reactflow';
+import OrgChartFlow from '@/components/tochuc/OrgChartFlow';
+import RecursiveInfoBlocks from '@/components/tochuc/RecursiveInfoBlocks';
+// import RecursiveInfoBlocks from '@tochuc/RecursiveInfoBlocks';
 
-// import React, { useCallback, useState } from 'react';
-import React, { useCallback, useRef, useState } from 'react';
-import ReactFlow, {
-  Controls,
-  MiniMap,
-  ReactFlowProvider,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+function restructureTreeForCustomLayout(data) {
+  const root = data.find(x => x.attributes.name.includes('Hội Đồng Quản Lý'));
+  if (!root) return data;
+  const truongCN = (root.attributes.children?.data || [])
+    .find(x => x.attributes.name.includes('Trường Công Nghệ'));
+  if (!truongCN) return data;
+
+  const childrenTCN = truongCN.attributes.children?.data || [];
+  const hoidong = childrenTCN.find(x => x.attributes.name.includes('Hội Đồng Học Thuật'));
+  const phongNC = childrenTCN.find(x => x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội'));
+
+  truongCN.attributes.children.data = childrenTCN.filter(x =>
+    !(
+      x.attributes.name.includes('Hội Đồng Học Thuật') ||
+      x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội')
+    )
+  );
+
+  let rootChildren = root.attributes.children?.data || [];
+  const names = rootChildren.map(x => x.attributes.name);
+  if (hoidong && !names.includes(hoidong.attributes.name))
+    root.attributes.children.data.push(hoidong);
+  if (phongNC && !names.includes(phongNC.attributes.name))
+    root.attributes.children.data.push(phongNC);
+
+  return data;
+}
 
 
-const nodeStyle = {
-  padding: '16px 12px',
-  borderRadius: 8,
-  backgroundColor: '#E0E7FF',
-  color: '#111827',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  border: '1px solid #888',
-  minWidth: 140,
-  maxWidth: 180,
-  height: 100,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  whiteSpace: 'normal',
-  fontSize: 13,
-  wordWrap: 'break-word',
-  boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-};
+function findRootTree(data) {
+  return data.find(x => x.attributes.name.includes('Hội Đồng Quản Lý'));
+}
+function findNodeById(data, id) {
+  return data.find(node => String(node.id) === String(id));
+}
+function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = null, custom = {}) {
+  const NODE_WIDTH = 320;
+  const NODE_HEIGHT = 280;
+  const id = String(node.id);
+  const y = depth * NODE_HEIGHT;
+  const isTruongCongNghe = node.attributes.name.includes('Trường Công Nghệ');
+  nodes.push({
+    id,
+    position: { x, y },
+    data: { label: node.attributes.name },
+    style: {
+      padding: '12px 14px',
+      borderRadius: 12,
+      backgroundColor: isTruongCongNghe ? '#DC2626' : '#E0E7FF', // đỏ cho trường CN
+      color: isTruongCongNghe ? '#fff' : '#111827',              // chữ trắng
+      fontWeight: 'bold',
+      textAlign: 'center',
+      border: '1px solid #888',
+      minWidth: 280,
+      maxWidth: 360,
+      height: 180,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      whiteSpace: 'normal',
+      fontSize: 24,
+      wordWrap: 'break-word',
+    },
+  });
 
-const nodes = [
-  { id: '1', position: { x: 600, y: -50 }, data: { label: 'Board of Trustees' }, style: nodeStyle },
-  { id: '2', position: { x: 600, y: 100 }, data: { label: 'College of Technology' }, style: { ...nodeStyle, backgroundColor: '#DC2626', color: '#fff' } },
-  { id: '3', position: { x: 250, y: 100 }, data: { label: 'Socio-political organizations' }, style: nodeStyle },
-  { id: '4', position: { x: 950, y: 100 }, data: { label: 'Academic council' }, style: nodeStyle },
-  { id: '5', position: { x: 30, y: 300 }, data: { label: 'Office' }, style: nodeStyle },
-  { id: '6', position: { x: 1220, y: 300 }, data: { label: 'LABs' }, style: nodeStyle },
-  { id: '7', position: { x: 200, y: 300 }, data: { label: 'Faculty\nof\nFundamental\nscience' }, style: nodeStyle },
-  { id: '8', position: { x: 360, y: 300 }, data: { label: 'Faculty\nof\nMathematical\nEconomics' }, style: nodeStyle },
-  { id: '9', position: { x: 530, y: 300 }, data: { label: 'Faculty\nof\nData Science\nand\nArtificial Intelligence' }, style: nodeStyle},
-  { id: '10', position: { x: 700, y: 300 }, data: { label: 'Faculty\nof\nStatistical\nEconomics' }, style: nodeStyle },
-  { id: '11', position: { x: 870, y: 300 }, data: { label: 'Faculty\nof\nInformation\nTechnology' }, style: nodeStyle },
-  { id: '12', position: { x: 1040, y: 300 }, data: { label: 'Faculty\nof\nManagement\nInformation\nSystem' }, style: nodeStyle },
-];
+  if (parent) {
+    edges.push({
+      id: `e${parent}-${id}`,
+      source: String(parent),
+      target: id,
+      type: 'step',
+      markerEnd: { type: 'arrowclosed' }
+    });
+  }
 
-const edges = [
-  { id: 'e1-2', source: '1', target: '2', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-3', source: '2', target: '3', type: 'step', sourceHandle: 'left', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-4', source: '2', target: '4', type: 'step', sourceHandle: 'right', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-5', source: '2', target: '5', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-6', source: '2', target: '6', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-7', source: '2', target: '7', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-8', source: '2', target: '8', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-9', source: '2', target: '9', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-10', source: '2', target: '10', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-11', source: '2', target: '11', type: 'step', markerEnd: { type: 'arrowclosed' } },
-  { id: 'e2-12', source: '2', target: '12', type: 'step', markerEnd: { type: 'arrowclosed' } },
-];
+  // CUSTOM: Nếu là root Hội Đồng Quản Lý
+  if (depth === 0 && node.attributes.children?.data?.length) {
+    const children = node.attributes.children.data;
+    // Tìm đúng các node đặc biệt theo tên (bạn cần kiểm tra đúng tên)
+    const truongCN = children.find(x => x.attributes.name.includes('Trường Công Nghệ'));
+    const hoiDongHT = children.find(x => x.attributes.name.includes('Hội Đồng Học Thuật'));
+    const toChucCT = children.find(x => x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội'));
 
-export default function Organization() {
-  const [selected, setSelected] = useState(null);
+    // Tạo 3 vị trí: left - center - right (giả sử chỉ có 3 node này dưới root)
+    const centerX = x;
+    const offsetX = NODE_WIDTH * 1.5;
+    // Trường Công Nghệ ở giữa
+    if (truongCN) buildFlowTree(truongCN, depth + 1, centerX, nodes, edges, id, { type: 'truong' });
+    // Hội đồng học thuật bên trái
+    if (hoiDongHT) buildFlowTree(hoiDongHT, depth + 1, centerX - offsetX, nodes, edges, id, { type: 'left' });
+    // Tổ chức chính trị xã hội bên phải
+    if (toChucCT) buildFlowTree(toChucCT, depth + 1, centerX + offsetX, nodes, edges, id, { type: 'right' });
 
-//   const onNodeClick = useCallback((event, node) => {
-//     setSelected(node.data.label);
-//     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-//   }, []);
+    // Các node còn lại (nếu có), vẽ thêm nếu cần
+    // const otherChildren = children.filter(x => 
+    //   ![truongCN, hoiDongHT, toChucCT].includes(x)
+    // );
+    // otherChildren.forEach((child, i) => {
+    //   buildFlowTree(child, depth + 1, centerX + (i-1)*NODE_WIDTH, nodes, edges, id);
+    // });
 
-  const detailRef = useRef(null);
+    return { nodes, edges };
+  }
 
-  const onNodeClick = useCallback((event, node) => {
-    setSelected(node.data.label);
-    setTimeout(() => {
-        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+  // Nếu là Trường Công Nghệ, vẽ các khoa/phòng bên dưới
+  if (custom.type === 'truong' && node.attributes.children?.data?.length) {
+    const children = node.attributes.children.data;
+    let baseX = x - (children.length - 1) / 2 * NODE_WIDTH;
+    children.forEach((child, i) => {
+      buildFlowTree(child, depth + 1, baseX + i * NODE_WIDTH, nodes, edges, id);
+    });
+
+    // CUSTOM: Vẽ mũi tên từ Trường Công Nghệ sang Hội Đồng Học Thuật và Tổ Chức Chính Trị Xã Hội cùng hàng
+    // Đã vẽ ở trên (ở nhánh root)
+    return { nodes, edges };
+  }
+
+  // Nếu là node thường, vẽ bình thường
+  const children = node.attributes.children?.data || [];
+  if (children.length) {
+    let baseX = x - (children.length - 1) / 2 * NODE_WIDTH;
+    children.forEach((child, i) => {
+      buildFlowTree(child, depth + 1, baseX + i * NODE_WIDTH, nodes, edges, id);
+    });
+  }
+
+  return { nodes, edges };
+}
+
+
+export default function OrgChartPage() {
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+  const [treeRoot, setTreeRoot] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeId, setActiveId] = useState(null);
+  const refs = useRef({});
+
+  useEffect(() => {
+    fetch("https://nct.neu.edu.vn/admin/api/org-charts?populate=deep,3")
+      .then(res => res.json())
+      .then(json => {
+        let data = json.data || [];
+        data = restructureTreeForCustomLayout(data); // <-- Thêm dòng này
+        setData(data);
+        const rootTree = findRootTree(data);
+        if (rootTree) {
+          const { nodes, edges } = buildFlowTree(rootTree, 0, 600);
+          setNodes(nodes);
+          setEdges(edges);
+          setTreeRoot(rootTree);
+          // refs...
+        }
+        setLoading(false);
+      });
     }, []);
 
 
+  const getNodeIdByLabel = (label) => {
+    let foundId = null;
+    function findId(node) {
+      const normalized = str => str.replace(/\n/g, '').replace(/\s+/g, '').toLowerCase();
+      if (normalized(node.attributes.name) === normalized(label)) {
+        foundId = node.id;
+      }
+      const children = node.attributes.children?.data || [];
+      for (const child of children) findId(child);
+    }
+    if (treeRoot) findId(treeRoot);
+    return foundId;
+  };
+
+  const onNodeClick = (event, node) => {
+    const id = getNodeIdByLabel(node.data.label);
+    // refs.current[id] phải là DOM element
+    if (id && refs.current[id]) {
+      setActiveId(id);
+      // refs.current[id] là <div> trong InfoBlock
+      refs.current[id].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => setActiveId(null), 1500);
+    }
+  };
+
+
+  if (loading) return <div className="text-center mt-5">Đang tải dữ liệu...</div>;
+
   return (
     <ReactFlowProvider>
-      <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-                  {/* <h1 style={{ textAlign: 'center', margin: '90px 0 0 0', fontWeight: 'bold', fontSize: '48px', color: '#781C1C' }}> */}
-          {/* Sơ đồ tổ chức */}
-        {/* </h1> */}
-        <div style={{ height: '600px', display: 'flex', justifyContent: 'center' }}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            fitView
-            onNodeClick={onNodeClick}
-            panOnDrag={false}
-            zoomOnScroll={false}
-            zoomOnPinch={false}
-            panOnScroll={false}
-            nodesDraggable={false}
-            nodesConnectable={false}
-            elementsSelectable={false}
-          >
-            <Controls showInteractive={false} />
-          </ReactFlow>
+      <div className="container py-4">
+        <h1 className="text-center bg-white mt-5 mb-0 pt-5 fw-bolder">SƠ ĐỒ TỔ CHỨC</h1>
+        <div className="bg-light" style={{ boxShadow: "none", borderRadius: 0 }}>
+          <OrgChartFlow nodes={nodes} edges={edges} onNodeClick={onNodeClick} />
         </div>
-
-    {selected && (
-          <div ref={detailRef} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: 20, padding: 16, borderTop: '1px solid #ccc' }}>
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ width: '48%', height: 350, backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontStyle: 'italic' }}>Ảnh 1</span>
-                </div>
-                <div style={{ marginTop: 10 }}>
-                <p>Thông tin mô tả về <strong>{selected.replace(/\n/g, ' ')}</strong> hiển thị tại đây.</p>
-                </div>
-            </div>
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ marginTop: 10 }}>
-                <p>Thông tin mô tả về <strong>{selected.replace(/\n/g, ' ')}</strong> hiển thị tại đây.</p>
-                </div>
-                <div style={{ width: '48%', height: 350, backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontStyle: 'italic' }}>Ảnh 2</span>
-                {/* <img src="https://neu.daotaotuxa.net/wp-content/uploads/2022/08/dai-hoc-kinh-te-quoc-dan-ngoi-truong-mo-uoc-cua-nhieu-sinh-vien-2.webp" alt="Ảnh mô tả" style={{ maxWidth: '100%', maxHeight: '100%',objectFit: 'cover',display: 'block' }} /> */}
-                </div>
-            </div>
-          </div>
-    )}
+        {treeRoot && (
+          <RecursiveInfoBlocks
+            node={treeRoot}
+            data={data}
+            refs={refs}
+            activeId={activeId}
+          />
+        )}
       </div>
-
       <style jsx global>{`
+        .react-flow__node {
+          transition: background 0.22s, color 0.22s;
+        }
         .react-flow__node:hover {
           background-color: #1D4ED8 !important;
           color: #fff !important;
