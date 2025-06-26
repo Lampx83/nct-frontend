@@ -39,23 +39,23 @@ const items1 = [
   },
   {
     key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02',
-    label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro</Link>,
+    label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro (Actuary) <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
   },
   {
     key: 'phan-tich-du-lieu-kinh-te-EP03',
-    label: <Link href="/tuyen-sinh/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế</Link>,
+    label: <Link href="/tuyen-sinh/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế (DSED) <span className="fa fa-star" style={{color: "#F5E65D"}}></span></Link>,
   },
   {
     key: 'khoa-hoc-du-lieu-EP15',
-    label: <Link href="/tuyen-sinh/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu</Link>,
+    label: <Link href="/tuyen-sinh/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu <span className="fa fa-star" style={{color: "#F5E65D"}}></span></Link>,
   },
   {
     key: 'tri-tue-nhan-tao-EP16',
-    label: <Link href="/tuyen-sinh/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo</Link>,
+    label: <Link href="/tuyen-sinh/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
   },
   {
     key: 'ky-thuat-phan-mem-EP17',
-    label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm</Link>,
+    label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
   },
 
 
