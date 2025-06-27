@@ -1,0 +1,190 @@
+:root {
+    --color-primary: #c81d31;
+}
+
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+section {
+    margin-bottom: 3rem;
+}
+
+.main-image {
+    position: relative;
+}
+
+.main-image sss>div img {
+    width: 100%;
+    height: 250px;
+}
+
+.main-image .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    color: white;
+    letter-spacing: 2px;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.main-image .content h1 {
+    padding-top: 5rem;
+    font-size: 3rem;
+    color: white;
+}
+
+.introduction {
+    padding: 3rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.introduction .s-title {
+    flex: 1;
+}
+
+.introduction .s-title h3 {
+    color: var(--color-primary);
+    line-height: 01rem;
+}
+
+.introduction .s-title span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.756);
+}
+
+.introduction p {
+    padding: 0 2rem;
+    flex: 2;
+    font-size: 1.2rem;
+    line-height: 2rem;
+    text-align: justify;
+}
+
+.introduction::after {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-color: var(--color-primary);
+}
+
+.content {
+    display: flex;
+    gap: 2rem;
+}
+
+.content .s-slide {
+    flex: 1;
+}
+
+.content .s-slide img {
+    width: 100%;
+    height: 300px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.content .descripton {
+    flex: 1;
+    width: 200px;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content .descripton p {
+    font-size: 1.2rem;
+    line-height: 2rem;
+    text-align: justify;
+}
+
+.lecture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.lecture .l-image {
+    flex: 1;
+}
+
+.lecture .l-image img {
+    width: 100%;
+    height: 400px;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.lecture p {
+    flex: 1;
+    font-size: 1.2rem;
+    line-height: 2rem;
+    text-align: justify;
+    padding: 2rem;
+}
+
+.vision {
+    position: relative;
+}
+
+.vision .v-image {
+    height: 200px;
+    position: relative;
+}
+
+.vision .v-image img {
+    width: 100%;
+    height: 200px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.vision .v-image::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    content: "";
+    opacity: 0.4;
+    border-radius: 1rem;
+    z-index: 1;
+}
+
+.vision p {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    line-height: 2rem;
+}
+
+/*# sourceMappingURL=styles.css.map */
