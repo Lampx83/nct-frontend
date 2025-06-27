@@ -44,7 +44,7 @@ const StatsSection = () => {
   return (
     <section id="stats" className="stats section bg-dark text-white position-relative my-5">
       <img
-        src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0"
+        src="https://nct.neu.edu.vn/admin/uploads/Neu_3a9777118c.jpg"
         alt="Stats Background"
         className="position-absolute top-0 start-0 w-100 h-100"
         style={{ objectFit: "cover", zIndex: 1 }}
