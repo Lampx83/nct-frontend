@@ -12,6 +12,57 @@ import config from '@/utils/config';
 
 const API_URL = config.API_URL;
 
+const items1 = [
+  {
+    key: 'an-toan-thong-tin-7480202',
+    label: <Link href="/tuyen-sinh/an-toan-thong-tin-7480202">An toàn thông tin</Link>,
+  },
+  {
+    key: 'cong-nghe-thong-tin-7480201',
+    label: <Link href="/tuyen-sinh/cong-nghe-thong-tin-7480201">Công nghệ thông tin</Link>,
+  },
+  {
+    key: 'he-thong-thong-tin-7480104',
+    label: <Link href="/tuyen-sinh/he-thong-thong-tin-7480104">Hệ thống thông tin</Link>,
+  },
+  {
+    key: 'he-thong-thong-tin-quan-ly-7340405',
+    label: <Link href="/tuyen-sinh/he-thong-thong-tin-quan-ly-7340405">Hệ thống thông tin quản lí</Link>,
+  },
+  {
+    key: 'khoa-hoc-may-tinh-7480101',
+    label: <Link href="/tuyen-sinh/khoa-hoc-may-tinh-7480101">Khoa học máy tính</Link>,
+  },
+  {
+    key: 'thong-ke-kinh-te-7310107',
+    label: <Link href="/tuyen-sinh/thong-ke-kinh-te-7310107">Thống kê kinh tế</Link>,
+  },
+  {
+    key: 'toan-kinh-te-7310108',
+    label: <Link href="/tuyen-sinh/toan-kinh-te-7310108">Toán kinh tế</Link>,
+  },
+  {
+    key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02',
+    label: <Link href="/tuyen-sinh/dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02">Định phí bảo hiểm & Quản trị rủi ro (Actuary) <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
+  },
+  {
+    key: 'phan-tich-du-lieu-kinh-te-EP03',
+    label: <Link href="/tuyen-sinh/phan-tich-du-lieu-kinh-te-EP03">Phân tích dữ liệu kinh tế (DSED) <span className="fa fa-star" style={{color: "#F5E65D"}}></span></Link>,
+  },
+  {
+    key: 'khoa-hoc-du-lieu-EP15',
+    label: <Link href="/tuyen-sinh/khoa-hoc-du-lieu-EP15">Khoa học dữ liệu <span className="fa fa-star" style={{color: "#F5E65D"}}></span></Link>,
+  },
+  {
+    key: 'tri-tue-nhan-tao-EP16',
+    label: <Link href="/tuyen-sinh/tri-tue-nhan-tao-EP16">Trí tuệ nhân tạo <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
+  },
+  {
+    key: 'ky-thuat-phan-mem-EP17',
+    label: <Link href="/tuyen-sinh/ky-thuat-phan-mem-EP17">Kỹ thuật phần mềm <span className="fa fa-star"style={{color: "#F5E65D"}}></span></Link>,
+  },
+];
+
 export default function CurriculumDetail({ major, newsData }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -72,48 +123,6 @@ export default function CurriculumDetail({ major, newsData }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Danh sách các ngành
-  const programs = [
-    { key: 'an-toan-thong-tin-7480202', title: 'An toàn thông tin' },
-    { key: 'cong-nghe-thong-tin-7480201', title: 'Công nghệ thông tin' },
-    { key: 'he-thong-thong-tin-7480104', title: 'Hệ thống thông tin' },
-    { key: 'he-thong-thong-tin-quan-ly-7340405', title: 'Hệ thống thông tin quản lí' },
-    { key: 'khoa-hoc-may-tinh-7480101', title: 'Khoa học máy tính' },
-    { key: 'thong-ke-kinh-te-7310107', title: 'Thống kê kinh tế' },
-    { key: 'toan-kinh-te-7310108', title: 'Toán kinh tế' },
-    { key: 'dinh-phi-bao-hiem-and-quan-tri-rui-ro-EP02', title: 'Định phí bảo hiểm & Quản trị rủi ro' },
-    { key: 'phan-tich-du-lieu-kinh-te-EP03', title: 'Phân tích dữ liệu kinh tế' },
-    { key: 'khoa-hoc-du-lieu-EP15', title: 'Khoa học dữ liệu' },
-    { key: 'tri-tue-nhan-tao-EP16', title: 'Trí tuệ nhân tạo' },
-    { key: 'ky-thuat-phan-mem-EP17', title: 'Kỹ thuật phần mềm' },
-
-  ];
-
-  const items1 = programs.map(({ key, title }) => {
-    const url = `/tuyen-sinh/${key}`;
-    const isActive = pathname === url;
-
-    return {
-      key,
-      icon: <SettingOutlined />,
-      label: (
-        <a
-          href={url}
-          onClick={(e) => {
-            e.preventDefault();
-            handleMenuClick(url);
-          }}
-          style={{
-            color: 'inherit',
-            textDecoration: 'none',
-            fontWeight: isActive ? 'bold' : 'normal',
-          }}
-        >
-          {title}
-        </a>
-      ),
-    };
-  });
 
   const items = [
     {
