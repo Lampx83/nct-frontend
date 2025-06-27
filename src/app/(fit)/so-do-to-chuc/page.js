@@ -209,7 +209,8 @@ export default function OrgChartPage() {
             <OrgChartFlow nodes={nodes} edges={edges} onNodeClick={onNodeClick} />
           </div>
         </div>
-        {treeRoot && (
+        <div className="container px-0 py-4">
+          {treeRoot && (
           <RecursiveInfoBlocks
             node={treeRoot}
             data={data}
@@ -217,6 +218,7 @@ export default function OrgChartPage() {
             activeId={activeId}
           />
         )}
+        </div>
       </div>
       <style jsx global>{`
         .react-flow__node {
