@@ -64,7 +64,7 @@ section {
     color: rgba(0, 0, 0, 0.756);
 }
 
-.introduction p {
+.introduction .text {
     padding: 0 2rem;
     flex: 2;
     font-size: 1.2rem;
@@ -107,9 +107,6 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.content .descripton p {
     font-size: 1.2rem;
     line-height: 2rem;
     text-align: justify;
