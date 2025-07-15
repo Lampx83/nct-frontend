@@ -47,7 +47,7 @@ export default function InfoBlock({ node, isActive, refProp }) {
               )}
             </div>
           </div>
-          <div className="col-md-6 d-flex align-items-center">
+          <div className="col-md-6 d-flex align-items-center mt-3">
             <div
               style={{
                 textAlign: 'justify',

@@ -49,12 +49,17 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
   const NODE_HEIGHT = 280;
   const id = String(node.id);
   const y = depth * NODE_HEIGHT;
-  const isTruongCongNghe = node.attributes.name.includes('Trường Công Nghệ');
+  const name = node.attributes.name;
+  const isTruongCongNghe = name.includes('Trường Công Nghệ');
+  const isHDDHT = name.includes('Hội Đồng Học Thuật');
+  const isCTXH = name.includes('Tổ Chức Chính Trị Xã Hội');
 
   nodes.push({
     id,
     position: { x, y },
-    data: { label: node.attributes.name },
+    data: { label: name },
+    sourcePosition: isTruongCongNghe ? undefined : undefined,
+    targetPosition: isHDDHT ? 'right' : isCTXH ? 'left' : undefined,
     style: {
       padding: '12px 14px',
       borderRadius: 12,
@@ -92,45 +97,71 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
     const toChucCTXH = children.find(x => x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội'));
 
     const centerX = x;
-    const offsetX = NODE_WIDTH * 1.5;
+    const spacing = NODE_WIDTH * 1.5;
 
+    if (hoidonHT)
+      buildFlowTree(hoidonHT, depth + 1, centerX - spacing, nodes, edges, id, { skipEdgeFromParent: true }, data);
     if (truongCN)
       buildFlowTree(truongCN, depth + 1, centerX, nodes, edges, id, { type: 'truong' }, data);
-    if (hoidonHT)
-      buildFlowTree(hoidonHT, depth + 1, centerX - offsetX, nodes, edges, id, { skipEdgeFromParent: true }, data);
     if (toChucCTXH)
-      buildFlowTree(toChucCTXH, depth + 1, centerX + offsetX, nodes, edges, id, { skipEdgeFromParent: true }, data);
+      buildFlowTree(toChucCTXH, depth + 1, centerX + spacing, nodes, edges, id, { skipEdgeFromParent: true }, data);
 
     return { nodes, edges };
   }
 
   if (custom.type === 'truong' && node.attributes.children?.data?.length) {
     const children = node.attributes.children.data;
-    let baseX = x - (children.length - 1) / 2 * NODE_WIDTH;
-    children.forEach((child, i) => {
-      buildFlowTree(child, depth + 1, baseX + i * NODE_WIDTH, nodes, edges, id, {}, data);
-    });
+    // let baseX = x - (children.length - 1) / 2 * NODE_WIDTH;
+    // children.forEach((child, i) => {
+    //   buildFlowTree(child, depth + 1, baseX + i * NODE_WIDTH, nodes, edges, id, {}, data);
+    // });
+
+    const perRow = window.innerWidth < 768 ? 3 : children.length; // 3 per row on mobile
+      let baseX = x - ((perRow - 1) / 2) * NODE_WIDTH;
+
+      children.forEach((child, i) => {
+        const row = Math.floor(i / perRow);
+        const col = i % perRow;
+        const childX = baseX + col * NODE_WIDTH;
+        const childY = y + (row + 1) * NODE_HEIGHT * 0.8; // thêm khoảng cách dọc
+        buildFlowTree(child, depth + 1 + row, childX, nodes, edges, id, {}, data);
+      });
+
 
     const hoidonHT = findNodeByName(data, 'Hội Đồng Học Thuật');
     const toChucCTXH = findNodeByName(data, 'Tổ Chức Chính Trị Xã Hội');
 
     if (hoidonHT) {
       edges.push({
-        id: `extra-edge-${id}-${hoidonHT.id}`,
+        id: `edge-left-${id}-${hoidonHT.id}`,
         source: id,
         target: String(hoidonHT.id),
-        type: 'step',
-        markerEnd: { type: 'arrowclosed' },
+        sourceHandle: 'left',
+        targetHandle: 'right',
+        type: 'straight',
+        markerEnd: {
+          type: 'arrowclosed',
+          width: 20,
+          height: 20,
+          color: '#1D4ED8'
+        },
       });
     }
 
     if (toChucCTXH) {
       edges.push({
-        id: `extra-edge-${id}-${toChucCTXH.id}`,
+        id: `edge-right-${id}-${toChucCTXH.id}`,
         source: id,
         target: String(toChucCTXH.id),
-        type: 'step',
-        markerEnd: { type: 'arrowclosed' },
+        sourceHandle: 'right',
+        targetHandle: 'left',
+        type: 'straight',
+        markerEnd: {
+          type: 'arrowclosed',
+          width: 20,
+          height: 20,
+          color: '#1D4ED8'
+        },
       });
     }
 
@@ -147,6 +178,8 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
 
   return { nodes, edges };
 }
+
+
 
 export default function OrgChartPage() {
   const [nodes, setNodes] = useState([]);
@@ -204,11 +237,23 @@ export default function OrgChartPage() {
     <ReactFlowProvider>
       <div className="container-fluid px-0 py-4">
         <h1 className="text-center bg-white mt-5 mb-0 pt-5 fw-bolder">SƠ ĐỒ TỔ CHỨC</h1>
-        <div className="bg-light w-100" style={{ boxShadow: 'none', borderRadius: 0, overflowX: 'auto' }}>
-          <div style={{ minWidth: '1200px' }}>
+
+
+        <div
+          className="bg-light w-100"
+          style={{
+            boxShadow: 'none',
+            borderRadius: 0,
+            overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch', // giúp mượt mà trên iOS
+          }}
+        >
+          <div style={{ minWidth: 1000, paddingBottom: 16 }}>
             <OrgChartFlow nodes={nodes} edges={edges} onNodeClick={onNodeClick} />
           </div>
         </div>
+
+
         <div className="container px-0 py-4">
           {treeRoot && (
           <RecursiveInfoBlocks
@@ -237,6 +282,7 @@ export default function OrgChartPage() {
         .react-flow__attribution {
           display: none;
         }
+
       `}</style>
     </ReactFlowProvider>
   );
