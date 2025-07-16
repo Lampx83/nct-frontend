@@ -2,8 +2,7 @@ import "../css/overview.css"
 
 
 const API_URL = "https://nct.neu.edu.vn/admin";
-const Overview = ({ dataOverview }) => {
-    console.log(dataOverview);
+const History = ({ dataHistory }) => {
     return (
 
         <div>
@@ -17,11 +16,11 @@ const Overview = ({ dataOverview }) => {
                     />
                 </div>
                 <div className="content">
-                    <h1>Giới thiệu chung</h1>
+                    <h1>Lịch sử phát triển</h1>
                 </div>
             </div>
             <div className="main">
-                {dataOverview?.map((data, index) => {
+                {dataHistory?.map((data, index) => {
                     const imageUrl = data?.image?.data?.attributes?.url
                         ? `${API_URL}${data.image.data.attributes.url}`
                         : "https://fsf.neu.edu.vn/wp-content/uploads/2024/09/06082024-leader-breadcrumb.png";
@@ -42,4 +41,4 @@ const Overview = ({ dataOverview }) => {
     );
 };
 
-export default Overview;
+export default History;
