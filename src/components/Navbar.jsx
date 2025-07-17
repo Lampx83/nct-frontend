@@ -119,30 +119,40 @@ const Navbar = () => {
       >
         <ul className="navbar-nav ms-auto p-4 p-lg-0">
           {menuItems.map((item) => (
-            <a
-            key={item.id}
-              className="nav-link text-white fw-bolder hover-grow"
-              href={item.path}
-              style={{
-                borderBottom: !isNavCollapsed ? "1px solid rgba(255,255,255,0.1)" : "none",
-                padding: !isNavCollapsed ? "1rem 0" : "10px",
-                fontFamily: "Barlow, sans-serif",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                textShadow: !scrolled ? "0 0 8px rgba(0, 0, 0, 0.8)" : "none",
-                cursor: "pointer",
-                display: "inline-block",     
-                lineHeight: "1",
-                overflow: "hidden",
-                transition: "transform 0.2s ease-in-out"
-              }}
-
-            >
-              {item.title}
-            </a>
-
+            <li key={item.id} className={`nav-item ${item.items?.length > 0 ? "dropdown" : ""}`}>
+              {item.items?.length > 0 ? (
+                <>
+                  <a
+                    className="nav-link dropdown-toggle text-white fw-bolder"
+                    href={item.path}
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {item.title}
+                  </a>
+                  <ul className="dropdown-menu">
+                    {item.items.map((subItem) => (
+                      <li key={subItem.id}>
+                        <a className="dropdown-item" href={subItem.path}>
+                          {subItem.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <a
+                  className="nav-link text-white "
+                  href={item.path}
+                >
+                  {item.title}
+                </a>
+              )}
+            </li>
           ))}
         </ul>
+
       </div>
     </nav>
   );
