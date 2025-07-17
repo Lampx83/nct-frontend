@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import config from "@/utils/config";
 import Link from "next/link";
+import "../css/aboutus.css"
 
 const AboutUs = ({ aboutUs }) => {
     const ref = useRef(null);
@@ -33,17 +34,17 @@ const AboutUs = ({ aboutUs }) => {
                 />
             </div>
 
-            <div className="container py-5">
-                <h4 style={{ fontWeight: "620", textTransform: "uppercase" }}>
+            <div className="container">
+                <h4 >
                     TRƯỜNG CÔNG NGHỆ – ĐẠI HỌC KINH TẾ QUỐC DÂN
                 </h4>
                 <h3 className="text-dark">LỜI CHÀO MỪNG</h3>
-                <div className="row">
-                    <div className="col-sm-9 pt-4 mx-auto">
-                        <div dangerouslySetInnerHTML={{ __html: aboutUs.attributes.content }}></div>
-                    </div>
-                    <div className="col-sm-3 pt-4">
+                <div className="box">
+                    <div className="image">
                         <img src={`${config.API_URL}${aboutUs.attributes.thumbnail.data.attributes.url}`} />
+                    </div>
+                    <div className="content">
+                        <div dangerouslySetInnerHTML={{ __html: aboutUs.attributes.content }}></div>
                     </div>
                 </div>
             </div>
