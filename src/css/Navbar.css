@@ -1,6 +1,23 @@
 .hover-grow:hover {
   transform: scale(1.1); 
 }
+.nav-link {
+  transition: transform .2s ease;
+}
+.nav-link:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-item:active {
+  color: inherit !important;
+  background-color: inherit;
+}
+
 @media screen {
   .navbar-brand {
     margin-left: 10px;
