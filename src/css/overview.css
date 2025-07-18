@@ -101,3 +101,10 @@
     height: auto;
   }
 }
+
+@media (max-width: 576px) {
+  .main-image .content h1 {
+    font-size: 2rem;
+  }
+
+}
