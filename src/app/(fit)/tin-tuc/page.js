@@ -1,40 +1,41 @@
 import Tintuc from "@/components/tin-tuc/Tintuc";
 
-async function getBlogs() {
-    const response = await fetch(
-      `https://nct.neu.edu.vn/admin/api/blogs?populate=*&sort=eventDate:desc`,
-      {
-        cache: "no-store"
-      }
-    );
-    
-    const data = await response.json();
+async function getBlogs(page = 1, pageSize = 9) {
+  const response = await fetch(
+    `https://nct.neu.edu.vn/admin/api/blogs?populate=*&sort=eventDate:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    {
+      cache: "no-store"
+    }
+  );
 
-    return {
-      newsData: data.data, 
-      allNews: data.data, // allNews chứa danh sách bài viết
-    };
+  const data = await response.json();
+
+  return {
+    newsData: data.data,
+    pagination: data.meta.pagination
+  };
 }
 async function getImage() {
-    const response = await fetch(
-      `https://nct.neu.edu.vn/admin/api/news-page?populate=*`,
-      {
-        cache: "no-store"
-      }
-    );
-    
-    const data = await response.json();
+  const response = await fetch(
+    `https://nct.neu.edu.vn/admin/api/news-page?populate=*`,
+    {
+      cache: "no-store"
+    }
+  );
 
-    return data.data.attributes.thumbnail;
+  const data = await response.json();
+
+  return data.data.attributes.thumbnail;
 }
 
-export default async function NewsPage() {
-  const { newsData, allNews } = await getBlogs();
+export default async function NewsPage({ searchParams }) {
+  const page = parseInt(searchParams?.page || '1'); // ví dụ ?page=2
+  const { newsData, pagination } = await getBlogs(page);
   const thumbnail = await getImage();
 
   return (
     <div>
-      <Tintuc newsData={newsData} allNews={allNews} thumbnail={thumbnail}/>
+      <Tintuc newsData={newsData} pagination={pagination} thumbnail={thumbnail} />
     </div>
   );
 }

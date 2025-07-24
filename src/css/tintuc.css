@@ -1,0 +1,129 @@
+
+
+.banner {
+    margin-top: 4rem;
+    height: 300px;
+    width: 100%;
+}
+
+.banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.container {
+    margin-top: 2rem;
+}
+
+.blogs {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1rem;
+}
+
+.blogs a {
+    width: calc(100% / 3);
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.inner {
+    border: 1px rgba(128, 128, 128, 0.194) solid;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.inner:hover {
+    background:	#ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.line-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* số dòng tối đa muốn hiển thị */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5rem;
+    max-height: calc(2 * 1.5rem);
+    /* cần đúng line-height */
+}
+
+p {
+    color: gray;
+    font-size: .9rem;
+}
+
+.content {
+    margin: 1rem;
+}
+
+h3 {
+    font-size: 1.1rem;
+    color: black;
+    font-weight: 400;
+}
+
+h3:hover {
+    color: #780614;
+}
+
+.info .author {
+    display: flex;
+    align-items: center;
+
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: gray;
+}
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.info .author div {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.page-item .page-link {
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
+}
+
+.page-item .page-link:hover {
+  background-color: #eee;
+  color: #000;
+}
+
+.page-item.active .page-link {
+  background-color: #ffffff;
+  color: #780614;
+  border-color: #780614;
+  font-weight: bold;
+}
