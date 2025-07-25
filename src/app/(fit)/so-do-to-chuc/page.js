@@ -5,19 +5,19 @@ import OrgChartFlow from '@/components/tochuc/OrgChartFlow';
 import RecursiveInfoBlocks from '@/components/tochuc/RecursiveInfoBlocks';
 
 function restructureTreeForCustomLayout(data) {
-  const root = data.find(x => x.attributes.name.includes('Hội Đồng Quản Lý'));
+  const root = data.find(x => x.attributes.name.includes('Đảng Bộ Trường'));
   if (!root) return data;
-  const truongCN = (root.attributes.children?.data || []).find(x => x.attributes.name.includes('Trường Công Nghệ'));
+  const truongCN = (root.attributes.children?.data || []).find(x => x.attributes.name.includes('Ban Giám Hiệu'));
   if (!truongCN) return data;
 
   const childrenTCN = truongCN.attributes.children?.data || [];
-  const hoidong = childrenTCN.find(x => x.attributes.name.includes('Hội Đồng Học Thuật'));
-  const phongNC = childrenTCN.find(x => x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội'));
+  const hoidong = childrenTCN.find(x => x.attributes.name.includes('Hội Đồng Chuyên Môn'));
+  const phongNC = childrenTCN.find(x => x.attributes.name.includes('Các Tổ Chức Chính Trị Xã Hội'));
 
   truongCN.attributes.children.data = childrenTCN.filter(x =>
     !(
-      x.attributes.name.includes('Hội Đồng Học Thuật') ||
-      x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội')
+      x.attributes.name.includes('Hội Đồng Chuyên Môn') ||
+      x.attributes.name.includes('Các Tổ Chức Chính Trị Xã Hội')
     )
   );
 
@@ -32,7 +32,7 @@ function restructureTreeForCustomLayout(data) {
 }
 
 function findRootTree(data) {
-  return data.find(x => x.attributes.name.includes('Hội Đồng Quản Lý'));
+  return data.find(x => x.attributes.name.includes('Đảng Bộ Trường'));
 }
 
 function findNodeById(data, id) {
@@ -50,9 +50,9 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
   const id = String(node.id);
   const y = depth * NODE_HEIGHT;
   const name = node.attributes.name;
-  const isTruongCongNghe = name.includes('Trường Công Nghệ');
-  const isHDDHT = name.includes('Hội Đồng Học Thuật');
-  const isCTXH = name.includes('Tổ Chức Chính Trị Xã Hội');
+  const isTruongCongNghe = name.includes('Ban Giám Hiệu');
+  const isHDDHT = name.includes('Hội Đồng Chuyên Môn');
+  const isCTXH = name.includes('Các Tổ Chức Chính Trị Xã Hội');
 
   nodes.push({
     id,
@@ -92,9 +92,9 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
 
   if (depth === 0 && node.attributes.children?.data?.length) {
     const children = node.attributes.children.data;
-    const truongCN = children.find(x => x.attributes.name.includes('Trường Công Nghệ'));
-    const hoidonHT = children.find(x => x.attributes.name.includes('Hội Đồng Học Thuật'));
-    const toChucCTXH = children.find(x => x.attributes.name.includes('Tổ Chức Chính Trị Xã Hội'));
+    const truongCN = children.find(x => x.attributes.name.includes('Ban Giám Hiệu'));
+    const hoidonHT = children.find(x => x.attributes.name.includes('Hội Đồng Chuyên Môn'));
+    const toChucCTXH = children.find(x => x.attributes.name.includes('Các Tổ Chức Chính Trị Xã Hội'));
 
     const centerX = x;
     const spacing = NODE_WIDTH * 1.5;
@@ -128,8 +128,8 @@ function buildFlowTree(node, depth = 0, x = 0, nodes = [], edges = [], parent = 
       });
 
 
-    const hoidonHT = findNodeByName(data, 'Hội Đồng Học Thuật');
-    const toChucCTXH = findNodeByName(data, 'Tổ Chức Chính Trị Xã Hội');
+    const hoidonHT = findNodeByName(data, 'Hội Đồng Chuyên Môn');
+    const toChucCTXH = findNodeByName(data, 'Các Tổ Chức Chính Trị Xã Hội');
 
     if (hoidonHT) {
       edges.push({
