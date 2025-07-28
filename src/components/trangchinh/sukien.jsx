@@ -47,6 +47,7 @@ export function Events() {
             return {
               id: blog.id,
               date: formattedDate,
+              rawDate: rawDate,
               category: category.attributes.title,
               title: blog.attributes.title,
               time: "N/A",
@@ -56,7 +57,7 @@ export function Events() {
               url: `/post/${blog.attributes.slug}`,
             };
           })
-        );
+        ).sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
         console.log(events);
         setEvents(mappedEvents);
 
