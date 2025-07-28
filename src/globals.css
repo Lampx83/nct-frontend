@@ -109,10 +109,38 @@ a {
   overflow: hidden;
 }
 
-.footer-bg-overlay {
+.footer-bg {
   pointer-events: none;
+  background-position: center;
+  background-repeat: no-repeat;
   filter: contrast(1.1) brightness(1.2); /* Tăng độ tương phản và độ sáng */
+  
 }
+
+.footer .container .content {
+  display: flex;
+}
+
+.footer .container .content .image-logo, .qr-code {
+  width: 300px;
+  height: 125px;
+  flex-shrink: 0;
+}
+
+.footer .container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} 
+.footer .container .content .school-name {
+  flex-grow: 1;
+}
+
+
+
+
+
+
 
 .footer .btn.btn-social {
   margin-right: 5px;
