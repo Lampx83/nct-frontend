@@ -47,7 +47,7 @@ export function Events() {
             return {
               id: blog.id,
               date: formattedDate,
-              rawDate: rawDate,
+              // rawDate: rawDate,
               category: category.attributes.title,
               title: blog.attributes.title,
               time: "N/A",
