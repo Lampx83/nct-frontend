@@ -260,6 +260,7 @@ a {
   }
 
   .navbar .nav-item > div.dropdown-menu {
+    background: #a31b1b;
     display: block;
     border: none;
     margin-top: 0;
@@ -267,6 +268,10 @@ a {
     opacity: 0;
     visibility: hidden;
     transition: 0.5s;
+  }
+  .container-menu {
+    width: 100%;
+    background-color: #a31b1b;
   }
 
   .navbar .nav-item > ul.dropdown-menu {

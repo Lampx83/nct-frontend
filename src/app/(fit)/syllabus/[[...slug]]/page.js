@@ -1,6 +1,7 @@
 import { denormalizeSubjectCode } from "@/helpers/curriculumTable";
 import Syllabus from "@/components/Syllabus";
 import { convertKNumber } from "@/constant/versionSyllabus";
+import config from "@/config";
 
 export const generateMetadata = async ({ params }) => {
   const { slug } = await params || {};
@@ -11,9 +12,9 @@ export const generateMetadata = async ({ params }) => {
   let KNumber = validateParams.split("/")[0]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
   KNumber = convertKNumber(KNumber);
 
-  const canonicalBaseURL = `https://fit.neu.edu.vn/syllabus/${KNumber}/${language}`;
+  const canonicalBaseURL = `https://nct.neu.edu.vn/syllabus/${KNumber}/${language}`;
   const canonicalURL = `${canonicalBaseURL}/${courseCode}`;
-  const url = `https://fit.neu.edu.vn/codelab/api/doc/${KNumber}/${language}/${courseCode}`;
+  const url = `https://nct.neu.edu.vn/smartdoc/api/doc/${KNumber}/${language}/${courseCode}`;
   const response = await fetch(url);
   if (!response.ok) {
     return {
@@ -62,7 +63,7 @@ export default async function Page({ params }) {
   const courseCode = validateParams.split("/").slice(-1)[0]; // Lấy mã môn học (phần cuối cùng của URL)
   let KNumber = validateParams.split("/")[0]; // Giả sử slug là dạng 'K67/vi/LLNL1105'
   KNumber = convertKNumber(KNumber);
-  const url = `https://fit.neu.edu.vn/codelab/api/doc/${KNumber}/${language}/${courseCode}`;
+  const url = `https://nct.neu.edu.vn/smartdoc/api/doc/${KNumber}/${language}/${courseCode}`;
   const response = await fetch(url);
 
   if (!response.ok) {

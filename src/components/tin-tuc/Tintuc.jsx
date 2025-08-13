@@ -17,7 +17,7 @@ const Tintuc = ({ newsData, pagination, thumbnail }) => {
                     alt="Banner Tin tức"
                 />
             </div>
-            <div className="container">
+            <div className="container news">
                 <div className=""></div>
                 <h2>Tin tức</h2>
                 <div className="blogs">

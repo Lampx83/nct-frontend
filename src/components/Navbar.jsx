@@ -17,9 +17,9 @@ const Navbar = () => {
     const fetchMenuItems = async () => {
       try {
         const response = await fetch(
-          "https://nct.neu.edu.vn/admin/api/navigation/render/1?type=TREE",{
-            cache:"no-cache"
-          }
+          "https://nct.neu.edu.vn/admin/api/navigation/render/1?type=TREE", {
+          cache: "no-cache"
+        }
         );
         const data = await response.json();
         setMenuItems(data);
@@ -133,15 +133,18 @@ const Navbar = () => {
                   >
                     {item.title}
                   </a>
-                  <ul className="dropdown-menu">
-                    {item.items.map((subItem) => (
-                      <li key={subItem.id}>
-                        <a className="dropdown-item" href={subItem.path}>
-                          {subItem.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+
+                  <div className="container-menu">
+                    <ul className="dropdown-menu">
+                      {item.items.map((subItem) => (
+                        <li key={subItem.id}>
+                          <a className="dropdown-item" href={subItem.path}>
+                            {subItem.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </>
               ) : (
                 <a
