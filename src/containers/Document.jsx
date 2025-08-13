@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import "material-icons/iconfont/material-icons.css";
 import StepContent from "../components/codelab/StepContent";
 import Header from "../components/codelab/Header";
@@ -9,9 +8,7 @@ import firebase from "firebase/compat/app";
 import debounce from "../utils/debounce";
 import app from "../firebase";
 import "firebase/compat/database";
-import { Timestamp } from "firebase/firestore";
 import {
-  getDatabase,
   onDisconnect,
   ref,
   set,
@@ -20,7 +17,7 @@ import {
   push,
   get,
 } from "firebase/database";
-import "firebase/firestore";
+import { getFirestore, collection, onSnapshot } from "firebase/firestore";
 import { Previewer } from "pagedjs";
 import StepList from "../components/codelab/StepList";
 import config from "../config";
@@ -28,21 +25,33 @@ import "@/css/toolbar.css";
 import { useSearchParams } from "next/navigation";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useAutoLogout } from "../hooks/useAutoLogout";
 import LoginModal from "../modals/LoginModal";
 import DocError from "../components/codelab/DocError";
-import { Button, Offcanvas } from "react-bootstrap";
-import DocControls from "../components/codelab/DocControls";
 import { usePathname, useRouter } from "next/navigation";
+import { useTabVisibility } from "@/hooks/useTabVisibility";
+import AiTutorChat from "../components/codelab/AiTutorChat";
+import html2pdf from "html2pdf.js";
+import database from "../services/database";
+
 const TOAST_TYPES = {
   RAISE_HAND: "RAISE_HAND",
   LOWER_HAND: "LOWER_HAND",
   ENTER_ROOM: "ENTER_ROOM",
   LEAVE_ROOM: "LEAVE_ROOM",
 };
-
+// const firestore = getFirestore(app);
 const Document = ({
+  iframe,
   dataResponse,
+  roomType,
   isRoomInPath,
   url,
   steps,
@@ -50,13 +59,11 @@ const Document = ({
   listChapter,
   chap,
 }) => {
-  const params = useParams();
   const pathname = usePathname(); // Lấy path hiện tại (VD: "/room/bAmGhf")
   const searchParams = useSearchParams(); // Lấy query string (VD: "?display=doc")
   const router = useRouter();
-
+  const isVisible = useTabVisibility();
   const update = searchParams.get("update");
-  const slide = searchParams.get("slide") || 1;
   const [currentStep, setCurrentStep] = useState(0);
   const [showStepList, setShowStepList] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -64,48 +71,74 @@ const Document = ({
   const [user, setUser] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [slideTitle, setSlideTitle] = useState(null);
-  const [template, setTemplate] = useState("NEU");
-  const isSyllabusInPath = window.location.pathname.includes("syllabus");
-  const display = searchParams.get("display") || "slide";
-  const isTeacher = room?.userID === user?.uid;
+  const iframeRef = useRef(null);
+  const [orgConfig, setOrgConfig] = useState(
+    room?.organization || {
+      nameVi: "",
+      nameEn: "",
+      logoBase64: null,
+      primaryColor: "#0061bb",
+      secondaryColor: "#d66f41", // Default to orange color if not provided
+    }
+  );
+
+  useEffect(() => {
+    if (room?.organization) {
+      setOrgConfig(room.organization);
+    }
+  }, [room?.organization?.nameVi, room?.organization?.nameEn, room?.organization?.logoBase64, room?.organization?.primaryColor, room?.organization?.secondaryColor]);
+
+  // Memoize computed values to prevent unnecessary re-renders
+  const isSyllabusInPath = useMemo(() => 
+    typeof window !== "undefined"
+      ? window.location.pathname.includes("syllabus")
+      : false,
+    [pathname]
+  );
+  
+  const display = useMemo(() => 
+    searchParams.get("display") || "slide",
+    [searchParams]
+  );
+  
+  const isTeacher = useMemo(() => 
+    room?.userID === user?.uid,
+    [room?.userID, user?.uid]
+  );
 
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showQRModal, setShowQRModal] = useState(false);
-
+  const previousUsersRef = useRef({});
   const [raisedHands, setRaisedHands] = useState({});
   const previousHandsRef = useRef({});
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [showWarningModal, setShowWarningModal] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [docError, setDocError] = useState(null);
   const isListenerAddedRef = useRef(false);
   const [isRaised, setIsRaised] = useState(false);
-
-  useAutoLogout(user);
+  useAutoLogout(user, room);
   const [sidebar, setSidebar] = useState(false);
-
+  const [tabEventQueue, setTabEventQueue] = useState([]);
+  // const [tabEventToast, setTabEventToast] = useState(null);
+  const toastTimeoutRef = useRef(null);
   const onDocClick = useCallback(() => {
-    const queryParams = new URLSearchParams(searchParams.toString()); // Chuyển thành đối tượng có thể chỉnh sửa
-    queryParams.set("display", "doc"); // Ghi đè giá trị của display
-    router.replace(`${pathname}?${queryParams.toString()}`); // Cập nhật URL
-  }, [location]);
+    const queryParams = new URLSearchParams(searchParams.toString());
+    queryParams.set("display", "doc");
+    router?.replace(`${pathname}?${queryParams.toString()}`);
+  }, [pathname, searchParams.toString(), router]);
 
   const onSlideClick = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams.toString()); // Chuyển thành đối tượng có thể chỉnh sửa
     queryParams.set("display", "slide"); // Ghi đè giá trị của display
-    router.replace(`${pathname}?${queryParams.toString()}`); // Cập nhật URL
-  }, [router, pathname, searchParams]);
+    router?.replace(`${pathname}?${queryParams.toString()}`); // Cập nhật URL
+  }, [router, pathname, searchParams.toString()]);
   const onBookClick = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams.toString()); // Chuyển thành đối tượng có thể chỉnh sửa
     queryParams.set("display", "book"); // Ghi đè giá trị của display
-
-    router.replace(`${pathname}?${queryParams.toString()}`); // Cập nhật URL
-  }, [location]);
+    router?.replace(`${pathname}?${queryParams.toString()}`); // Cập nhật URL
+  }, [pathname, searchParams.toString(), router]);
 
   async function saveScrollLog(room, user) {
     try {
-      await fetch(`${config.API_BASE_URL}/logs`, {
+      fetch(`${config.API_LOG_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +146,9 @@ const Document = ({
         body: JSON.stringify({
           logType: "scrollPosition",
           roomID: room?.roomID,
-          user: user.displayName,
+          userName: user.displayName,
+          userID: user.uid,
+          timestamp: new Date().toISOString(),
         }),
       });
     } catch (err) {
@@ -123,8 +158,6 @@ const Document = ({
 
   const handleStepClick = useCallback(
     (index) => {
-      console.log("Handling step click:", index);
-
       if (index < 0 || index >= steps.length) {
         console.error("Invalid step index:", index);
         return;
@@ -137,12 +170,12 @@ const Document = ({
 
       if (room?.roomID && user?.uid) {
         try {
-          const db = getDatabase(app);
+          const db = database;
           let link = chap ? `/chap${chap}` : "";
           set(
             ref(
               db,
-              `/labs/${room.docID.replace(/\./g, "")}/${room?.roomID
+              `/labs/${room.docID?.replace(/\./g, "")}/${room?.roomID
               }${link}/users/${user.uid}`
             ),
             {
@@ -157,7 +190,7 @@ const Document = ({
         }
       }
     },
-    [chap, user]
+    [chap, user, room]
   );
 
   const handleTitleClick = useCallback(() => {
@@ -180,52 +213,6 @@ const Document = ({
       setShowLogin(false);
     }
   };
-  const handleLogLink = () => {
-    // Select all anchor (<a>) elements in the document
-    const links = document.querySelectorAll("a");
-
-    links.forEach((link) => {
-      // Skip links that contain the text "Đăng xuất"
-      if (link.textContent.trim() === "Đăng xuất") {
-        return;
-      }
-
-      // Remove any existing click event listener by cloning the element
-      const clonedLink = link.cloneNode(true);
-      link.parentNode.replaceChild(clonedLink, link);
-
-      // Add a new event listener for click events
-      clonedLink.addEventListener("click", async (event) => {
-        event.preventDefault(); // Prevent default behavior (e.g., navigation)
-
-        try {
-          // Send a log of the clicked link to the server
-          const response = await fetch(`${config.API_BASE_URL}/logs`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              logType: "clickLink",
-              roomID: room?.roomID, // Ensure `room` exists before accessing `roomID`
-              timestamp: new Date().toISOString(), // ISO timestamp format
-              userName: user.displayName, // Assuming `user` exists and has `displayName`
-              log: `Link: ${clonedLink.href}`, // Log the link's URL
-            }),
-          });
-
-          if (!response.ok) {
-            console.error("Failed to log clicked link:", response.statusText);
-          }
-        } catch (error) {
-          console.error("Error logging clicked link:", error);
-        }
-
-        // Open the link in a new tab
-        window.open(clonedLink.href, "_blank");
-      });
-    });
-  };
 
   const readDoc = async () => {
     try {
@@ -240,19 +227,17 @@ const Document = ({
       if (isRoomInPath) {
         //In room
         if (update === "true" && dataResponse.docID) {
-          // navigate(`/doc/${dataResponse.docID}`);
           router.replace(`/doc/${dataResponse.docID}`);
           return;
         }
         labConfig = dataResponse.config;
         dataResponse.teacher = dataResponse.userID === user.uid;
 
-        if (dataResponse?.template) setTemplate(dataResponse?.template);
-        const db = getDatabase(app);
+        const db = database;
         let link = chap ? `/chap${chap}` : "";
         const refUsers = ref(
           db,
-          `/labs/${dataResponse.docID.replace(/\./g, "")}/${dataResponse?.roomID
+          `/labs/${dataResponse.docID?.replace(/\./g, "")}/${dataResponse?.roomID
           }${link}/users/${user.uid}`
         );
 
@@ -260,7 +245,7 @@ const Document = ({
         const handleOnDisconnect = async () => {
           try {
             // Make the API call when disconnecting
-            const response = await fetch(`${config.API_BASE_URL}/logs`, {
+            fetch(`${config.API_LOG_URL}`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -270,16 +255,11 @@ const Document = ({
                 roomID: dataResponse?.roomID,
                 timestamp: new Date().toISOString(), // Use ISO timestamp for consistency
                 userName: user.displayName,
+                userID: user.uid,
+
                 log: "Thoát trình duyệt",
               }),
             });
-            if (!response.ok) {
-              console.error(
-                "Failed to log on disconnect:",
-                response.statusText
-              );
-            } else {
-            }
           } catch (error) {
             console.error("Error logging disconnect event:", error);
           }
@@ -292,27 +272,24 @@ const Document = ({
         // log click link
         const hash = window.location.hash;
         const hashIndex = hash ? parseInt(hash.substring(1), 10) : 0;
-        //Vao phong, dang ky step
-        if (hashIndex > 0) {
-          let link = chap ? `/chap${chap}` : "";
-          set(
-            ref(
-              db,
-              `/labs/${dataResponse.docID.replace(/\./g, "")}/${dataResponse?.roomID
-              }${link}/users/${user.uid}`
-            ),
-            {
-              step: hashIndex,
-              timestamp: firebase.database.ServerValue.TIMESTAMP,
-              name: user.displayName,
-              email: user.email,
-            }
-          );
-        }
+
+        // Always register user in Firebase when entering room
+        const userRef = ref(
+          db,
+          `/labs/${dataResponse.docID?.replace(/\./g, "")}/${dataResponse?.roomID
+          }${link}/users/${user.uid}`
+        );
+
+        await set(userRef, {
+          step: hashIndex,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        });
 
         const handleChapChange = async () => {
           if (isRoomInPath && room && user) {
-            const db = getDatabase(app);
             const prevChapRef = ref(
               db,
               `/labs/${dataResponse.docID.replace(/\./g, "")}/${dataResponse?.roomID
@@ -329,9 +306,9 @@ const Document = ({
       setLoading(false);
       if (!isRoomInPath) {
         const queryParams = new URLSearchParams(location.search);
-        queryParams.set("update", "false");
+        // queryParams.set("update", "false");
 
-        router.replace(`${location.pathname}?${queryParams.toString()}`);
+        // router.replace(`${location.pathname}?${queryParams.toString()}`);
       }
     } catch (error) {
       console.error("Error fetching doc:", error);
@@ -339,38 +316,142 @@ const Document = ({
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   handleLogLink();
-  // }, [loading, room, user, chap, currentStep]);
-  useEffect(() => {
-    let lastLoggedPosition = null;
-    if (room && room?.roomID && user) {
-      const debouncedSaveScrollLog = debounce(() => {
-        saveScrollLog(room, user);
-      }, 300);
-      const handleScroll = () => {
-        const scrollTop = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        if (
-          scrollTop + windowHeight >= documentHeight - 1 &&
-          lastLoggedPosition !== "bottom"
-        ) {
-          try {
-            lastLoggedPosition = "bottom";
-            debouncedSaveScrollLog();
-          } catch (error) {
-            console.error("Error logging scroll event: ", error);
-          }
-        }
-      };
-      window.addEventListener("scroll", handleScroll);
+  // Memoize tab visibility logging to prevent excessive Firebase calls
+  // const logTabVisibility = useCallback(async (visible) => {
+  //   if (!room?.roomID || !user?.uid) return;
+  //  
+  //   const logRef = doc(firestore, `rooms/${room.roomID}/monitor`, user.uid);
+  //   const logEntry = {
+  //     displayName: user.displayName,
+  //     timestamp: new Date().toISOString(),
+  //     status: visible ? "active" : "inactive",
+  //   };
+  //  
+  //   try {
+  //     await updateDoc(logRef, {
+  //       events: arrayUnion(logEntry),
+  //       lastUpdate: serverTimestamp(),
+  //     });
+  //   } catch (error) {
+  //     console.log("Error updating log, trying to create new:", error);
+  //     try {
+  //       await setDoc(logRef, {
+  //         displayName: user.displayName,
+  //         events: [logEntry],
+  //         lastUpdate: serverTimestamp(),
+  //       });
+  //       console.log("Created new log successfully");
+  //     } catch (error) {
+  //       console.error("Error creating new log:", error);
+  //     }
+  //   }
+  // }, [room?.roomID, user?.uid, user?.displayName]);
 
+  // Debounce tab visibility changes to prevent rapid Firebase calls
+  // const debouncedLogTabVisibility = useMemo(
+  //   () => debounce(logTabVisibility, 1000),
+  //   [logTabVisibility]
+  // );
+
+  // useEffect(() => {
+  //   if (room?.roomID && user?.uid) {
+  //     debouncedLogTabVisibility(isVisible);
+  //   }
+  // }, [isVisible, room?.roomID, user?.uid, debouncedLogTabVisibility]);
+  // const isInitialLoadRef = useRef(true);
+  //
+  // useEffect(() => {
+  //   if (!room?.roomID || !user?.uid) return;
+  //
+  //   const monitorCol = collection(firestore, `rooms/${room.roomID}/monitor`);
+  //   const unsub = onSnapshot(monitorCol, (snapshot) => {
+  //     // Skip processing on initial load
+  //     if (isInitialLoadRef.current) {
+  //       isInitialLoadRef.current = false;
+  //       return;
+  //     }
+  //
+  //     // snapshot.docChanges().forEach((change) => {
+  //     //   if (change.type === "modified" || change.type === "added") {
+  //     //     const data = change.doc.data();
+  //     //     const lastEvent = data.events?.at(-1);
+  //     //     if (lastEvent && change.doc.id !== user.uid) {
+  //     //       setTabEventQueue((prev) => [
+  //     //         ...prev,
+  //     //         {
+  //     //           name: data.displayName || change.doc.id,
+  //     //           status: lastEvent.status,
+  //     //         },
+  //     //       ]);
+  //     //     }
+  //     //   }
+  //     // });
+  //   });
+  //
+  //   return () => {
+  //     unsub();
+  //     // isInitialLoadRef.current = true; // Reset the ref when component unmounts
+  //   };
+  // }, [room?.roomID, user?.uid]);
+  // useEffect(() => {
+  //   if (!tabEventToast && tabEventQueue.length > 0) {
+  //     // Lấy toast đầu tiên trong queue ra hiển thị
+  //     setTabEventToast(tabEventQueue[0]);
+  //     setTabEventQueue((prev) => prev.slice(1));
+  //   }
+  // }, [tabEventToast, tabEventQueue]);
+  //
+  // // Tách riêng effect để xử lý timeout
+  // useEffect(() => {
+  //   if (tabEventToast) {
+  //     // Clear any existing timeout
+  //     if (toastTimeoutRef.current) {
+  //       clearTimeout(toastTimeoutRef.current);
+  //     }
+  //
+  //     // Set new timeout
+  //     toastTimeoutRef.current = setTimeout(() => {
+  //       setTabEventToast(null);
+  //     }, 3000);
+  //   }
+  //   return () => {
+  //     if (toastTimeoutRef.current) {
+  //       clearTimeout(toastTimeoutRef.current);
+  //     }
+  //   };
+  // }, [tabEventToast]);
+
+  // Memoize scroll handler to prevent recreation on every render
+  const handleScroll = useCallback(() => {
+    if (!room?.roomID || !user) return;
+    
+    const scrollTop = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    if (scrollTop + windowHeight >= documentHeight - 1) {
+      try {
+        saveScrollLog(room, user);
+      } catch (error) {
+        console.error("Error logging scroll event: ", error);
+      }
+    }
+  }, [room?.roomID, user?.uid]);
+
+  // Debounce the scroll handler
+  const debouncedHandleScroll = useMemo(
+    () => debounce(handleScroll, 300),
+    [handleScroll]
+  );
+
+  useEffect(() => {
+    if (room?.roomID && user) {
+      window.addEventListener("scroll", debouncedHandleScroll);
       return () => {
-        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("scroll", debouncedHandleScroll);
       };
     }
-  }, [room, user, currentStep]);
+  }, [room?.roomID, user?.uid, debouncedHandleScroll]);
   useEffect(() => {
     if (isRoomInPath) {
       if (!user) {
@@ -388,98 +469,144 @@ const Document = ({
       setCurrentStep(hashIndex);
     }
   }, [chap]);
+  // Memoize CSS colors to prevent unnecessary recalculations
+  const cssColors = useMemo(() => ({
+    "--primary-color": orgConfig.primaryColor || "#0061bb",
+    "--second-color": orgConfig.secondaryColor || "#d66f41"
+  }), [orgConfig.primaryColor, orgConfig.secondaryColor]);
 
-  useEffect(() => {  //Change css
-    if (!loading) {
-      if (display === "book") {
-        let paged = new Previewer();
-        let DOMContent = document.querySelector(".main-content");
-        paged
-          .preview(DOMContent, ["../css/book.css"], document.body)
-          .then(() => { });
-      } else {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.type = "text/css";
-        link.href = `/css/${display}.css`;
-        link.id = "dynamic-css";
-        const existingLink = document.getElementById("dynamic-css");
+  // Update CSS colors when they change
+  useEffect(() => {
+    for (const [key, value] of Object.entries(cssColors)) {
+      document.documentElement.style.setProperty(key, value);
+    }
+  }, [cssColors]);
+
+  // Handle CSS and book preview loading
+  useEffect(() => {
+    if (loading) return;
+
+    if (display === "book") {
+      const paged = new Previewer();
+      const DOMContent = document.querySelector(".main-content");
+      if (DOMContent) {
+        paged.preview(DOMContent, ["../css/book.css"], document.body)
+          .catch(error => console.error("Error loading book preview:", error));
+      }
+    } else {
+      const cssFile = room?.roomType === "Phòng thi" ? "test.css" : `${display}.css`;
+      const existingLink = document.getElementById("dynamic-css");
+      
+      // Only update if CSS file changed
+      if (!existingLink || existingLink.href !== `/css/${cssFile}`) {
         if (existingLink) {
           document.head.removeChild(existingLink);
         }
+        
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.type = "text/css";
+        link.href = `/css/${cssFile}`;
+        link.id = "dynamic-css";
         document.head.appendChild(link);
       }
     }
-  }, [loading, display]);
+  }, [loading, display, room?.roomType]);
+
+
+  // thông báo raiseHand và rời/vào phòng
+  // useEffect(() => {
+  //   if (room?.roomID && user) {
+  //     const db = database;
+  //     const usersRef = ref(
+  //       db,
+  //       `/labs/${room.docID.replace(/\./g, "")}/${room?.roomID}/users`
+  //     );
+  //
+  //
+  //     const unsubscribe = onValue(usersRef, (snapshot) => {
+  //       const data = snapshot.val();
+  //
+  //       if (data) {
+  //         // Get current raised hands
+  //         const currentHands = Object.entries(data)
+  //           .filter(([uid, userData]) => userData.isRaise)
+  //           .reduce((acc, [uid, userData]) => {
+  //             acc[uid] = userData;
+  //             return acc;
+  //           }, {});
+  //
+  //         // Check for new users entering the room
+  //         Object.entries(data).forEach(([uid, userData]) => {
+  //           if (
+  //             uid !== user.uid &&
+  //             !previousUsersRef.current[uid] &&
+  //             userData.timestamp > Date.now() - 5000 // Increased to 5 seconds for better detection
+  //           ) {
+  //             const userName = userData.name || "Someone";
+  //             console.log(`New user detected: ${userName} (${uid})`);
+  //             setUserEnterMessage(`${userName} đã vào phòng`);
+  //             setShowUserEnterToast(true);
+  //
+  //             // Auto hide toast after 3 seconds
+  //             setTimeout(() => {
+  //               setShowUserEnterToast(false);
+  //             }, 3000);
+  //           }
+  //         });
+  //
+  //         // Update previous users ref
+  //         previousUsersRef.current = data;
+  //
+  //         // Only process notifications if we have previous state
+  //         // This prevents notifications on initial load
+  //         if (Object.keys(previousHandsRef.current).length > 0) {
+  //           // Check for new raised hands
+  //           Object.entries(currentHands).forEach(([uid, userData]) => {
+  //             if (
+  //               uid !== user.uid &&
+  //               (!previousHandsRef.current[uid] ||
+  //                 !previousHandsRef.current[uid].isRaise) &&
+  //               userData.timestamp > Date.now() - 2000 // Only show if raised within last 2 seconds
+  //             ) {
+  //               setToastMessage(`${userData.name} raised their hand!`);
+  //               setShowToast(true);
+  //             }
+  //           });
+  //
+  //           // Check for lowered hands
+  //           Object.entries(previousHandsRef.current).forEach(
+  //             ([uid, userData]) => {
+  //               if (
+  //                 uid !== user.uid &&
+  //                 userData.isRaise &&
+  //                 (!currentHands[uid] || !currentHands[uid].isRaise) &&
+  //                 data[uid]?.timestamp > Date.now() - 2000 // Only show if lowered within last 2 seconds
+  //               ) {
+  //                 const userName =
+  //                   userData.name || data[uid]?.name || "Someone";
+  //                 setToastMessage(`${userName} lowered their hand`);
+  //                 setShowToast(true);
+  //               }
+  //             }
+  //           );
+  //         }
+  //
+  //         // Update the previous state reference
+  //         previousHandsRef.current = currentHands;
+  //         // Update the state
+  //         setRaisedHands(currentHands);
+  //       }
+  //     });
+  //
+  //     return () => {
+  //       off(usersRef);
+  //     };
+  //   }
+  // }, [room?.roomID, room?.docID, user?.uid]);
 
   useEffect(() => {
-    if (room?.roomID && user) {
-      const db = getDatabase(app);
-      const raisedHandsRef = ref(
-        db,
-        `/labs/${room.docID.replace(/\./g, "")}/${room?.roomID}/users`
-      );
-
-      const unsubscribe = onValue(raisedHandsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          // Get current raised hands
-          const currentHands = Object.entries(data)
-            .filter(([uid, userData]) => userData.isRaise)
-            .reduce((acc, [uid, userData]) => {
-              acc[uid] = userData;
-              return acc;
-            }, {});
-
-          // Only process notifications if we have previous state
-          // This prevents notifications on initial load
-          if (Object.keys(previousHandsRef.current).length > 0) {
-            // Check for new raised hands
-            Object.entries(currentHands).forEach(([uid, userData]) => {
-              if (
-                uid !== user.uid &&
-                (!previousHandsRef.current[uid] ||
-                  !previousHandsRef.current[uid].isRaise) &&
-                userData.timestamp > Date.now() - 2000 // Only show if raised within last 2 seconds
-              ) {
-                setToastMessage(`${userData.name} raised their hand!`);
-                setShowToast(true);
-              }
-            });
-
-            // Check for lowered hands
-            Object.entries(previousHandsRef.current).forEach(
-              ([uid, userData]) => {
-                if (
-                  uid !== user.uid &&
-                  userData.isRaise &&
-                  (!currentHands[uid] || !currentHands[uid].isRaise) &&
-                  data[uid]?.timestamp > Date.now() - 2000 // Only show if lowered within last 2 seconds
-                ) {
-                  const userName =
-                    userData.name || data[uid]?.name || "Someone";
-                  setToastMessage(`${userName} lowered their hand`);
-                  setShowToast(true);
-                }
-              }
-            );
-          }
-
-          // Update the previous state reference
-          previousHandsRef.current = currentHands;
-          // Update the state
-          setRaisedHands(currentHands);
-        }
-      });
-
-      return () => {
-        // Cleanup listener
-        off(raisedHandsRef);
-      };
-    }
-  }, [room, user]);
-
-  useEffect(() => {
+    //Kiểm tra đăng nhập hay chưa
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -498,16 +625,21 @@ const Document = ({
     setShowLogin(false);
   };
 
+  const mainContentRef = useRef();
+
   let mainContent;
+  let mainContentDoc;
   if (display != null && (display === "book" || display === "doc")) {
     //Hiển thị toàn bộ nội dung
     mainContent = contents.map((content, index) => {
       return (
-        <div className="container"
-
+        <div
+          className="container"
+          style={index === 0 ? { marginTop: "0" } : {}}
         >
           <StepContent
             room={room}
+            orgConfig={orgConfig}
             steps={steps}
             step={steps[index]}
             content={content}
@@ -519,8 +651,34 @@ const Document = ({
       );
     });
   } else {
+    mainContentDoc = (
+      <div ref={mainContentRef}
+        className={`justify-content-center content`}
+      >
+        {contents.map((content, index) => (
+          <div
+            className="container"
+            key={index}
+            style={index === 0 ? { marginTop: "0" } : {}}
+          >
+            <StepContent
+              room={room}
+              orgConfig={orgConfig}
+              steps={steps}
+              step={steps[index]}
+              content={content}
+              currentStep={index}
+              display="doc"
+              user={user}
+            />
+          </div>
+        ))}
+      </div>
+    );
+
     mainContent = (
       <StepContent
+        isRoomInPath={isRoomInPath}
         chap={chap}
         room={room}
         steps={steps}
@@ -529,70 +687,223 @@ const Document = ({
         currentStep={currentStep}
         display={display}
         user={user}
+        orgConfig={orgConfig}
       />
     );
   }
 
-  const handleDownload = () => {
-    // Implement download logic
-    console.log("Downloading document...");
-  };
+  const handleExportPdf = useCallback(() => {
+    if (display === "doc" && mainContentRef.current) {
+      console.log("Exporting PDF...");
+      console.log("Main content ref:", mainContentRef.current);
+      setIsExportingPdf(true); // Bắt đầu hiển thị spinner
 
-  const handleCompare = () => {
-    // Implement version comparison logic
-    console.log("Comparing versions...");
-  };
+      // Hàm chuyển đổi ảnh sang base64 để tránh CORS
+      const convertImagesToBase64 = async () => {
+        const images = mainContentRef.current.querySelectorAll("img");
+        console.log("Tìm thấy", images.length, "ảnh");
 
+        if (images.length === 0) {
+          console.log("Không có ảnh nào, bỏ qua bước chuyển đổi");
+          return;
+        }
+
+        const promises = Array.from(images).map(async (img, index) => {
+          console.log(`Xử lý ảnh ${index + 1}:`, img.src);
+          return new Promise((resolve) => {
+            if (img.complete && img.naturalHeight !== 0) {
+              console.log(`Ảnh ${index + 1} đã load xong, kích thước:`, img.naturalWidth, 'x', img.naturalHeight);
+              // Ảnh đã load xong, chuyển sang base64
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+
+              try {
+                ctx.drawImage(img, 0, 0);
+                const dataURL = canvas.toDataURL('image/png');
+                console.log(`Ảnh ${index + 1} chuyển sang base64 thành công`);
+                img.src = dataURL;
+                resolve();
+              } catch (error) {
+                console.warn(`Không thể chuyển ảnh ${index + 1} sang base64:`, error);
+                console.warn('Ảnh src:', img.src);
+                resolve();
+              }
+            } else {
+              console.log(`Ảnh ${index + 1} chưa load xong, đợi...`);
+              // Ảnh chưa load xong, đợi load
+              img.onload = () => {
+                console.log(`Ảnh ${index + 1} load xong, kích thước:`, img.naturalWidth, 'x', img.naturalHeight);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+
+                try {
+                  ctx.drawImage(img, 0, 0);
+                  const dataURL = canvas.toDataURL('image/png');
+                  console.log(`Ảnh ${index + 1} chuyển sang base64 thành công`);
+                  img.src = dataURL;
+                  resolve();
+                } catch (error) {
+                  console.warn(`Không thể chuyển ảnh ${index + 1} sang base64:`, error);
+                  console.warn('Ảnh src:', img.src);
+                  resolve();
+                }
+              };
+              img.onerror = () => {
+                console.warn(`Lỗi load ảnh ${index + 1}:`, img.src);
+                resolve();
+              };
+            }
+          });
+        });
+
+        console.log("Đợi tất cả ảnh xử lý xong...");
+        await Promise.all(promises);
+        console.log("Tất cả ảnh đã xử lý xong");
+      };
+
+      // Thực hiện xuất PDF
+      convertImagesToBase64().then(() => {
+        console.log("Bắt đầu tạo PDF...");
+        html2pdf()
+          .set({
+            margin: 0.5,
+            filename: `document.pdf`,
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              allowTaint: false,
+              foreignObjectRendering: true
+            },
+            jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+          })
+          .from(mainContentRef.current)
+          .save()
+          .then(() => {
+            console.log("PDF xuất thành công!");
+            setIsExportingPdf(false); // Ẩn spinner khi hoàn thành
+          })
+          .catch((error) => {
+            console.error('Lỗi xuất PDF:', error);
+            console.error('Error details:', {
+              message: error.message,
+              stack: error.stack,
+              name: error.name
+            });
+            setIsExportingPdf(false); // Ẩn spinner khi có lỗi
+          });
+      }).catch((error) => {
+        console.error('Lỗi chuyển đổi ảnh:', error);
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        setIsExportingPdf(false); // Ẩn spinner khi có lỗi
+      });
+    } else {
+      console.log("Không thể xuất PDF:", {
+        display,
+        hasMainContentRef: !!mainContentRef.current
+      });
+    }
+  }, [display]);
+
+  const handlePrintPdf = useCallback(() => {
+    if (mainContentRef.current) {
+      // Thêm CSS để in khổ ngang và lề tối thiểu
+      const style = document.createElement('style');
+      style.innerHTML = `@media print { @page { size: landscape; margin: 0; } body { margin: 0 !important; } }`;
+      document.head.appendChild(style);
+
+      const printContents = mainContentRef.current.innerHTML;
+      // const originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      // document.body.innerHTML = originalContents;
+      document.head.removeChild(style);
+      window.location.reload(); // reload lại để khôi phục event listener/react state
+    }
+  }, [display]);
   const handlePrint = () => {
-    window.print();
+    const iframe = iframeRef.current;
+    if (!iframe || !iframe.contentWindow) {
+      alert("Không thể in nội dung iframe!");
+      return;
+    }
+
+    // Kiểm tra nếu iframe đã tải xong
+    const iframeDoc = iframe.contentWindow.document;
+    if (iframeDoc.readyState === "complete") {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } else {
+      // Nếu chưa xong, đợi sự kiện load
+      const onLoad = () => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        iframe.removeEventListener("load", onLoad);
+      };
+
+      iframe.addEventListener("load", onLoad);
+
+      // Fallback timeout nếu "load" không kích hoạt sau 5s
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        iframe.removeEventListener("load", onLoad);
+      }, 5000);
+    }
   };
-  const handleShare = () => {
-    // Implement share logic
-    console.log("Sharing document...");
-  };
-  const handleTemplate = useCallback((value) => {
-    setTemplate(value);
-  }, []);
+
   const handleSettingModal = useCallback((value) => {
     setShowSettingsModal(value);
   }, []);
 
+  const [showNavHint, setShowNavHint] = useState(false);
+  const [aiChatOpen, setAiChatOpen] = useState(false);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [showUserEnterToast, setShowUserEnterToast] = useState(false);
+  const [userEnterMessage, setUserEnterMessage] = useState("");
+
+  // Close AI chat when aiTutorEnabled is turned off
   useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (window.innerWidth >= 1400) return;
+    if (room?.aiTutorEnabled === false && aiChatOpen) {
+      setAiChatOpen(false);
+    }
+  }, [room?.aiTutorEnabled, aiChatOpen]);
 
-      // Check if we're not in an input field
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
         return;
+      }
 
-      switch (e.key) {
-        case "ArrowLeft":
-        case "ArrowUp":
-          e.preventDefault();
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
           if (currentStep > 0) {
             handleStepClick(currentStep - 1);
           }
           break;
-        case "ArrowRight":
-        case "ArrowDown":
-          e.preventDefault();
+        case 'ArrowRight':
+          event.preventDefault();
           if (currentStep < steps.length - 1) {
             handleStepClick(currentStep + 1);
           }
           break;
-        default:
-          break;
       }
     };
 
-    window.addEventListener("keydown", handleKeyPress);
-
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentStep, steps.length, handleStepClick]);
 
-  const [showNavHint, setShowNavHint] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -610,10 +921,10 @@ const Document = ({
 
   useEffect(() => {
     if (room?.roomID) {
-      const db = getDatabase(app);
+      const db = database;
       const titleRef = ref(
         db,
-        `/labs/${room.docID.replace(/\./g, "")}/${room.roomID}/title`
+        `/labs/${room?.docID?.replace(/\./g, "")}/${room.roomID}/title`
       );
 
       const unsubscribe = onValue(titleRef, (snapshot) => {
@@ -627,13 +938,33 @@ const Document = ({
     }
   }, [room]);
 
+  // useEffect(() => {
+  //   if (room?.roomID) {
+  //     const roomRef = doc(firestore, "rooms", room.roomID);
+  //
+  //     const unsubscribe = onSnapshot(roomRef, (doc) => {
+  //       if (doc.exists()) {
+  //         const roomData = doc.data();
+  //         console.log("Room data updated:", roomData);
+  //         // Update the room state with new data
+  //         setRoom(prevRoom => ({
+  //           ...prevRoom,
+  //           ...roomData
+  //         }));
+  //       }
+  //     });
+  //
+  //     return () => unsubscribe();
+  //   }
+  // }, [room?.roomID]);
+
   const sendNotification = async (type, userName) => {
     if (!room?.roomID || !user) return;
 
-    const db = getDatabase(app);
+    const db = database;
     const notificationsRef = ref(
       db,
-      `/labs/${room.docID.replace(/\./g, "")}/${room.roomID}/notifications`
+      `/labs/${room.docID?.replace(/\./g, "")}/${room.roomID}/notifications`
     );
 
     await push(notificationsRef, {
@@ -650,10 +981,10 @@ const Document = ({
     }
 
     const newRaisedState = !isRaised;
-    const db = getDatabase(app);
+    const db = database;
     const userRef = ref(
       db,
-      `/labs/${room.docID.replace(/\./g, "")}/${room.roomID}${chap ? `/chap${chap}` : ""
+      `/labs/${room.docID?.replace(/\./g, "")}/${room.roomID}${chap ? `/chap${chap}` : ""
       }/users/${user.uid}`
     );
 
@@ -682,7 +1013,7 @@ const Document = ({
 
       // Send log to backend MongoDB
       const currentStep = window.location.hash.split("#")[1] || null;
-      await fetch(`${config.API_BASE_URL}/logs`, {
+      fetch(`${config.API_LOG_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -692,6 +1023,8 @@ const Document = ({
           roomID: room.roomID,
           userID: user.uid,
           userName: user.displayName,
+          timestamp: new Date().toISOString(), // ISO timestamp format
+
           stepID: currentStep,
           status: newRaisedState ? "RAISED_HAND" : "LOWERED_HAND",
         }),
@@ -712,15 +1045,20 @@ const Document = ({
   useEffect(() => {
     if (!room?.roomID || !user || isTeacher) return;
 
-    const db = getDatabase(app);
+    const db = database;
     const forceLogoutRef = ref(
       db,
-      `/labs/${room.docID.replace(/\./g, "")}/${room.roomID}/forceLogout`
+      `/labs/${room.docID?.replace(/\./g, "")}/${room.roomID}/forceLogout`
     );
 
     const unsubscribe = onValue(forceLogoutRef, (snapshot) => {
       const data = snapshot.val();
-      if (data && data.users && data.users.includes(user.uid)) {
+      // Check if data exists and has users array
+      if (
+        data?.users &&
+        Array.isArray(data.users) &&
+        data.users.includes(user.uid)
+      ) {
         // User is in the force logout list
         firebase
           .auth()
@@ -752,13 +1090,13 @@ const Document = ({
       {mainContent}
     </div>
   ) : (
-    <div className={`${template}`}>
+    <div>
       <Toaster position={"top-right"} richColors className={"me-4"} />
       {(display.includes("slide") || display.includes("doc")) &&
-        !isSyllabusInPath &&
-        user && (
+        !isSyllabusInPath && !iframe && (
           <Header
-            template={template}
+            roomType={roomType}
+            isRoomInPath={isRoomInPath}
             showSettingsModal={showSettingsModal}
             handleSettingModal={handleSettingModal}
             steps={steps}
@@ -779,16 +1117,16 @@ const Document = ({
             display={display}
             raisedHands={raisedHands}
             user={user}
-            handleTemplate={handleTemplate}
             docError={docError}
             handleShowSideBar={() => setSidebar((prev) => !prev)}
             isRaised={isRaised}
             toggleRaiseHand={toggleRaiseHand}
+            orgConfig={orgConfig}
+            setOrgConfig={setOrgConfig}
           />
         )}
 
-
-      <div className="fluid-container overflow-hidden2">
+      <div className="fluid-container overflow-hidden2" style={{ flex: 1, transition: "margin-right 0.3s" }}>
         <div className="d-flex">
           <div
             className={`sidebar-container ${sidebar ? "open" : "closed"}`}
@@ -806,11 +1144,10 @@ const Document = ({
             <div
               className=""
               style={{
-                height: "calc(100vh - 66px)",
+                height: "calc(100vh - 82px)",
                 overflowY: "auto",
                 overflowX: "hidden",
-                marginTop: 66,
-
+                marginTop: 82,
               }}
             >
               <StepList
@@ -829,6 +1166,8 @@ const Document = ({
             style={{
               paddingLeft: 0,
               width: sidebar ? "calc(100% - 320px)" : "100%",
+              transition: "margin-right 0.3s",
+              marginRight: aiChatOpen ? 550 : 0,
             }}
           >
             {loading ? (
@@ -842,15 +1181,40 @@ const Document = ({
               <DocError error={docError} />
             ) : (
               room && (
-                <div className={`justify-content-center content`}
-                >
-                  {mainContent}
-                </div>
+                <>
+                  <div className={`justify-content-center content`} >
+                    {mainContent}
+                  </div>
+                  <div style={{ display: 'none' }}>
+                    {mainContentDoc}
+                  </div>
+                  <iframe
+                    ref={iframeRef}
+                    src={`https://fit.neu.edu.vn/room/${room?.roomID}/iframe?display=doc`}
+                    // 
+                    // src={`http:///room/${room?.roomID}/iframe?display=doc`}
+                    style={{ width: "100%", height: "600px", border: "1px solid #ccc", display: 'none' }}
+                    title="Printable Iframe"
+                  />
+                </>
               )
             )}
           </div>
         </div>
       </div>
+      {/* AI Tutor Chat Sidebar (right) */}
+      {user && room?.aiTutorEnabled !== false && (
+        <AiTutorChat
+          room={room}
+          user={user}
+          isOpen={aiChatOpen}
+          onToggle={() => setAiChatOpen((v) => !v)}
+          currentStep={currentStep}
+          steps={steps}
+          content={contents[currentStep]}
+          dataResponse={dataResponse}
+        />
+      )}
       <LoginModal
         show={showLogin}
         handleClose={handleCloseLogin}
@@ -879,6 +1243,87 @@ const Document = ({
       >
         Sử dụng Phím mũi tên để Chuyển Slide
       </div>
+
+      <style jsx>{`
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
+      {/* {tabEventToast && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            background:
+              tabEventToast.status === "inactive" ? "#f44336" : "#4caf50",
+            color: "white",
+            padding: "12px 24px",
+            borderRadius: 8,
+            zIndex: 9999,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            fontWeight: "bold",
+          }}
+        >
+          {tabEventToast.name}{" "}
+          {tabEventToast.status === "inactive"
+            ? "đã rời tab"
+            : "đã quay lại tab"}
+        </div>
+      )} */}
+      {isExportingPdf && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div className="text-center">
+            <div
+              className="spinner-border text-primary mb-3"
+              role="status"
+              style={{ width: "3rem", height: "3rem" }}
+            ></div>
+            <div className="text-primary fw-bold">Đang xuất PDF...</div>
+          </div>
+        </div>
+      )}
+
+      {/* User Enter Toast */}
+      {showUserEnterToast && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            backgroundColor: "#4caf50",
+            color: "white",
+            padding: "12px 24px",
+            borderRadius: 8,
+            zIndex: 9999,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            fontWeight: "bold",
+            animation: "slideInRight 0.3s ease-out",
+          }}
+        >
+          {userEnterMessage}
+        </div>
+      )}
     </div>
   );
 };
